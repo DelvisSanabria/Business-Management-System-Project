@@ -1,8 +1,10 @@
-import { Schema, model } from "mongoose";
-const UserSchema = Schema({
+const mongoose = require('mongoose');
+const mongoosePaginate = require('mongoose-paginate-v2');
+
+const UserSchema = new mongoose.Schema({
   avatar: {
     type: String,
-    minlength: 50,
+    minlength: 10,
     maxlength: 600,
     required: true,
   },
@@ -20,19 +22,19 @@ const UserSchema = Schema({
   },
   email: {
     type: String,
-    minlength: 50,
+    minlength: 10,
     maxlength: 100,
     required: true,
   },
   phone: {
     type: String,
-    minlength: 12,
+    minlength: 9,
     maxlength: 20,
     required: true,
   },
   address: {
     type: String,
-    minlength: 100,
+    minlength: 10,
     maxlength: 400,
     required: true,
   },
@@ -57,6 +59,11 @@ const UserSchema = Schema({
     type: Date,
     default: Date.now(),
     required:true
+  },
+  deleted: {
+    type: Boolean,
+    default: false,
+    required: true
   }
 });
 
@@ -65,7 +72,8 @@ UserSchema.pre('save', function (next) {
   next();
 });
 
+UserSchema.plugin(mongoosePaginate);
 
-const Users = model("Users", UserSchema);
+const User = mongoose.model("User", UserSchema);
 
-export default Users
+module.exports = User;

@@ -1,5 +1,6 @@
-import { Schema, model } from "mongoose";
-const SaleSchema = Schema({
+const mongoose = require('mongoose');
+const mongoosePaginate = require('mongoose-paginate-v2');
+const SaleSchema = new mongoose.Schema({
   client: {
     type: String,
     minlength: 1,
@@ -36,6 +37,11 @@ const SaleSchema = Schema({
     type: Date,
     default: Date.now(),
     required:true
+  },
+  deleted: {
+    type: Boolean,
+    default: false,
+    required: true
   }
 });
 
@@ -44,6 +50,6 @@ SaleSchema.pre('save', function (next) {
   next();
 });
 
-const Sales = model("Sale", SaleSchema);
+const Sales = mongoose.model("Sale", SaleSchema);
 
-export default Sales
+module.exports = Sales

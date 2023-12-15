@@ -1,5 +1,6 @@
-import { Schema, model } from "mongoose";
-const ProductSchema = Schema({
+const mongoose = require('mongoose');
+const mongoosePaginate = require('mongoose-paginate-v2');
+const ProductSchema = new mongoose.Schema({
   Img: {
     type: String,
     minlength: 50,
@@ -43,6 +44,11 @@ const ProductSchema = Schema({
     type: Date,
     default: Date.now(),
     required:true
+  },
+  deleted: {
+    type: Boolean,
+    default: false,
+    required: true
   }
 });
 
@@ -51,6 +57,8 @@ ProductSchema.pre('save', function (next) {
   next();
 });
 
-const Products = model("Products", ProductSchema);
+ProductSchema.plugin(mongoosePaginate);
 
-export default Products
+const Products = mongoose.model("Products", ProductSchema);
+
+module.exports = Products
