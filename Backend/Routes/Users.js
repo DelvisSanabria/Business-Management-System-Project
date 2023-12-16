@@ -2,15 +2,35 @@ const mongoose = require("mongoose");
 const UserSchema = require("./../Models/Users");
 const routerUsers = require("express").Router();
 const ObjectId = mongoose.Types.ObjectId;
+const bcrypt = require("bcryptjs");
+const multer = require("multer");
+const domain = process.env.DOMAIN || "http://localhost:3000";
+
+const storage = multer.diskStorage({
+  destination: (callback) => {
+     callback(null, "./images/users");
+  },
+  filename: (file, callback) => {
+     callback(null, `${Date.now()} - ${file.originalname}`);
+  }
+});
+
+const upload = multer({ storage: storage });
 
 routerUsers.get("/", async (req, res) => {
   try {
-    const { page, limit, orderBy } = req.query;
+    const { page, limit, orderBy, role } = req.query;
     const options = {
       page: parseInt(page, 10) || 1,
-      limit: parseInt(limit, 10) || 6,
+      limit: parseInt(limit, 10) || 6
     };
-    let users = await UserSchema.paginate({}, options);
+    let query = {deleted: false};
+    if (role === "vendors") {
+      query = { ...query ,role: "vendor" };
+    } else if (role === "client") {
+      query = { ...query , role: "client" };
+    }
+    let users = await UserSchema.paginate(query, options);
     if (orderBy) {
       users = users.sort({ [orderBy]: -1 });
     }
@@ -22,15 +42,25 @@ routerUsers.get("/", async (req, res) => {
   }
 });
 
-routerUsers.get("/allUsers", async (req, res) => {
+routerUsers.get("/allUsers/:role?", async (req, res) => {
   try {
     const { orderBy } = req.query;
+    const { role } = req.params;
+
+    let query = {deleted: false};
+
+    if (role === 'vendors') {
+      query = { ...query, role: 'vendor' };
+    } else if (role === 'clients') {
+      query = { ...query, role: 'client' };
+    }
+
     let users = [];
 
     if (orderBy) {
-      users = await UserSchema.find().sort({ [orderBy]: -1 });
+      users = await UserSchema.find(query).sort({ [orderBy]: -1 });
     } else {
-      users = await UserSchema.find();
+      users = await UserSchema.find(query);
     }
 
     const results = users;
@@ -74,9 +104,14 @@ routerUsers.get("/:email", async (req, res) => {
   }
 });
 
-routerUsers.post("/", async (req, res) => {
+routerUsers.post("/", upload.single("avatar"), async (req, res) => {
   try {
-    let user = new UserSchema(req.body);
+    const salt = await bcrypt.genSalt();
+    const hash = await bcrypt.hash(req.body.password, salt);
+    let user = new UserSchema({...req.body, password: hash});
+    if (req.file) {
+      user.avatar = `${domain}/images/users/${req.file.filename}`;
+    }
     await user.save();
     res.status(201).json(user);
   } catch (error) {
@@ -85,11 +120,24 @@ routerUsers.post("/", async (req, res) => {
   }
 });
 
-routerUsers.patch("/:email", async (req, res) => {
+routerUsers.patch("/:email", upload.single("avatar"), async (req, res) => {
   try {
     const usEmail = req.params.email;
     const newData = req.body;
-
+    if (newData.password) {
+      const match = await bcrypt.compare(password, newData.password);
+      if (!match) {
+         const salt = await bcrypt.genSalt();
+         const hash = await bcrypt.hash(password, salt);
+         newData.password = hash;
+      } else {
+        res.status(404).json(new Error('Wrong password cannot repeat same password'));
+        return;
+      }
+      if (req.file) {
+        newData.avatar = req.file.path;
+      }
+   }
     try {
       const updated = await UserSchema.findOneAndUpdate({ email: usEmail }, newData, { new: true });
       res.json(updated);
@@ -103,7 +151,7 @@ routerUsers.patch("/:email", async (req, res) => {
   }
 });
 
-routerUsers.patch("/:email/deleted", async (req, res) => {
+routerUsers.patch("/:email/deleted", upload.single("avatar"), async (req, res) => {
   try {
     const usEmail = req.params.email;
   
