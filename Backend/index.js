@@ -25,6 +25,10 @@ const userRouter = require("./Routes/Users");
 
 app.use("/users", userRouter); 
 
+const vendorRouter = require("./Routes/Vendors");
+
+app.use("/vendors", vendorRouter); 
+
 app.listen(app.get('port'), () => {
   console.log('server on port', app.get('port'));
 })
