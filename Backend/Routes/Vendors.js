@@ -3,7 +3,7 @@ const UserSchema = require("./../Models/Users");
 const routerVendors = require("express").Router();
 const ObjectId = mongoose.Types.ObjectId;
 
-routerVendors.get("/", async (req, res) => {
+routerVendors.get("/vendors", async (req, res) => {
   try {
     const { page, limit, orderBy } = req.query;
     const options = {
@@ -63,7 +63,7 @@ routerVendors.get("/search", async (req, res) => {
   }
 });
 
-routerVendors.get("/:email", async (req, res) => {
+routerVendors.get("/vendors/:email", async (req, res) => {
   try {
     let vendor = await UserSchema.findOne({ email: req.params.email });
     res.json(vendor);
@@ -123,6 +123,5 @@ routerVendors.patch("/:email/deleted", async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 });
-
 
 module.exports = routerVendors;
