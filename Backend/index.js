@@ -5,6 +5,8 @@ const cors = require("cors");
 
 //hola
 
+//cambio de Sergio
+
 try {
   mongoose.connect("mongodb://127.0.0.1:27017/businessDatabase");
 } catch (error) {
