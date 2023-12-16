@@ -1,6 +1,7 @@
-const { find, findByIdAndUpdate, deleteOne } = require("../Models/Users");
+const mongoose = require("mongoose"); 
 const UserSchema = require("./../Models/Users");
 const routerUsers = require("express").Router();
+const ObjectId = mongoose.Types.ObjectId;
 
 routerUsers.get("/", async (req, res) => {
   try {
@@ -21,49 +22,42 @@ routerUsers.get("/", async (req, res) => {
   }
 });
 
+routerUsers.get("/allUsers", async (req, res) => {
+  try {
+    const { orderBy } = req.query;
+    let users = [];
+
+    if (orderBy) {
+      users = await UserSchema.find().sort({ [orderBy]: -1 });
+    } else {
+      users = await UserSchema.find();
+    }
+
+    const results = users;
+    res.json(results);
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ message: error.message });
+  }
+});
+
 routerUsers.get("/search", async (req, res) => {
   try {
-    const name = req.query.term;
-    let users = await find();
-    users = users.filter(filterByTerm);
-    let filteredUser = "";
-    function filterByTerm(users) {
-      if (
-        users.filter((user) =>
-          user.name.toLowerCase().includes(name.toLowerCase())
-        )
-      ) {
-        return filteredUser;
-      } else if (
-        users.filter((user) =>
-          user.email.toLowerCase().includes(email.toLowerCase())
-        )
-      ) {
-        return filteredUser;
-      } else if (
-        users.filter((user) =>
-          user.lastName.toLowerCase().includes(lastName.toLowerCase())
-        )
-      ) {
-        return filteredUser;
-      } else if (
-        users.filter((user) =>
-          user.phone.toLowerCase().includes(phone.toLowerCase())
-        )
-      ) {
-        return filteredUser;
-      } else if (
-        users.filter((user) =>
-          user._id.toLowerCase().includes(_id.toLowerCase())
-        )
-      ) {
-        return filteredUser;
-      } else {
-        throw new Error("User not found");
-      }
+    const userData = req.query.term;
+    let filteredUser = [];
+    if (ObjectId.isValid(userData)) {
+      filteredUser = await UserSchema.find({ _id: new ObjectId(userData) });
+    } else {
+      filteredUser = await UserSchema.find({
+        $or: [
+          { name: userData.toLocaleLowerCase() },
+          { lastName: userData.toLocaleLowerCase() },
+          { email: userData.toLocaleLowerCase() },
+          { phone: userData}
+        ]
+      });
     }
-    filterByTerm(users);
-    res.json(filteredUser);
+    res.status(200).json(filteredUser);
   } catch (error) {
     console.log(error);
     res.status(500).json({ message: error.message });
@@ -72,7 +66,7 @@ routerUsers.get("/search", async (req, res) => {
 
 routerUsers.get("/:email", async (req, res) => {
   try {
-    let user = await find({ email: req.params.email });
+    let user = await UserSchema.findOne({ email: req.params.email });
     res.json(user);
   } catch (error) {
     console.log(error);
@@ -97,7 +91,7 @@ routerUsers.patch("/:email", async (req, res) => {
     const newData = req.body;
 
     try {
-      const updated = await findByIdAndUpdate(usEmail, newData, { new: true });
+      const updated = await UserSchema.findOneAndUpdate({ email: usEmail }, newData, { new: true });
       res.json(updated);
     } catch (error) {
       console.log(error);
@@ -109,14 +103,27 @@ routerUsers.patch("/:email", async (req, res) => {
   }
 });
 
-routerUsers.delete("/:email", async (req, res) => {
+routerUsers.patch("/:email/deleted", async (req, res) => {
   try {
-    const deleted = await deleteOne({ email: req.params.email });
-    res.json(deleted);
+    const usEmail = req.params.email;
+  
+    try {
+      const updated = await UserSchema.findOneAndUpdate({ email: usEmail }, { deleted: true }, { new: true });
+      
+      if (!updated) {
+        return res.status(404).json({ message: 'User not was updated' });
+      }
+      
+      res.json(updated);
+    } catch (error) {
+      console.log(error);
+      res.status(500).json({ message: error.message });
+    }
   } catch (error) {
     console.log(error);
     res.status(500).json({ message: error.message });
   }
 });
+
 
 module.exports = routerUsers;
