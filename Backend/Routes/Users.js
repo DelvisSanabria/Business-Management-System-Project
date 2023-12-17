@@ -7,10 +7,10 @@ const multer = require("multer");
 const domain = process.env.DOMAIN || "http://localhost:3000";
 
 const storage = multer.diskStorage({
-  destination: (callback) => {
+  destination: (req, file, callback) => {
      callback(null, "./images/users");
   },
-  filename: (file, callback) => {
+  filename: (req, file, callback) => {
      callback(null, `${Date.now()} - ${file.originalname}`);
   }
 });
