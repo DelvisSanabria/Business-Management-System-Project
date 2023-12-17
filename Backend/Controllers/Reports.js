@@ -27,7 +27,7 @@ reportsRouter.get("/:year/:month", async (req, res) => {
       {
         $group: {
           _id: null,
-          totalSales: { $sum: "$amount" },
+          totalSales: { $sum: 1 },
         }
       }
     ])
