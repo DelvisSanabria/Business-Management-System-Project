@@ -25,6 +25,10 @@ const userRouter = require("./Routes/Users");
 
 app.use("/users", userRouter); 
 
+const reportRouter = require("./Controllers/Reports");
+
+app.use("/reports", reportRouter);
+
 app.listen(app.get('port'), () => {
   console.log('server on port', app.get('port'));
 })
