@@ -18,7 +18,7 @@ productRouter.get("/", async (req, res) => {
    try {
       const {page, limit, search} = req.query;
       const options = {page: parseInt(page) || 1, limit: parseInt(limit) || 10};
-      let find = {Deleted: false};
+      let find = {deleted: false};
       if (search) {
          find = {
             $or: [
@@ -26,7 +26,7 @@ productRouter.get("/", async (req, res) => {
                { category: { $regex: search, $options: "i" } },
                { description: { $regex: search, $options: "i" } }
             ],
-            Deleted: false
+            deleted: false
          };
       }
       const products = await Products.paginate(find, options);

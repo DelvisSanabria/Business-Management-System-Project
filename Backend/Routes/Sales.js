@@ -7,7 +7,7 @@ saleRouter.get("/", async (req, res) => {
    try {
       const {page, limit, search} = req.query;
       const options = {page: parseInt(page) || 1, limit: parseInt(limit) || 10};
-      let find = { Deleted: false };
+      let find = { deleted: false };
       if (search) {
          find = {
             $or: [
@@ -15,14 +15,14 @@ saleRouter.get("/", async (req, res) => {
                { vendor: { $regex: search, $options: "i" } },
                { products: { $regex: search, $options: "i" } },
             ],
-            Deleted: false
+            deleted: false
          };
       }
       const sale = await Sales.paginate(find, options);
       return res.status(200).json(sale);
    } catch (error) {
       console.error(`${error.name}: ${error.message}`);
-      return res.status(405).json({error: error.name, message: error.message});
+      return res.status(405).json({name: error.name, message: error.message});
    }
 });
 
@@ -45,7 +45,7 @@ saleRouter.post("/", async (req, res) => {
       return res.status(201).json(sale);
    } catch (error) {
       console.error(`${error.name}: ${error.message}`);
-      return res.status(400).json({ error: error.name, message: error.message });
+      return res.status(400).json({ name: error.name, message: error.message });
    }
 });
 
@@ -59,7 +59,7 @@ saleRouter.patch("/:id", async (req, res) => {
       }
    } catch (error) {
       console.error(`${error.name}: ${error.message}`);
-      return res.status(404).json({error: error.name, message: error.message});
+      return res.status(404).json({name: error.name, message: error.message});
    }
 });
 
@@ -69,7 +69,7 @@ saleRouter.delete("/:id", async (req, res) => {
       return res.json(saleDeleted);
    } catch (error) {
       console.error(`${error.name}: ${error.message}`);
-      return res.status(404).json({error: error.name, message: error.message})
+      return res.status(404).json({name: error.name, message: error.message})
    }
 });
 
@@ -79,7 +79,7 @@ saleRouter.delete("/", async (req, res) => {
       return res.json(saleDeleted);
    } catch (error) {
       console.error(`${error.name}: ${error.message}`);
-      return res.status(404).json({error: error.name, message: error.message})
+      return res.status(404).json({name: error.name, message: error.message})
    }
 });
 
