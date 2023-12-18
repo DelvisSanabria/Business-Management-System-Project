@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const mongoosePaginate = require('mongoose-paginate-v2');
+
 const SaleSchema = new mongoose.Schema({
   client: {
     type: String,
@@ -11,7 +12,6 @@ const SaleSchema = new mongoose.Schema({
     type: String,
     minlength: 1,
     maxlength: 100,
-    required: true,
   },
   products: {
     type: Array,
@@ -49,6 +49,8 @@ SaleSchema.pre('save', function (next) {
   this.updateAt = new Date();
   next();
 });
+
+SaleSchema.plugin(mongoosePaginate);
 
 const Sales = mongoose.model("Sale", SaleSchema);
 
