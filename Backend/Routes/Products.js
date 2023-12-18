@@ -1,5 +1,5 @@
 const productRouter = require("express").Router();
-const { Products } = require("../Model/Products");
+const { Products } = require("../Models/Products");
 const multer = require("multer");
 const domain = process.env.DOMAIN || "http://localhost:3000";
 
