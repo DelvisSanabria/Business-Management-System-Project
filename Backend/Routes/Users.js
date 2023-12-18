@@ -1,5 +1,5 @@
 const mongoose = require("mongoose"); 
-const UserSchema = require("./../Models/Users");
+const UserSchema = require("./../Mockups/UsersMockup");
 const routerUsers = require("express").Router();
 const ObjectId = mongoose.Types.ObjectId;
 const bcrypt = require("bcryptjs");

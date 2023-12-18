@@ -29,6 +29,16 @@ const reportRouter = require("./Controllers/Reports");
 
 app.use("/reports", reportRouter);
 
+//only for controllers testing
+
+const saleRouter = require("./Mockups/ModelsMockups/Sales");
+
+app.use("/sales", saleRouter);
+
+const productRouter = require("./Mockups/ModelsMockups/Products");
+
+app.use("/products", productRouter);
+
 app.listen(app.get('port'), () => {
   console.log('server on port', app.get('port'));
 })

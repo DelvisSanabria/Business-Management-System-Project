@@ -1,4 +1,5 @@
 const SaleSchema = require("./../Models/Sales");
+const Product = require("./../Models/Products");
 const reportsRouter = require("express").Router();
 
 reportsRouter.get("/:year/:month", async (req, res) => {
@@ -18,8 +19,8 @@ reportsRouter.get("/:year/:month", async (req, res) => {
         $match: {
           $expr: {
             $and: [
-              { $eq: [{ $year: "$createdAt" }, yearValue] },
-              { $eq: [{ $month: "$createdAt" }, monthValue] },
+              { $eq:  [{ $year: { $toDate: "$createdAt" } }, yearValue] },
+              { $eq: [{ $month: { $toDate: "$createdAt" } }, monthValue] },
             ],
           },
         },
@@ -43,7 +44,7 @@ reportsRouter.get("/:year/:month", async (req, res) => {
       },
     ]);
   
-    if (reportData.length === 0) {
+    if (generalDataReportPerMonth.length === 0) {
       return res.status(404).json({ error: "No sales found for the specified month and year" });
     }
   
@@ -72,8 +73,8 @@ reportsRouter.get("/sellersReportMonthly/:year/:month", async (req, res) => {
         $match: {
           $expr: {
             $and: [
-              { $eq: [{ $year: "$createdAt" }, yearValue] },
-              { $eq: [{ $month: "$createdAt" }, monthValue] },
+              { $eq:  [{ $year: { $toDate: "$createdAt" } }, yearValue] },
+              { $eq: [{ $month: { $toDate: "$createdAt" } }, monthValue] },
             ],
           }, 
         }
@@ -98,7 +99,7 @@ reportsRouter.get("/sellersReportMonthly/:year/:month", async (req, res) => {
   }
 })
 
-reportsRouter.get("/sellersForCategoryReportMonthly/:year/:month", async (req, res) => {
+reportsRouter.get('/salesPerCategory/:year/:month', async (req, res) => {
   try {
     const year = req.params.year;
     const month = req.params.month;
@@ -109,47 +110,85 @@ reportsRouter.get("/sellersForCategoryReportMonthly/:year/:month", async (req, r
     const yearValue = typeof year !== 'undefined' ? parseInt(year) : currentYear;
     const monthValue = typeof month !== 'undefined' ? parseInt(month) : currentMonth;
 
-    const totalSalesForCategory = await SaleSchema.aggregate([
+
+
+    const salesPerCategory = await SaleSchema.aggregate([
       {
         $match: {
           $expr: {
             $and: [
-              { $eq: [{ $year: "$createdAt" }, yearValue] },
-              { $eq: [{ $month: "$createdAt" }, monthValue] },
+              { $eq:  [{ $year: { $toDate: "$createdAt" } }, yearValue] },
+              { $eq: [{ $month: { $toDate: "$createdAt" } }, monthValue] },
             ],
           }, 
         }
       },
       {
-        $unwind: "$products"
-      },
-      { $lookup: 
-        { 
-          from: "ProductSchema", localField: "products", foreignField: "_id", as: "product"
+        $unwind: {
+          path: "$products",
+          includeArrayIndex: "productIndex"
         }
       },
       {
-        $unwind: "$product"
+        $addFields: {
+          convertedProductId: {
+            $toObjectId: "$products"
+          }
+        }
       },
       {
-        $group: 
-        { 
-          _id: "$product.category", 
-          totalSales: { $sum: 1 } 
+        $lookup: {
+          from: "products",
+          localField: "convertedProductId",
+          foreignField: "_id",
+          as: "productData"
+        }
+      },
+      {
+        $unwind: "$productData"
+      },
+      {
+        $group: {
+          _id: "$productData.category",
+          totalSales: { $sum: 1 }
         }
       },
       {
         $project: {
-          "_id": 0,
-          "category": "$_id",
-          "totalSales": 1,
-        },
-      },
-    ])
-    res.status(200).json(totalSalesForCategory);
+          _id: 0,
+          category: "$_id",
+          totalSales: 1
+        }
+      }
+    ]);
+
+    const allCategories = await Product.distinct("category");
+    const totalSalesPerCategory = {};
+
+
+    allCategories.forEach(category => {
+      totalSalesPerCategory[category] = 0;
+    });
+
+
+    salesPerCategory.forEach(categorySales => {
+      totalSalesPerCategory[categorySales.category] = categorySales.totalSales;
+    });
+
+    const results = [];
+    allCategories.forEach(category => {
+      results.push({
+        category: category,
+        totalSales: totalSalesPerCategory[category]
+      });
+    });
+
+    res.status(200).json(results);
   } catch (error) {
-    throw new Error(error);
+    console.error(error);
+    res.status(500).json({ error });
   }
-})
+});
+
 
 module.exports = reportsRouter;
