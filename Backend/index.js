@@ -29,15 +29,10 @@ const reportRouter = require("./Controllers/Reports");
 
 app.use("/reports", reportRouter);
 
-//only for controllers testing
+const mailRouter = require("./Models/EmailSender");
 
-const saleRouter = require("./Mockups/ModelsMockups/Sales");
+app.use("/mailsender", mailRouter);
 
-app.use("/sales", saleRouter);
-
-const productRouter = require("./Mockups/ModelsMockups/Products");
-
-app.use("/products", productRouter);
 
 app.listen(app.get('port'), () => {
   console.log('server on port', app.get('port'));
