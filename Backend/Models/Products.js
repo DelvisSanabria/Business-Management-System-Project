@@ -1,7 +1,8 @@
 const mongoose = require('mongoose');
 const mongoosePaginate = require('mongoose-paginate-v2');
+
 const ProductSchema = new mongoose.Schema({
-  Img: {
+  imageURL: {
     type: String,
     minlength: 50,
     maxlength: 600,
@@ -11,6 +12,16 @@ const ProductSchema = new mongoose.Schema({
     type: String,
     minlength: 5,
     maxlength: 100,
+    required: true,
+  },
+  price: {
+    type: Number,
+    min: 0,
+    required: true,
+  },
+  stock: {
+    type: Number,
+    min: 0,
     required: true,
   },
   description: {
@@ -25,34 +36,23 @@ const ProductSchema = new mongoose.Schema({
     maxlength: 100,
     required: true,
   },
-  price: {
-    type: Number,
-    min: 0,
-    required: true,
-  },
-  quantity: {
-    type: Number,
-    min: 0,
-    required: true,
+  deleted: {
+    type: Boolean,
+    default: false,
   },
   createdAt: {
     type: Date,
-    default: Date.now(),
+    default: Date.now,
     required:true
   },
   updateAt: {
     type: Date,
-    default: Date.now(),
+    default: Date.now,
     required:true
-  },
-  deleted: {
-    type: Boolean,
-    default: false,
-    required: true
   }
 });
 
-ProductSchema.pre('save', function (next) {
+ProductSchema.pre("save", function (next) {
   this.updateAt = new Date();
   next();
 });

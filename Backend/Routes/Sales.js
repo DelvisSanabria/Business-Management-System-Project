@@ -3,83 +3,145 @@ const { Sales } = require("../Models/Sales");
 const { Products } = require("../Models/Products");
 const { Users } = require("../Models/Users");
 
+//Rutas GET
+
 saleRouter.get("/", async (req, res) => {
    try {
-      const {page, limit, search} = req.query;
-      const options = {page: parseInt(page) || 1, limit: parseInt(limit) || 10};
-      let find = { deleted: false };
-      if (search) {
-         find = {
+      let fields = {};
+      for (let field in req.query) {
+         if (req.query[field]) {
+            fields[field] = req.query[field];
+         }
+      }
+      const options = {page: parseInt(fields.page) || 1, limit: parseInt(fields.limit) || 10};
+      let query = {deleted: false};
+      if (fields.search) {
+         const search = fields.search.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+         query = {
+            ...query,
             $or: [
                { client: { $regex: search, $options: "i" } },
                { vendor: { $regex: search, $options: "i" } },
-               { products: { $regex: search, $options: "i" } },
-            ],
-            deleted: false
+               { products: { $regex: search, $options: "i" } }
+            ]
          };
       }
-      const sale = await Sales.paginate(find, options);
+      if (fields.vendor) {
+         query = {
+            ...query,
+            vendor: fields.vendor
+         };
+         if (fields.search) {
+            delete query.$or;
+            const search = fields.search.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+            query = {
+               ...query,
+               vendor: fields.vendor,
+               $or: [
+                  { client: { $regex: search, $options: "i" } },
+                  { products: { $regex: search, $options: "i" } }
+               ]
+            };
+         }
+      }
+      const sale = await Sales.paginate(query, options);
       return res.status(200).json(sale);
    } catch (error) {
       console.error(`${error.name}: ${error.message}`);
-      return res.status(405).json({name: error.name, message: error.message});
+      return res.status(405).json({error: error.name, message: error.message});
    }
 });
 
+//Rutas POST
+
 saleRouter.post("/", async (req, res) => {
    try {
-      const { clientID, vendorID, productsID} = req.body;
-      const client = await Users.findById(clientID);
-      const products = await Products.find({_id: { $in: productsID }});
-      let sale = new Sales({
-         ...req.body, 
-         client: client.client,
-         vendor: "N/A",
-         products: products.map(product => product.Name)
-      });
-      if (vendorID) {
-         const vendor = await Users.findById(vendorID);
-         sale.Vendor = `${vendor.Firstname} ${vendor.Lastname}`;
+      let { client, vendor, products} = req.body;
+      const Client = await Users.findOne({_id: client}, {email: 1});
+      const ProductsList = await Products.find({_id: { $in: products }}, {name: 1});
+      let sale;
+      if (Client && ProductsList) {
+         sale = new Sales({
+            ...req.body, 
+            client: Client.email,
+            vendor: "N/A",
+            products: ProductsList.map(product => product.name)
+         });
+      }
+      if (vendor) {
+         const Vendor = await Users.findOne({_id: vendor}, {email: 1});
+         sale.vendor = Vendor.email;
       }
       await sale.save();
       return res.status(201).json(sale);
    } catch (error) {
       console.error(`${error.name}: ${error.message}`);
-      return res.status(400).json({ name: error.name, message: error.message });
+      return res.status(400).json({ error: error.name, message: error.message });
    }
 });
 
-saleRouter.patch("/:id", async (req, res) => {
+//Rutas PATCH
+
+saleRouter.patch("/", async (req, res) => {
    try {
-      let sale = await Sales.findById(req.params.id);
-      if (sale) {
-         Object.assign(sale, req.body);
-         await sale.save();
-         return res.json(sale);
+      let fields = {};
+      for (let field in req.body) {
+         if (req.body[field]) {
+            fields[field] = req.body[field];
+         }
       }
+      const sale = await Sales.findById(fields.Id);
+      if (!sale) {
+         return res.status(404).json({error: "Venta no encontrada"});
+      }
+      //SOFT Delete
+      if (fields.deleted) {
+         sale.deleted = fields.deleted;
+         await sale.save();
+         return res.status(202).json(sale);
+      }
+      let errors = {};
+      for (const field in fields) {
+         if (fields[field] === sale[field]) {
+            errors[field] = "El nuevo valor debe ser distinto del anterior";
+         }
+      }
+      if (Object.keys(errors).length > 0) {
+         return res.status(400).json(errors);
+      }
+      Object.assign(sale, fields);
+      await sale.save();
+      return res.status(202).json(sale);
    } catch (error) {
       console.error(`${error.name}: ${error.message}`);
-      return res.status(404).json({name: error.name, message: error.message});
+      return res.status(404).json({error: error.name, message: error.message});
    }
 });
+
+//Rutas DELETE para las pruebas en la base de datos
 
 saleRouter.delete("/:id", async (req, res) => {
    try {
-      let saleDeleted = await Sales.deleteOne({_id:req.params.id});
+      let saleDeleted = await Sales.deleteOne({_id: req.params.id});
       return res.json(saleDeleted);
    } catch (error) {
       console.error(`${error.name}: ${error.message}`);
-      return res.status(404).json({name: error.name, message: error.message})
+      return res.status(404).json({error: error.name, message: error.message})
    }
 });
 
 saleRouter.delete("/", async (req, res) => {
    try {
-      let saleDeleted = await Sales.deleteMany({});
+      let saleDeleted;
+      if (Object.keys(req.query).length > 0) {
+         saleDeleted = await Sales.deleteMany(req.query);
+      } else {
+         saleDeleted = await Sales.deleteMany({});
+      }
       return res.json(saleDeleted);
    } catch (error) {
       console.error(`${error.name}: ${error.message}`);
-      return res.status(404).json({name: error.name, message: error.message})
+      return res.status(404).json({error: error.name, message: error.message})
    }
 });
 
