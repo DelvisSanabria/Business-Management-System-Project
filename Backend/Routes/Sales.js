@@ -1,7 +1,7 @@
 const saleRouter = require("express").Router();
-const { Sales } = require("../Models/Sales");
-const { Products } = require("../Models/Products");
-const { Users } = require("../Models/Users");
+const Sale = require("../Models/Sales");
+const Product = require("../Models/Products");
+const User = require("../Models/Users");
 
 //Rutas GET
 
@@ -13,10 +13,10 @@ saleRouter.get("/", async (req, res) => {
             fields[field] = req.query[field];
          }
       }
-      const options = {page: parseInt(fields.page) || 1, limit: parseInt(fields.limit) || 10};
+      const options = {page: parseInt(fields.page) || 1, limit: parseInt(fields.limit) || 6};
       let query = {deleted: false};
+      const search = fields.search.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
       if (fields.search) {
-         const search = fields.search.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
          query = {
             ...query,
             $or: [
@@ -33,7 +33,6 @@ saleRouter.get("/", async (req, res) => {
          };
          if (fields.search) {
             delete query.$or;
-            const search = fields.search.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
             query = {
                ...query,
                vendor: fields.vendor,
@@ -44,7 +43,7 @@ saleRouter.get("/", async (req, res) => {
             };
          }
       }
-      const sale = await Sales.paginate(query, options);
+      const sale = await Sale.paginate(query, options);
       return res.status(200).json(sale);
    } catch (error) {
       console.error(`${error.name}: ${error.message}`);
@@ -57,11 +56,11 @@ saleRouter.get("/", async (req, res) => {
 saleRouter.post("/", async (req, res) => {
    try {
       let { client, vendor, products} = req.body;
-      const Client = await Users.findOne({_id: client}, {email: 1});
-      const ProductsList = await Products.find({_id: { $in: products }}, {name: 1});
+      const Client = await User.findOne({_id: client}, {email: 1});
+      const ProductsList = await Product.find({_id: { $in: products }}, {name: 1});
       let sale;
       if (Client && ProductsList) {
-         sale = new Sales({
+         sale = new Sale({
             ...req.body, 
             client: Client.email,
             vendor: "N/A",
@@ -69,7 +68,7 @@ saleRouter.post("/", async (req, res) => {
          });
       }
       if (vendor) {
-         const Vendor = await Users.findOne({_id: vendor}, {email: 1});
+         const Vendor = await User.findOne({_id: vendor}, {email: 1});
          sale.vendor = Vendor.email;
       }
       await sale.save();
@@ -90,7 +89,7 @@ saleRouter.patch("/", async (req, res) => {
             fields[field] = req.body[field];
          }
       }
-      const sale = await Sales.findById(fields.Id);
+      const sale = await Sale.findById(fields.Id);
       if (!sale) {
          return res.status(404).json({error: "Venta no encontrada"});
       }
@@ -122,7 +121,7 @@ saleRouter.patch("/", async (req, res) => {
 
 saleRouter.delete("/:id", async (req, res) => {
    try {
-      let saleDeleted = await Sales.deleteOne({_id: req.params.id});
+      let saleDeleted = await Sale.deleteOne({_id: req.params.id});
       return res.json(saleDeleted);
    } catch (error) {
       console.error(`${error.name}: ${error.message}`);
@@ -134,9 +133,9 @@ saleRouter.delete("/", async (req, res) => {
    try {
       let saleDeleted;
       if (Object.keys(req.query).length > 0) {
-         saleDeleted = await Sales.deleteMany(req.query);
+         saleDeleted = await Sale.deleteMany(req.query);
       } else {
-         saleDeleted = await Sales.deleteMany({});
+         saleDeleted = await Sale.deleteMany({});
       }
       return res.json(saleDeleted);
    } catch (error) {

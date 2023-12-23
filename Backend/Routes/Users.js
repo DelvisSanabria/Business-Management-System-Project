@@ -1,5 +1,5 @@
 const mongoose = require("mongoose"); 
-const UserSchema = require("./../Mockups/UsersMockup");
+const User = require("../Models/Users");
 const routerUsers = require("express").Router();
 const ObjectId = mongoose.Types.ObjectId;
 const bcrypt = require("bcryptjs");
@@ -8,11 +8,11 @@ const domain = process.env.DOMAIN || "http://localhost:3000";
 
 const storage = multer.diskStorage({
   destination: (req, file, callback) => {
-     callback(null, "./images/users");
+    callback(null, "./images/users");
   },
   filename: (req, file, callback) => {
-     callback(null, `${Date.now()} - ${file.originalname}`);
-  }
+    callback(null, `${Date.now()}_${file.originalname.replace(/\s/g, "_")}`);
+ }
 });
 
 const upload = multer({ storage: storage });
@@ -30,7 +30,7 @@ routerUsers.get("/", async (req, res) => {
     } else if (role === "client") {
       query = { ...query , role: "client" };
     }
-    let users = await UserSchema.paginate(query, options);
+    let users = await User.paginate(query, options);
     if (orderBy) {
       users = users.sort({ [orderBy]: -1 });
     }
@@ -58,9 +58,9 @@ routerUsers.get("/allUsers/:role?", async (req, res) => {
     let users = [];
 
     if (orderBy) {
-      users = await UserSchema.find(query).sort({ [orderBy]: -1 });
+      users = await User.find(query).sort({ [orderBy]: -1 });
     } else {
-      users = await UserSchema.find(query);
+      users = await User.find(query);
     }
 
     const results = users;
@@ -76,9 +76,9 @@ routerUsers.get("/search", async (req, res) => {
     const userData = req.query.term;
     let filteredUser = [];
     if (ObjectId.isValid(userData)) {
-      filteredUser = await UserSchema.find({ _id: new ObjectId(userData) });
+      filteredUser = await User.find({ _id: new ObjectId(userData) });
     } else {
-      filteredUser = await UserSchema.find({
+      filteredUser = await User.find({
         $or: [
           { name: userData.toLocaleLowerCase() },
           { lastName: userData.toLocaleLowerCase() },
@@ -96,7 +96,7 @@ routerUsers.get("/search", async (req, res) => {
 
 routerUsers.get("/:email", async (req, res) => {
   try {
-    let user = await UserSchema.findOne({ email: req.params.email });
+    let user = await User.findOne({ email: req.params.email });
     res.json(user);
   } catch (error) {
     console.log(error);
@@ -108,7 +108,7 @@ routerUsers.post("/", upload.single("avatar"), async (req, res) => {
   try {
     const salt = await bcrypt.genSalt();
     const hash = await bcrypt.hash(req.body.password, salt);
-    let user = new UserSchema({...req.body, password: hash});
+    let user = new User({...req.body, password: hash});
     if (req.file) {
       user.avatar = `${domain}/images/users/${req.file.filename}`;
     }
@@ -139,7 +139,7 @@ routerUsers.patch("/:email", upload.single("avatar"), async (req, res) => {
       }
    }
     try {
-      const updated = await UserSchema.findOneAndUpdate({ email: usEmail }, newData, { new: true });
+      const updated = await User.findOneAndUpdate({ email: usEmail }, newData, { new: true });
       res.json(updated);
     } catch (error) {
       console.log(error);
@@ -156,7 +156,7 @@ routerUsers.patch("/:email/deleted", upload.single("avatar"), async (req, res) =
     const usEmail = req.params.email;
   
     try {
-      const updated = await UserSchema.findOneAndUpdate({ email: usEmail }, { deleted: true }, { new: true });
+      const updated = await User.findOneAndUpdate({ email: usEmail }, { deleted: true }, { new: true });
       
       if (!updated) {
         return res.status(404).json({ message: 'User not was updated' });

@@ -1,5 +1,5 @@
 const productRouter = require("express").Router();
-const { Products } = require("../Models/Products");
+const Product = require("../Models/Products");
 const multer = require("multer");
 const domain = process.env.DOMAIN || "http://localhost:3000";
 
@@ -8,7 +8,7 @@ const storage = multer.diskStorage({
       callback(null, "./images/products");
    },
    filename: (req, file, callback) => {
-      callback(null, `${Date.now()}_${file.originalname}`);
+      callback(null, `${Date.now()}_${file.originalname.replace(/\s/g, "_")}`);
    }
 });
 
@@ -24,7 +24,7 @@ productRouter.get("/", async (req, res) => {
             fields[field] = req.query[field];
          }
       }
-      const options = {page: parseInt(fields.page) || 1, limit: parseInt(fields.limit) || 10};
+      const options = {page: parseInt(fields.page) || 1, limit: parseInt(fields.limit) || 6};
       let query = {deleted: false};
       if (fields.search) {
          const search = fields.search.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
@@ -37,7 +37,7 @@ productRouter.get("/", async (req, res) => {
             ]
          };
       }
-      const products = await Products.paginate(query, options);
+      const products = await Product.paginate(query, options);
       return res.status(200).json(products);
    } catch (error) {
       console.error(`${error.name}: ${error.message}`);
@@ -49,7 +49,7 @@ productRouter.get("/", async (req, res) => {
 
 productRouter.post("/", upload.single("image"), async (req, res) => {
    try {
-      let product = new Products(req.body);
+      let product = new Product(req.body);
       if (req.file) {
          product.imageURL = `${domain}/images/products/${req.file.filename}`;
       }
@@ -64,7 +64,7 @@ productRouter.post("/", upload.single("image"), async (req, res) => {
 productRouter.post("/cart", async (req, res) => {
    let { products } = req.body;
    try {
-      const product = await Products.find({_id: {$in: products}});
+      const product = await Product.find({_id: {$in: products}});
       if (product) {
          return res.status(200).json(product);
       } else {
@@ -86,7 +86,7 @@ productRouter.patch("/", async (req, res) => {
             fields[field] = req.body[field];
          }
       }
-      const product = await Products.findById(fields.Id);
+      const product = await Product.findById(fields.Id);
       if (!product) {
          return res.status(404).json({ error: "Producto no encontrado" });
       }
@@ -118,7 +118,7 @@ productRouter.patch("/", async (req, res) => {
 
 productRouter.delete("/:id", async (req, res) => {
    try {
-      let productDeleted = await Products.deleteOne({_id: req.params.id});
+      let productDeleted = await Product.deleteOne({_id: req.params.id});
       return res.json(productDeleted);
    } catch (error) {
       console.error(`${error.name}: ${error.message}`);
@@ -130,9 +130,9 @@ productRouter.delete("/", async (req, res) => {
    try {
       let productDeleted;
       if (Object.keys(req.query).length > 0) {
-         productDeleted = await Products.deleteMany(req.query);
+         productDeleted = await Product.deleteMany(req.query);
       } else {
-         productDeleted = await Products.deleteMany({});
+         productDeleted = await Product.deleteMany({});
       }
       return res.json(productDeleted);
    } catch (error) {

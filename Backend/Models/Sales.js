@@ -55,6 +55,6 @@ SaleSchema.pre("save", function (next) {
 SaleSchema.plugin(mongoosePaginate);
 SaleSchema.plugin(aggregatePaginate);
 
-const Sales = mongoose.model("Sale", SaleSchema);
+const Sale = mongoose.model("Sale", SaleSchema);
 
-module.exports = Sales
+module.exports = Sale;

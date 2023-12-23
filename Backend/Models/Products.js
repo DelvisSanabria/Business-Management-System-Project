@@ -59,6 +59,6 @@ ProductSchema.pre("save", function (next) {
 
 ProductSchema.plugin(mongoosePaginate);
 
-const Products = mongoose.model("Products", ProductSchema);
+const Product = mongoose.model("Product", ProductSchema);
 
-module.exports = Products
+module.exports = Product;

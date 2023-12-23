@@ -6,7 +6,7 @@ const userRouter = require("./Routes/Users");
 const productRouter = require("./Routes/Products");
 const saleRouter = require("./Routes/Sales");
 const reportRouter = require("./Controllers/Reports");
-const mailRouter = require("./Models/EmailSender");
+/* const mailRouter = require("./Models/EmailSender"); */
 const corsOptions = {
   origin: "*",
 };
@@ -32,7 +32,7 @@ app.use("/users", userRouter);
 app.use("/products", productRouter);
 app.use("/sales", saleRouter);
 app.use("/reports", reportRouter);
-app.use("/mailsender", mailRouter);
+/* app.use("/mailsender", mailRouter); */
 
 
 //puerto

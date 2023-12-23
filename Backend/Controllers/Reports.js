@@ -1,4 +1,4 @@
-const SaleSchema = require("./../Models/Sales");
+const Sales = require("./../Models/Sales");
 const Product = require("./../Models/Products");
 const reportsRouter = require("express").Router();
 
@@ -14,7 +14,7 @@ reportsRouter.get("/:year/:month", async (req, res) => {
     const yearValue = typeof year !== 'undefined' ? parseInt(year) : currentYear;
     const monthValue = typeof month !== 'undefined' ? parseInt(month) : currentMonth;
 
-    const generalDataReportPerMonth = await SaleSchema.aggregate([
+    const generalDataReportPerMonth = await Sales.aggregate([
       {
         $match: {
           $expr: {
@@ -68,7 +68,7 @@ reportsRouter.get("/sellersReportMonthly/:year/:month", async (req, res) => {
     const yearValue = typeof year !== 'undefined' ? parseInt(year) : currentYear;
     const monthValue = typeof month !== 'undefined' ? parseInt(month) : currentMonth;
 
-    const totalSalesVendors = await SaleSchema.aggregate([
+    const totalSalesVendors = await Sales.aggregate([
       {
         $match: {
           $expr: {
@@ -112,7 +112,7 @@ reportsRouter.get('/salesPerCategory/:year/:month', async (req, res) => {
 
 
 
-    const salesPerCategory = await SaleSchema.aggregate([
+    const salesPerCategory = await Sales.aggregate([
       {
         $match: {
           $expr: {
@@ -199,14 +199,14 @@ reportsRouter.get("/salesPerDay", async (req, res) => {
       }
     }
     const { year, month, day } = fields;
-    const options = {page: parseInt(fields.page) || 1, limit: parseInt(fields.limit) || 10};
+    const options = {page: parseInt(fields.page) || 1, limit: parseInt(fields.limit) || 6};
 
     let newAggregate = Sales.aggregate();
     if (day && month && year) {
       newAggregate.match({
         createdAt: {
-          $gte: new Date(year, month - 1, day - 1, 20, 0, 0),
-          $lt: new Date(year, month - 1, day, 20, 0, 0)
+          $gte: new Date(year, month - 1, day),
+          $lt: new Date(year, month - 1, day + 1)
         }
       }).group({
         _id: {
