@@ -3,6 +3,7 @@ const emailRouter = require("express").Router();
 
 const contraseñaparanodemailer = "bvzf otiz jnbo zybt"
 
+
 const transporter = nodemailer.createTransport({
   host: "smtp.gmail.com",
   port: 465,
@@ -27,9 +28,9 @@ emailRouter.post("/", async (req, res) => {
   transporter.sendMail(info, (error, info) => {
     if (error) {
       console.log(error);
-      res.status(500).send('a error has occurred.');
+      res.status(500).send("a error has occurred.");
     } else {
-      res.status(200).send('email send successfully');
+      res.status(200).send("email send successfully");
     }
   });
 })
