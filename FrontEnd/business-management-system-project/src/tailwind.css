@@ -1,0 +1,18 @@
+@import 'tailwindcss/base';
+@import 'tailwindcss/components';
+@import 'tailwindcss/utilities';
+
+@layer components {
+   body {
+      @apply text-[18px]
+   }
+   .navbutton {
+      @apply flex items-center justify-center gap-[12px] text-[#637381] h-[48px] border-b-[1px] border-l-[1px] border-[#9BA4B4]
+   }
+   .error {
+      @apply absolute -bottom-[5px] text-[0.8em] [color:_rgb(255,0,0)]
+   }
+   #search {
+      @apply text-[#14274E] bg-[#F1F6F9] indent-[10px]
+   }
+}
