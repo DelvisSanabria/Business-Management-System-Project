@@ -12,7 +12,7 @@ function App() {
             {/* <Route path="addProduct" element={<Page.AddProduct />} />
             <Route path="editProduct/:id" element={<Page.EditProduct />} />
             <Route path="viewProduct/:id" element={<Page.ViewProduct />} /> */}
-            <Route path="Cart" element={<Page.Cart />} />
+            <Route path="cart" element={<Page.Cart />} />
           </Route>
           <Route path="users" element={<Page.Users />}>
             {/* <Route path="addUser" element={<Page.AddUser />} />
