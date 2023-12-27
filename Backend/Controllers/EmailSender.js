@@ -1,4 +1,4 @@
-import nodemailer from "nodemailer";
+const nodemailer = require("nodemailer");
 const emailRouter = require("express").Router();
 
 const contraseñaparanodemailer = "bvzf otiz jnbo zybt"

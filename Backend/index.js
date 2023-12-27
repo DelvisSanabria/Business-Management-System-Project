@@ -6,7 +6,7 @@ const userRouter = require("./Routes/Users");
 const productRouter = require("./Routes/Products");
 const saleRouter = require("./Routes/Sales");
 const reportRouter = require("./Controllers/Reports");
-const mailRouter = require("./Models/EmailSender"); 
+const mailRouter = require("./Controllers/EmailSender"); 
 const corsOptions = {
   origin: "*",
 };

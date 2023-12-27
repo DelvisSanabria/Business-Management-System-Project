@@ -1,5 +1,5 @@
 import { createContext } from "react";
 
-const Session = createContext();
+const UserSession = createContext();
 
-export default Session;
+export default UserSession;

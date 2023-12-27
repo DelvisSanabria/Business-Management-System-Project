@@ -80,7 +80,7 @@ export default function MenuBox(){
       setSessionIcon(<Login currentColor={Session}/>)
     }
 
-    let userRole = "";
+    let userRole = "admin";
 
     try {
       const parsedUser = JSON.parse(user);
@@ -146,7 +146,7 @@ export default function MenuBox(){
         {MenuItems.map((page, index) => (
     <Link
       key={page.name}
-      to={`http://localhost:5174${page.path}`}
+      to={`http://localhost:5173${page.path}`}
       onClick={() => {handleActive(page)}}
       className={`grid grid-cols-[29px_1fr] gap-2 justify-items-start content-center h-[48px] top-0 border-b [border-bottom-style:solid] border-[#9ba4b4] w-[183px] left-0 ${
         activeTab === page.name ? "bg-[#d6dfff]" : "bg-[#f1f6f9]"
