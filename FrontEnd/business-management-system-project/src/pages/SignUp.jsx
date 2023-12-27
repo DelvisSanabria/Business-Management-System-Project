@@ -6,6 +6,7 @@ import { polar, camera, blueBg, polarSede } from "../images/exports";
 function SignUp() {
    const server = "http://localhost:3000";
    const [user, setUser] = useState({
+      avatar: "",
       firstname: "",
       lastname: "",
       phone: "",
