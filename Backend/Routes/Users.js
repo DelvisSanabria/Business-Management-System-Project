@@ -1,4 +1,4 @@
-const mongoose = require("mongoose"); 
+const mongoose = require("mongoose");
 const User = require("../Models/Users");
 const routerUsers = require("express").Router();
 const ObjectId = mongoose.Types.ObjectId;
@@ -12,7 +12,7 @@ const storage = multer.diskStorage({
   },
   filename: (req, file, callback) => {
     callback(null, `${Date.now()}_${file.originalname.replace(/\s/g, "_")}`);
- }
+  }
 });
 
 const upload = multer({ storage: storage });
@@ -24,11 +24,11 @@ routerUsers.get("/", async (req, res) => {
       page: parseInt(page, 10) || 1,
       limit: parseInt(limit, 10) || 6
     };
-    let query = {deleted: false};
+    let query = { deleted: false };
     if (role === "vendors") {
-      query = { ...query ,role: "vendor" };
+      query = { ...query, role: "vendor" };
     } else if (role === "client") {
-      query = { ...query , role: "client" };
+      query = { ...query, role: "client" };
     }
     let users = await User.paginate(query, options);
     if (orderBy) {
@@ -47,7 +47,7 @@ routerUsers.get("/allUsers/:role?", async (req, res) => {
     const { orderBy } = req.query;
     const { role } = req.params;
 
-    let query = {deleted: false};
+    let query = { deleted: false };
 
     if (role === 'vendors') {
       query = { ...query, role: 'vendor' };
@@ -83,7 +83,7 @@ routerUsers.get("/search", async (req, res) => {
           { name: userData.toLocaleLowerCase() },
           { lastName: userData.toLocaleLowerCase() },
           { email: userData.toLocaleLowerCase() },
-          { phone: userData}
+          { phone: userData }
         ]
       });
     }
@@ -94,29 +94,47 @@ routerUsers.get("/search", async (req, res) => {
   }
 });
 
-routerUsers.get("/:email", async (req, res) => {
+routerUsers.post("/signup", upload.single("avatar"), async (req, res) => {
   try {
-    let user = await User.findOne({ email: req.params.email });
-    res.json(user);
+    const { email } = req.body;
+    let user = await User.findOne({ email: email });
+    if (user) {
+      return res.status(409).json({ email: "Correo ya registrado" });
+    }
+    else {
+      const salt = await bcrypt.genSalt();
+      const hash = await bcrypt.hash(req.body.password, salt);
+      user = new User({ ...req.body, password: hash });
+      if (req.file) {
+        user.imageURL = `${domain}/images/users/${req.file.filename}`;
+      }
+      await user.save();
+      return res.status(201).json(user);
+    }
   } catch (error) {
-    console.log(error);
-    res.status(500).json({ message: error.message });
+    console.error(`${error.name}: ${error.message}`);
+    return res.status(400).json({ name: error.name, message: error.message });
   }
 });
 
-routerUsers.post("/", upload.single("avatar"), async (req, res) => {
+routerUsers.post("/login", async (req, res) => {
   try {
-    const salt = await bcrypt.genSalt();
-    const hash = await bcrypt.hash(req.body.password, salt);
-    let user = new User({...req.body, password: hash});
-    if (req.file) {
-      user.avatar = `${domain}/images/users/${req.file.filename}`;
+    const { email, password } = req.body;
+    let user = await User.findOne({ email: email });
+    if (user) {
+      const match = await bcrypt.compare(password, user.password);
+      if (match) {
+        const { _id, firstname, lastname, email, role } = user;
+        return res.status(200).json({ _id, firstname, lastname, email, role });
+      } else {
+        return res.status(406).json({ password: "La contraseña es incorrecta" });
+      }
+    } else {
+      return res.status(404).json({ email: "Correo no registrado" });
     }
-    await user.save();
-    res.status(201).json(user);
   } catch (error) {
-    console.log(error);
-    res.status(500).json({ message: error.message });
+    console.error(`${error.name}: ${error.message}`);
+    return res.status(404).json({ name: error.name, message: error.message });
   }
 });
 
@@ -127,9 +145,9 @@ routerUsers.patch("/:email", upload.single("avatar"), async (req, res) => {
     if (newData.password) {
       const match = await bcrypt.compare(password, newData.password);
       if (!match) {
-         const salt = await bcrypt.genSalt();
-         const hash = await bcrypt.hash(password, salt);
-         newData.password = hash;
+        const salt = await bcrypt.genSalt();
+        const hash = await bcrypt.hash(password, salt);
+        newData.password = hash;
       } else {
         res.status(404).json(new Error('Wrong password cannot repeat same password'));
         return;
@@ -137,7 +155,7 @@ routerUsers.patch("/:email", upload.single("avatar"), async (req, res) => {
       if (req.file) {
         newData.avatar = req.file.path;
       }
-   }
+    }
     try {
       const updated = await User.findOneAndUpdate({ email: usEmail }, newData, { new: true });
       res.json(updated);
@@ -154,14 +172,14 @@ routerUsers.patch("/:email", upload.single("avatar"), async (req, res) => {
 routerUsers.patch("/:email/deleted", upload.single("avatar"), async (req, res) => {
   try {
     const usEmail = req.params.email;
-  
+
     try {
       const updated = await User.findOneAndUpdate({ email: usEmail }, { deleted: true }, { new: true });
-      
+
       if (!updated) {
         return res.status(404).json({ message: 'User not was updated' });
       }
-      
+
       res.json(updated);
     } catch (error) {
       console.log(error);

@@ -10,6 +10,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "axios": "^1.6.3",
     "hamburger-react": "^2.5.0",
     "keep-react": "^1.1.0",
     "localforage": "^1.10.0",
