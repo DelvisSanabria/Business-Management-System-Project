@@ -12,6 +12,7 @@ function SignUp() {
       phone: "",
       email: "",
       password: "",
+      role: "client",
       address: ""
    });
    const [error, setError] = useState({
@@ -145,7 +146,7 @@ function SignUp() {
       }
       button.current.disabled = !isValid;
       setError(errors);
-      setUser(user);
+      setUser((prev) => ({...prev, ...user}));
    }
    useEffect(() => {
       handleValidation();
