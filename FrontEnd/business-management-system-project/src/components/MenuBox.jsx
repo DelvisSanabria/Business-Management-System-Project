@@ -83,8 +83,8 @@ export default function MenuBox(){
     let userRole = "admin";
 
     try {
-      const parsedUser = JSON.parse(user);
-      userRole = parsedUser.role;
+      /* const parsedUser = JSON.parse(user);
+      userRole = parsedUser.role; */
     } catch (error) {
       console.error("an error occurred while parsing the user", error);
     }

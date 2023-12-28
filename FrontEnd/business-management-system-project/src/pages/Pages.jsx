@@ -1,7 +1,7 @@
 /* eslint-disable react/prop-types */
 import Layout from './../components/Layout'
 import Home from './Home.jsx'
-import Login from './Login'
+import LogIn from './LogIn'
 import Products from './Products.jsx'
 /* import AddProduct from './AddProduct.jsx'
 import EditProduct from './EditProduct.jsx'
@@ -23,14 +23,14 @@ import Contact from './ContactUs.jsx'
 import Reports from './Reports.jsx'
 import Cart from './Cart.jsx'
 import NoPage from './NoPage.jsx'
-import Register from './Register.jsx'
+import SignUp from './SignUp.jsx'
 import Profile from './Profile.jsx'
 import MakeSale from './MakeSale.jsx'
 
 export {
   Layout,
   Home,
-  Login,
+  LogIn,
   Products,
   /* AddProduct,
   EditProduct,
@@ -52,7 +52,7 @@ export {
   Reports,
   Cart,
   NoPage,
-  Register,
+  SignUp,
   Profile,
   MakeSale,
 }

@@ -4,7 +4,7 @@ const routerUsers = require("express").Router();
 const ObjectId = mongoose.Types.ObjectId;
 const bcrypt = require("bcryptjs");
 const multer = require("multer");
-const domain = process.env.DOMAIN || "http://localhost:3000";
+const domain = process.env.DOMAIN || "http://localhost:3001";
 
 const storage = multer.diskStorage({
   destination: (req, file, callback) => {
@@ -22,20 +22,19 @@ routerUsers.get("/", async (req, res) => {
     const { page, limit, orderBy, role } = req.query;
     const options = {
       page: parseInt(page, 10) || 1,
-      limit: parseInt(limit, 10) || 6
+      limit: parseInt(limit, 10) || 6,
+      sort: { createdAt: orderBy === "asc" ? 1 : -1 },
+      customLabels: { docs: "users", totalDocs: "count" }
     };
-    let query = {deleted: false};
+    let query = { deleted: false };
     if (role === "vendors") {
-      query = { ...query ,role: "vendor" };
+      query = { ...query, role: "vendor" };
     } else if (role === "client") {
-      query = { ...query , role: "client" };
+      query = { ...query, role: "client" };
     }
     let users = await User.paginate(query, options);
-    if (orderBy) {
-      users = users.sort({ [orderBy]: -1 });
-    }
-    const results = users;
-    res.json(results);
+
+    res.json(users);
   } catch (error) {
     console.log(error);
     res.status(500).json({ message: error.message });
@@ -124,23 +123,24 @@ routerUsers.patch("/:email", upload.single("avatar"), async (req, res) => {
   try {
     const usEmail = req.params.email;
     const newData = req.body;
-    if (newData.password) {
-      const match = await bcrypt.compare(password, newData.password);
-      if (!match) {
-         const salt = await bcrypt.genSalt();
-         const hash = await bcrypt.hash(password, salt);
-         newData.password = hash;
-      } else {
-        res.status(404).json(new Error('Wrong password cannot repeat same password'));
-        return;
+    try {
+      const user = await User.findOne({ email: usEmail });
+      if (!user) {
+        return res.status(404).json({ message: "No se encontró un usuario con ese correo" });
+      }
+      if (newData.password) {
+        const match = await bcrypt.compare(newData.password, user.password);
+        if (!match) {
+          const salt = await bcrypt.genSalt();
+          const hash = await bcrypt.hash(newData.password, salt);
+          newData.password = hash;
+        }
       }
       if (req.file) {
         newData.avatar = req.file.path;
       }
-   }
-    try {
       const updated = await User.findOneAndUpdate({ email: usEmail }, newData, { new: true });
-      res.json(updated);
+      res.status(201).json(updated);
     } catch (error) {
       console.log(error);
       res.status(500).json({ message: error.message });

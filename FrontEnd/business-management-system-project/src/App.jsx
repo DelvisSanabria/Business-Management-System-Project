@@ -6,6 +6,8 @@ function App() {
   return (
     <BrowserRouter>
       <Routes>
+        <Route path="login" element={<Page.LogIn />} />  
+        <Route path="register" element={<Page.SignUp />} />
         <Route path="/" element={<Page.Layout />}>
           <Route path='/' element={<Page.Home />} />
           <Route path="products" element={<Page.Products />}>
@@ -32,8 +34,6 @@ function App() {
           </Route>
           <Route path="makeSale" element={<Page.MakeSale />} />
           <Route path="settings" element={<Page.Settings />} />
-          <Route path="login" element={<Page.Login />} />
-          <Route path="register" element={<Page.Register />} />
           <Route path="profile" element={<Page.Profile />} />
           <Route path="contactUs" element={<Page.Contact />} />
           <Route path="reports" element={<Page.Reports />} />

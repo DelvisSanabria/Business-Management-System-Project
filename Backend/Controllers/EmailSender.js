@@ -35,3 +35,4 @@ emailRouter.post("/", async (req, res) => {
   });
 })
 
+module.exports = emailRouter

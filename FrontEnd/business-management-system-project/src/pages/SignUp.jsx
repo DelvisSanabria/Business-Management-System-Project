@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import axios from "axios";
 import { useNavigate, Link } from "react-router-dom";
-import { polar, camera, blueBg, polarSede } from "../Components/exports";
+import { polar, camera, blueBg, polarSede } from "./../components/exports";
 
 function SignUp() {
    const server = "http://localhost:3001";
@@ -273,6 +273,6 @@ function SignUp() {
          <img className="z-0 absolute bottom-0 min-[1440px]:hidden" src={blueBg} alt="background" />
       </section>
    );
-};
+}
 
 export default SignUp;
