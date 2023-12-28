@@ -4,7 +4,7 @@ const mongoosePaginate = require('mongoose-paginate-v2');
 const UserSchema = new mongoose.Schema({
   avatar: {
     type: String,
-    minlength: 10,
+    minlength: 5,
     maxlength: 600,
     required: true,
   },

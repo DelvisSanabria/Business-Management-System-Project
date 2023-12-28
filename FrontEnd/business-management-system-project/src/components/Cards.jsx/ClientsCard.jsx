@@ -12,6 +12,7 @@ const ClientsCard = ({ isOpen,type, onClose,clientEmail}) => {
 
   const server = "http://localhost:3001";
    const [user, setUser] = useState({
+      avatar:"",
       name: "",
       lastName: "",
       phone: "",
@@ -60,17 +61,19 @@ const ClientsCard = ({ isOpen,type, onClose,clientEmail}) => {
    
    const handleSubmit = async () => {
       try {
+        
          const formdata = new FormData();
          for (const prop in user) {
             formdata.append(prop, user[prop]);
          }
          
-         const response = await axios.patch(`${server}/users/${clientEmail}`, formdata, {
+         const response = await axios.post(`${server}/users`, formdata, {
             headers: {
                "Content-Type": "multipart/form-data"
             }
          });
          if (response.status === 201) {
+            console.log(user)
             setInput({
                avatar: "",
                name: "",
@@ -82,9 +85,9 @@ const ClientsCard = ({ isOpen,type, onClose,clientEmail}) => {
                address: "",
                role: "client"
             })
-            setStatusMsg("El usuario se ha editado correctamente");
+            setStatusMsg("El usuario se ha creado correctamente");
          }else if (response.status === 500) {
-            setStatusMsg("Error al editar el usuario");
+            setStatusMsg("Error al crear el usuario");
          }
       } catch ({name, message, response}) {
          if (response.data.email) {
@@ -93,6 +96,47 @@ const ClientsCard = ({ isOpen,type, onClose,clientEmail}) => {
          console.error(`${name}: ${message}`);
       }
    }
+
+   const handleUpdate = async () => {
+     try {
+       const formdata = new FormData();
+       for (const prop in user) {
+         formdata.append(prop, user[prop]);
+       }
+
+       const response = await axios.patch(
+         `${server}/users/${clientEmail}`,
+         formdata,
+         {
+           headers: {
+             "Content-Type": "multipart/form-data",
+           },
+         }
+       );
+       if (response.status === 201) {
+         setInput({
+           avatar: "",
+           name: "",
+           lastName: "",
+           phone: "",
+           email: "",
+           password: "",
+           repPassword: "",
+           address: "",
+           role: "client",
+         });
+         setStatusMsg("El usuario ha sido editado correctamente");
+       } else if (response.status === 500) {
+         setStatusMsg("Error al editar el usuario");
+       }
+     } catch ({ name, message, response }) {
+       if (response.data.email) {
+         setError((prev) => ({ ...prev, email: response.data.email }));
+       }
+       console.error(`${name}: ${message}`);
+     }
+   };
+
    const handleChange = (event) => {
       const { name, value } = event.target;
       setInput((prev) => ({...prev, [name]: value }));
@@ -138,11 +182,10 @@ const ClientsCard = ({ isOpen,type, onClose,clientEmail}) => {
           user = { ...user, [field]: input[field] };
         }
       } else if (field === "avatar") {
-        if (inputFile.current && inputFile.current.files.length > 0) {
+        if (input[field] && inputFile.current && inputFile.current.files.length > 0) {
           const file = inputFile.current.files[0];
           switch (file.type) {
-            case "image/jpeg":
-            case "image/png":
+            case "image/*":
               user = { ...user, avatar: file };
               errors = { ...errors, avatar: "" };
               break;
@@ -154,8 +197,6 @@ const ClientsCard = ({ isOpen,type, onClose,clientEmail}) => {
         } else {
           isValid = false;
         }
-      } else {
-        isValid = false;
       }
     }
     
@@ -205,7 +246,6 @@ const ClientsCard = ({ isOpen,type, onClose,clientEmail}) => {
 
    useEffect(() => {
      getClient(clientEmail)
-     console.log(previousDates)
    // eslint-disable-next-line react-hooks/exhaustive-deps
    }, [clientEmail])
 
@@ -215,27 +255,42 @@ const ClientsCard = ({ isOpen,type, onClose,clientEmail}) => {
         <motion.div className="fixed inset-0  bg-black bg-opacity-50 flex items-center justify-center z-50">
           <div className="bg-white p-6 rounded-lg overflow-auto h-[95vh] w-[460px]">
             <form className="z-10 flex flex-col justify-center items-center gap-[21px]   rounded-[20px]">
-            <div className="relative grid grid-cols-[1fr_30px]">
+              <div className="relative grid grid-cols-[1fr_30px]">
                 <div>
                   <p className="text-[24px] border-[#E7E7E7] border-b-[1px] text-center w-full">
                     Crear nuevo Cliente
                   </p>
                 </div>
-                <div onClick={onClose} className="absolute top-0 right-[-100px] flex px-4 hover:text-white hover:bg-red-500 rounded-[8px] border border-[#394867]">
-                  <button className="text-[#394867] w-[20px]   font-bold rounded" >X</button>
+                <div
+                  onClick={() => {
+                    onClose();
+                    setStatusMsg("");
+                  }}
+                  className="absolute top-0 right-[-100px] flex px-4 hover:text-white hover:bg-red-500 rounded-[8px] border border-[#394867]"
+                >
+                  <button className="text-[#394867] w-[20px]   font-bold rounded">
+                    X
+                  </button>
                 </div>
-            </div>
+              </div>
               {statusMsg && (
-                <div className={`${statusMsg == "El usuario se ha creado correctamente" ? "bg-green-200 text-green-500 p-3" : "bg-red-200 text-red-500 p-3"}`}>
+                <div
+                  className={`${
+                    statusMsg == "El usuario se ha creado correctamente"
+                      ? "bg-green-200 text-green-500 p-3"
+                      : "bg-red-200 text-red-500 p-3"
+                  }`}
+                >
                   <span>{statusMsg}</span>
                 </div>
               )}
               <div className="frame flex flex-col gap-[15px] px-4 w-full">
                 <div className="flex justify-center">
-                  <figure onClick={() => inputFile.current.click()} className="cursor-pointer relative rounded-full bg-[#E7E7E7] w-[125px] h-[125px] shadow-sm">
-                    <div
-                      className="absolute bottom-0 flex justify-center items-center w-[35px] h-[35px] rounded-full bg-[#FFFFFF] border-[1px] border-[#E7E7E7]"
-                    >
+                  <figure
+                    onClick={() => inputFile.current.click()}
+                    className="cursor-pointer relative rounded-full bg-[#E7E7E7] w-[125px] h-[125px] shadow-sm"
+                  >
+                    <div className="absolute bottom-0 flex justify-center items-center w-[35px] h-[35px] rounded-full bg-[#FFFFFF] border-[1px] border-[#E7E7E7]">
                       <img className="w-[25px]" src={"camera"} alt="camara" />
                     </div>
                     <input
@@ -244,7 +299,7 @@ const ClientsCard = ({ isOpen,type, onClose,clientEmail}) => {
                       id="avatar"
                       type="file"
                       name="avatar"
-                      accept="image/jpeg, image/png"
+                      accept="image/*"
                       onChange={handleValidation}
                     />
                     <div className="p-3 absolute top-0 right-0">
@@ -256,14 +311,15 @@ const ClientsCard = ({ isOpen,type, onClose,clientEmail}) => {
                   <span className="error">{error.avatar}</span>
                 </div>
                 <div className="grid grid-cols-2 gap-2">
-                  <div >
+                  <div>
                     <label
                       className="text-[16px] text-[#394867]"
                       htmlFor="name"
                     >
                       Nombre:
                     </label>
-                    <input className="hidden"
+                    <input
+                      className="hidden"
                       id="role"
                       type="text"
                       name="role"
@@ -279,7 +335,9 @@ const ClientsCard = ({ isOpen,type, onClose,clientEmail}) => {
                       onChange={handleChange}
                     />
                     <div className="relative">
-                      <span className="error text-[14px] text-red-500">{error.name}</span>
+                      <span className="error text-[14px] text-red-500">
+                        {error.name}
+                      </span>
                     </div>
                   </div>
                   <div>
@@ -290,22 +348,31 @@ const ClientsCard = ({ isOpen,type, onClose,clientEmail}) => {
                       Apellido:
                     </label>
                     <input
-                      className={`data outline-none px-3 py-1 border w-[160px] border-[#394867] rounded-[5px] ${error.lastName ? "border-[#DC3545]" : ""}`}
+                      className={`data outline-none px-3 py-1 border w-[160px] border-[#394867] rounded-[5px] ${
+                        error.lastName ? "border-[#DC3545]" : ""
+                      }`}
                       id="lastName"
                       type="text"
                       name="lastName"
                       onChange={handleChange}
                     />
                     <div className="relative">
-                      <span className="error text-[14px]">{error.lastName}</span>
+                      <span className="error text-[14px]">
+                        {error.lastName}
+                      </span>
                     </div>
                   </div>
                   <div>
-                    <label className="text-[16px] text-[#394867]" htmlFor="phone">
+                    <label
+                      className="text-[16px] text-[#394867]"
+                      htmlFor="phone"
+                    >
                       Número de teléfono:
                     </label>
                     <input
-                      className={`data outline-none px-3 py-1 border w-[160px] border-[#394867] rounded-[5px] ${error.phone ? "border-[#DC3545]" : ""}`}
+                      className={`data outline-none px-3 py-1 border w-[160px] border-[#394867] rounded-[5px] ${
+                        error.phone ? "border-[#DC3545]" : ""
+                      }`}
                       id="phone"
                       type="tel"
                       name="phone"
@@ -316,11 +383,16 @@ const ClientsCard = ({ isOpen,type, onClose,clientEmail}) => {
                     </div>
                   </div>
                   <div>
-                    <label className="text-[16px] text-[#394867]" htmlFor="email">
+                    <label
+                      className="text-[16px] text-[#394867]"
+                      htmlFor="email"
+                    >
                       Correo electrónico:
                     </label>
                     <input
-                      className={`data outline-none px-3 py-1 border w-[160px] border-[#394867] rounded-[5px] ${error.email ? "border-[#DC3545]" : ""}`}
+                      className={`data outline-none px-3 py-1 border w-[160px] border-[#394867] rounded-[5px] ${
+                        error.email ? "border-[#DC3545]" : ""
+                      }`}
                       id="email"
                       type="email"
                       name="email"
@@ -338,7 +410,9 @@ const ClientsCard = ({ isOpen,type, onClose,clientEmail}) => {
                       Contraseña:
                     </label>
                     <input
-                      className={`data outline-none px-3 py-1 border w-[160px] border-[#394867] rounded-[5px] ${error.password ? "border-[#DC3545]" : ""}`}
+                      className={`data outline-none px-3 py-1 border w-[160px] border-[#394867] rounded-[5px] ${
+                        error.password ? "border-[#DC3545]" : ""
+                      }`}
                       id="password"
                       type="password"
                       name="password"
@@ -348,7 +422,9 @@ const ClientsCard = ({ isOpen,type, onClose,clientEmail}) => {
                       }
                     />
                     <div className="relative">
-                      <span className="error text-[14px]">{error.password}</span>
+                      <span className="error text-[14px]">
+                        {error.password}
+                      </span>
                     </div>
                   </div>
                   <div>
@@ -368,12 +444,17 @@ const ClientsCard = ({ isOpen,type, onClose,clientEmail}) => {
                       onBlur={handleChange}
                     />
                     <div className="relative">
-                      <span className="error text-[14px]">{error.repPassword}</span>
+                      <span className="error text-[14px]">
+                        {error.repPassword}
+                      </span>
                     </div>
                   </div>
                 </div>
                 <div className="grid grid-rows-[30px_100px_30px]">
-                  <label className="text-[16px] text-[#394867]" htmlFor="address">
+                  <label
+                    className="text-[16px] text-[#394867]"
+                    htmlFor="address"
+                  >
                     Dirección:
                   </label>
                   <textarea
@@ -413,26 +494,41 @@ const ClientsCard = ({ isOpen,type, onClose,clientEmail}) => {
           <div className="bg-white p-6 rounded-lg overflow-auto h-[95vh] w-[460px]">
             <form className="z-10 flex flex-col justify-center items-center gap-[21px]  rounded-[20px]">
               <div className="relative grid grid-cols-[1fr_30px]">
-                  <div>
-                    <p className="text-[24px] border-[#E7E7E7] border-b-[1px] text-center w-full">
-                      Editar Cliente
-                    </p>
-                  </div>
-                  <div onClick={onClose} className="absolute top-0 right-[-100px] flex px-4 hover:text-white hover:bg-red-500 rounded-[8px] border border-[#394867]">
-                    <button className="text-[#394867] w-[20px]   font-bold rounded" >X</button>
-                  </div>
+                <div>
+                  <p className="text-[24px] border-[#E7E7E7] border-b-[1px] text-center w-full">
+                    Editar Cliente
+                  </p>
+                </div>
+                <div
+                  onClick={() => {
+                    onClose();
+                    setStatusMsg("");
+                  }}
+                  className="absolute top-0 right-[-100px] flex px-4 hover:text-white hover:bg-red-500 rounded-[8px] border border-[#394867]"
+                >
+                  <button className="text-[#394867] w-[20px]   font-bold rounded">
+                    X
+                  </button>
+                </div>
               </div>
               {statusMsg && (
-                <div className={`${statusMsg == "El usuario se ha editado correctamente" ? "bg-green-200 text-green-500 p-3" : "bg-red-200 text-red-500 p-3"}`}>
+                <div
+                  className={`${
+                    statusMsg == "El usuario ha sido editado correctamente"
+                      ? "bg-green-200 text-green-500 p-3"
+                      : "bg-red-200 text-red-500 p-3"
+                  }`}
+                >
                   <span>{statusMsg}</span>
                 </div>
               )}
               <div className="frame flex flex-col gap-[15px] px-4 w-full">
                 <div className="flex justify-center">
-                  <figure onClick={() => inputFile.current.click()} className="cursor-pointer relative rounded-full bg-[#E7E7E7] w-[125px] h-[125px] shadow-sm">
-                    <div
-                      className="absolute bottom-0 flex justify-center items-center w-[35px] h-[35px] rounded-full bg-[#FFFFFF] border-[1px] border-[#E7E7E7]"
-                    >
+                  <figure
+                    onClick={() => inputFile.current.click()}
+                    className="cursor-pointer relative rounded-full bg-[#E7E7E7] w-[125px] h-[125px] shadow-sm"
+                  >
+                    <div className="absolute bottom-0 flex justify-center items-center w-[35px] h-[35px] rounded-full bg-[#FFFFFF] border-[1px] border-[#E7E7E7]">
                       <img className="w-[25px]" src={"camera"} alt="camara" />
                     </div>
                     <input
@@ -453,14 +549,15 @@ const ClientsCard = ({ isOpen,type, onClose,clientEmail}) => {
                   <span className="error">{error.avatar}</span>
                 </div>
                 <div className="grid grid-cols-2 gap-2">
-                  <div >
+                  <div>
                     <label
                       className="text-[16px] text-[#394867]"
                       htmlFor="name"
                     >
                       Nombre:
                     </label>
-                    <input className="hidden"
+                    <input
+                      className="hidden"
                       id="role"
                       type="text"
                       name="role"
@@ -477,7 +574,9 @@ const ClientsCard = ({ isOpen,type, onClose,clientEmail}) => {
                       onChange={handleChange}
                     />
                     <div className="relative">
-                      <span className="error text-[14px] text-red-500">{error.name}</span>
+                      <span className="error text-[14px] text-red-500">
+                        {error.name}
+                      </span>
                     </div>
                   </div>
                   <div>
@@ -488,7 +587,9 @@ const ClientsCard = ({ isOpen,type, onClose,clientEmail}) => {
                       Apellido:
                     </label>
                     <input
-                      className={`data outline-none px-3 py-1 border w-[160px] border-[#394867] rounded-[5px] ${error.lastName ? "border-[#DC3545]" : ""}`}
+                      className={`data outline-none px-3 py-1 border w-[160px] border-[#394867] rounded-[5px] ${
+                        error.lastName ? "border-[#DC3545]" : ""
+                      }`}
                       id="lastName"
                       type="text"
                       name="lastName"
@@ -496,15 +597,22 @@ const ClientsCard = ({ isOpen,type, onClose,clientEmail}) => {
                       onChange={handleChange}
                     />
                     <div className="relative">
-                      <span className="error text-[14px]">{error.lastName}</span>
+                      <span className="error text-[14px]">
+                        {error.lastName}
+                      </span>
                     </div>
                   </div>
                   <div>
-                    <label className="text-[16px] text-[#394867]" htmlFor="phone">
+                    <label
+                      className="text-[16px] text-[#394867]"
+                      htmlFor="phone"
+                    >
                       Número de teléfono:
                     </label>
                     <input
-                      className={`data outline-none px-3 py-1 border w-[160px] border-[#394867] rounded-[5px] ${error.phone ? "border-[#DC3545]" : ""}`}
+                      className={`data outline-none px-3 py-1 border w-[160px] border-[#394867] rounded-[5px] ${
+                        error.phone ? "border-[#DC3545]" : ""
+                      }`}
                       id="phone"
                       type="tel"
                       name="phone"
@@ -516,11 +624,16 @@ const ClientsCard = ({ isOpen,type, onClose,clientEmail}) => {
                     </div>
                   </div>
                   <div>
-                    <label className="text-[16px] text-[#394867]" htmlFor="email">
+                    <label
+                      className="text-[16px] text-[#394867]"
+                      htmlFor="email"
+                    >
                       Correo electrónico:
                     </label>
                     <input
-                      className={`data outline-none px-3 py-1 border w-[160px] border-[#394867] rounded-[5px] ${error.email ? "border-[#DC3545]" : ""}`}
+                      className={`data outline-none px-3 py-1 border w-[160px] border-[#394867] rounded-[5px] ${
+                        error.email ? "border-[#DC3545]" : ""
+                      }`}
                       id="email"
                       type="email"
                       name="email"
@@ -539,7 +652,9 @@ const ClientsCard = ({ isOpen,type, onClose,clientEmail}) => {
                       Contraseña:
                     </label>
                     <input
-                      className={`data outline-none px-3 py-1 border w-[160px] border-[#394867] rounded-[5px] ${error.password ? "border-[#DC3545]" : ""}`}
+                      className={`data outline-none px-3 py-1 border w-[160px] border-[#394867] rounded-[5px] ${
+                        error.password ? "border-[#DC3545]" : ""
+                      }`}
                       id="password"
                       type="password"
                       name="password"
@@ -550,7 +665,9 @@ const ClientsCard = ({ isOpen,type, onClose,clientEmail}) => {
                       }
                     />
                     <div className="relative">
-                      <span className="error text-[14px]">{error.password}</span>
+                      <span className="error text-[14px]">
+                        {error.password}
+                      </span>
                     </div>
                   </div>
                   <div>
@@ -571,12 +688,17 @@ const ClientsCard = ({ isOpen,type, onClose,clientEmail}) => {
                       onBlur={handleChange}
                     />
                     <div className="relative">
-                      <span className="error text-[14px]">{error.repPassword}</span>
+                      <span className="error text-[14px]">
+                        {error.repPassword}
+                      </span>
                     </div>
                   </div>
                 </div>
                 <div className="grid grid-rows-[30px_100px_30px]">
-                  <label className="text-[16px] text-[#394867]" htmlFor="address">
+                  <label
+                    className="text-[16px] text-[#394867]"
+                    htmlFor="address"
+                  >
                     Dirección:
                   </label>
                   <textarea
@@ -601,7 +723,7 @@ const ClientsCard = ({ isOpen,type, onClose,clientEmail}) => {
                     }
                     ref={button}
                     id="submit"
-                    onClick={handleSubmit}
+                    onClick={handleUpdate}
                     type="button"
                   >
                     Editar Cliente

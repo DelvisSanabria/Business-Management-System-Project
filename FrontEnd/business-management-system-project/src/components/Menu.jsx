@@ -1,7 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable react/prop-types */
 
-import { useEffect,useState } from "react"
+import { useEffect,useState,useContext } from "react"
 import { Link, useNavigate } from "react-router-dom"
 import { EmpresasPolar, Hamburger, MenuBox, HomeSvg, Login, Products, ReportsSvg, SalesSvg, SettingsSvg, UserSvg, LogoutSvg, Cart, ContactUsSvg, AccountSvg } from "./exportsImports";
 
@@ -20,14 +20,14 @@ export default function Menu () {
   const [Reports, setReports] = useState("#637381")
   const [Settings, setSettings] = useState("#637381")
   const [MakeSale, setMakeSale] = useState("#637381")
-  const [Session, setSession] = useState("#637381")
+  const [SessionColor, setSessionColor] = useState("#637381")
   const [Contact, setContact] = useState("#637381")
   const [MenuItems, setMenuItems] = useState([])
   const navigate = useNavigate();
-  const [sessionIcon, setSessionIcon] = useState(<Login currentColor={Session}/>)
-  /* const {user, setUser} = useContext(UserSession); */
+  const [sessionIcon, setSessionIcon] = useState(<Login currentColor={SessionColor}/>)
+  /* const {user, setUser} = useContext(UserSession) */
   const logout = () => {
-    setUser(null);
+    /* setUser(null); */
     navigate("/");
   }
   const adminPages = [
@@ -64,26 +64,25 @@ export default function Menu () {
           {name: "Session" , title: sessionItem, path: "/login", icon: sessionIcon},]
 
   useEffect(()=>{
-    const user = localStorage.getItem("user")
-    if(user){
+    const user = localStorage.getItem("user");
+    let userRole = "";
+    if(user && user.length > 0){
       setIsLogged(true)
-      setSessionIcon(<LogoutSvg currentColor={Session}/>)
+      setSessionIcon(<LogoutSvg currentColor={SessionColor}/>)
+      /* try {
+        const parsedUser = JSON.parse(user);
+        userRole = parsedUser.role;
+      } catch (error) {
+        console.error("an error occurred while parsing the user", error);
+      } */
     }
 
     if (!user){
       setIsLogged(false)
-      setSessionIcon(<Login currentColor={Session}/>)
+      setSessionIcon(<Login currentColor={SessionColor}/>)
     }
 
-    let userRole = "admin";
-
-    try {
-      /* const parsedUser = JSON.parse(user);
-      userRole = parsedUser.role; */
-    } catch (error) {
-      console.error("an error occurred while parsing the user", error);
-    }
-  
+    
     if (userRole === "admin") {
       setMenuItems(adminPages)
     } else if (userRole === "vendor") {
@@ -100,7 +99,7 @@ export default function Menu () {
       return setSessionItem("Iniciar Sesion")
     }
 
-  }, [Session, adminPages, clientsPages, generalMenu, isLogged, vendorsPages])
+  }, [SessionColor, adminPages, clientsPages, generalMenu, isLogged, vendorsPages])
 
   const handleActive = (tab) => {
     const colors = {
@@ -131,7 +130,7 @@ export default function Menu () {
         Reports: setReports,
         Settings: setSettings,
         MakeSale: setMakeSale,
-        Session: setSession,
+        Session: setSessionColor,
         Contact: setContact
       };
       setKey[key](color);

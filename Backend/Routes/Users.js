@@ -27,7 +27,7 @@ routerUsers.get("/", async (req, res) => {
       customLabels: { docs: "users", totalDocs: "count" }
     };
     let query = { deleted: false };
-    if (role === "vendors") {
+    if (role === "vendor") {
       query = { ...query, role: "vendor" };
     } else if (role === "client") {
       query = { ...query, role: "client" };

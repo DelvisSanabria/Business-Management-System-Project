@@ -279,15 +279,16 @@ export default function Customers() {
                     onClick={() => {
                       openModal("createClient");
                     }}
-                    className="text-[13px] mb-1 text-white"
-                  >
-                    Agregar Cliente
+                    className="text-[13px] mb-1 text-white grid grid-cols-[20px_1fr]"
+                  > 
+                    <span className="mr-2">+</span>
+                    <span>Agregar Cliente</span>
                   </button>
                 </div>
               </div>
             </div>
           </header>
-          <div>
+          <div className="mt-10">
             <table className="w-[80vw] border-b-2">
               <thead>
                 <tr className="text-[#637381]">

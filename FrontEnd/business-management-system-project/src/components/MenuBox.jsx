@@ -2,7 +2,7 @@
 /* eslint-disable no-undef */
 import { useEffect } from "react"
 import { useState } from "react"
-import { Link } from "react-router-dom"
+import { Link,useNavigate } from "react-router-dom"
 import HomeSvg from "./Svgs/Home"
 import Login from "./Svgs/Login"
 import Products from "./Svgs/Products"
@@ -27,10 +27,17 @@ export default function MenuBox(){
   const [Reports, setReports] = useState("#637381")
   const [Settings, setSettings] = useState("#637381")
   const [MakeSale, setMakeSale] = useState("#637381")
-  const [Session, setSession] = useState("#637381")
+  const [SessionColor, setSessionColor] = useState("#637381")
   const [MenuItems, setMenuItems] = useState([])
+  /* const { user, setUser } = useContext(UserSession); */
+  const navigate = useNavigate();
 
-  const [sessionIcon, setSessionIcon] = useState(<Login currentColor={Session}/>)
+  const logout = () => {
+    /* setUser(null); */
+    navigate("/");
+  }
+
+  const [sessionIcon, setSessionIcon] = useState(<Login currentColor={SessionColor}/>)
   const adminPages = [
    {name: "Home" , title:"Inicio", path: "/", icon: <HomeSvg currentColor={Home}/>},
    {name:"Users", title: "Usuarios", path: "/users", icon: <UserSvg currentColor={User}/>},
@@ -64,31 +71,29 @@ export default function MenuBox(){
         {name: "Home" , title:"Inicio", path: "/", icon: <HomeSvg currentColor={Home}/>},
         {name: "Inventory" , title: "Productos", path: "/products", icon: <Products currentColor={Inventory}/>},
         {name: "Customers", title: "Contactanos", path: "/contacUs", icon: <ContactUsSvg currentColor={Customers}/>},
-        {name: "Session" , title: "Iniciar Sesion", path: "/login", icon: <Login currentColor={Session}/>},
+        {name: "Session" , title: "Iniciar Sesion", path: "/login", icon: <Login currentColor={SessionColor}/>},
         {name: "Users" , title: "Registrarse", path: "/register", icon: <UserSvg currentColor={User}/>},]
      
 
   useEffect(()=>{
-    const user = localStorage.getItem("user")
-    if(user){
+    const user = localStorage.getItem("user");
+    let userRole = "";
+    if(user && user.length > 0){
       setIsLogged(true)
-      setSessionIcon(<LogoutSvg currentColor={Session}/>)
+      setSessionIcon(<LogoutSvg currentColor={SessionColor}/>)
+      /* try {
+        const parsedUser = JSON.parse(user);
+        userRole = parsedUser.role;
+      } catch (error) {
+        console.error("an error occurred while parsing the user", error);
+      } */
     }
 
     if (!user){
       setIsLogged(false)
-      setSessionIcon(<Login currentColor={Session}/>)
+      setSessionIcon(<Login currentColor={SessionColor}/>)
     }
 
-    let userRole = "admin";
-
-    try {
-      /* const parsedUser = JSON.parse(user);
-      userRole = parsedUser.role; */
-    } catch (error) {
-      console.error("an error occurred while parsing the user", error);
-    }
-  
     if (userRole === "admin") {
       setMenuItems(adminPages)
     } else if (userRole === "vendor") {
@@ -105,7 +110,7 @@ export default function MenuBox(){
       return setSessionItem("Iniciar Sesion")
     }
 
-  }, [Session, adminPages, clientsPages, generalMenu, isLogged, vendorsPages])
+  }, [SessionColor, adminPages, clientsPages, generalMenu, isLogged, vendorsPages])
 
   const handleActive = (tab) => {
     const colors = {
@@ -135,7 +140,7 @@ export default function MenuBox(){
         Reports: setReports,
         Settings: setSettings,
         MakeSale: setMakeSale,
-        Session: setSession
+        Session: setSessionColor
       };
       setKey[key](color);
     });
@@ -147,7 +152,13 @@ export default function MenuBox(){
     <Link
       key={page.name}
       to={`http://localhost:5173${page.path}`}
-      onClick={() => {handleActive(page)}}
+      onClick={() => {
+        if (page.title === "Cerrar Sesion") {
+          logout();
+        } else {
+          handleActive(page);
+        }
+      }}
       className={`grid grid-cols-[29px_1fr] gap-2 justify-items-start content-center h-[48px] top-0 border-b [border-bottom-style:solid] border-[#9ba4b4] w-[183px] left-0 ${
         activeTab === page.name ? "bg-[#d6dfff]" : "bg-[#f1f6f9]"
       } ${index === MenuItems.length - 1 ? "rounded-[0px_0px_0px_25px] overflow-hidden border-b [border-bottom-style:solid] border-[#9ba4b4]" : ""}`}
