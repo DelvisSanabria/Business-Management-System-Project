@@ -2,9 +2,10 @@ import { useState, useContext, useEffect } from "react";
 import { useNavigate, Link } from 'react-router-dom';
 import Session from "../Session/session";
 import axios from "axios";
-import { polar, bg_login } from "../components/exports";
+import { polar, bg_login } from "../images/exports";
 
 function LogIn() {
+   /* const server = "http://localhost:3000"; */
    const server = "http://localhost:3001";
    const [error, setError] = useState({});
    const [input, setInput] = useState({});
@@ -109,5 +110,6 @@ function LogIn() {
       </>
    );
 }
+
 
 export default LogIn;

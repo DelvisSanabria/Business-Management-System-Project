@@ -1,20 +1,23 @@
 import { useState, useEffect, useRef } from "react";
 import axios from "axios";
 import { useNavigate, Link } from "react-router-dom";
-import { polar, camera, blueBg, polarSede } from "./../components/exports";
+
+import { polar, camera, blueBg, polarSede } from "../images/exports";
 
 function SignUp() {
-   const server = "http://localhost:3001";
+   const server = "http://localhost:3000";
    const [user, setUser] = useState({
+      avatar: "",
       firstname: "",
       lastname: "",
       phone: "",
       email: "",
       password: "",
+      role: "client",
       address: ""
    });
    const [error, setError] = useState({
-      image: "",
+      avatar: "",
       firstname: "",
       lastname: "",
       phone: "",
@@ -24,7 +27,7 @@ function SignUp() {
       address: ""
    });
    const [input, setInput] = useState({
-      image: "",
+      avatar: "",
       firstname: "",
       lastname: "",
       phone: "",
@@ -94,7 +97,7 @@ function SignUp() {
          phone: "El teléfono es inválido",
          password: "La contraseña es inválida",
          address: "La dirección es inválida",
-         image: "Sólo en formato: png, jpg, jpeg"
+         avatar: "Sólo en formato: png, jpg, jpeg"
       };
       let user = {};
       let errors = {};
@@ -109,18 +112,18 @@ function SignUp() {
                errors = {...errors, [field]: ""};
                user = {...user, [field]: input[field]};
             }
-         } else if (field === "image") {
+         } else if (field === "avatar") {
             if (inputFile.current.files.length > 0) {
                const file = inputFile.current.files[0];
                switch (file.type) {
                   case "image/jpeg":
                   case "image/png":
-                     user = {...user, image: file };
-                     errors = {...errors, image: "" };
+                     user = {...user, avatar: file };
+                     errors = {...errors, avatar: "" };
                      break;
                   default:
                      errors = {...errors, [field]: message[field]};
-                     user = {...user, image: null};
+                     user = {...user, avatar: null};
                      isValid = false;
                }
             } else {
@@ -144,7 +147,7 @@ function SignUp() {
       }
       button.current.disabled = !isValid;
       setError(errors);
-      setUser(user);
+      setUser((prev) => ({...prev, ...user}));
    }
    useEffect(() => {
       handleValidation();
@@ -170,16 +173,16 @@ function SignUp() {
                            <input
                               className="hidden"
                               ref={inputFile}
-                              id="image"
+                              id="avatar"
                               type="file"
-                              name="image"
+                              name="avatar"
                               accept="image/jpeg, image/png"
                               onChange={handleValidation}
                            />
                         </figure>
                      </div>
                      <div className="relative">
-                        <span className="error">{error.image}</span>
+                        <span className="error">{error.avatar}</span>
                      </div>
                      <label className="text-[20px] text-[#394867]" htmlFor="firstname">Nombre:</label>
                      <input
