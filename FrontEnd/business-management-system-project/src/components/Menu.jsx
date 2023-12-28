@@ -3,7 +3,7 @@
 
 import { useEffect,useState } from "react"
 import { Link, useNavigate } from "react-router-dom"
-import { EmpresasPolar, Hamburger, MenuBox, UserSession, HomeSvg, Login, Products, ReportsSvg, SalesSvg, SettingsSvg, UserSvg, LogoutSvg, Cart, ContactUsSvg, AccountSvg } from "./exports";
+import { EmpresasPolar, Hamburger, MenuBox, HomeSvg, Login, Products, ReportsSvg, SalesSvg, SettingsSvg, UserSvg, LogoutSvg, Cart, ContactUsSvg, AccountSvg } from "./exportsImports";
 
 export default function Menu () {
   const [isOpen, setOpen] = useState(false)

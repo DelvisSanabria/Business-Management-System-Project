@@ -206,6 +206,7 @@ const ClientsCard = ({ isOpen,type, onClose,clientEmail}) => {
    useEffect(() => {
      getClient(clientEmail)
      console.log(previousDates)
+   // eslint-disable-next-line react-hooks/exhaustive-deps
    }, [clientEmail])
 
   return (
