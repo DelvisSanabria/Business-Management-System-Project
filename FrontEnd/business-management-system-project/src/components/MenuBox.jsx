@@ -1,6 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable no-undef */
-import { useEffect } from "react"
+import { useEffect,useContext } from "react"
 import { useState } from "react"
 import { Link,useNavigate } from "react-router-dom"
 import HomeSvg from "./Svgs/Home"
@@ -13,6 +13,7 @@ import UserSvg from "./Svgs/User"
 import LogoutSvg from "./Svgs/Logout"
 import Cart from "./Svgs/Cart"
 import ContactUsSvg from "./Svgs/ContactUs"
+import Session from "./../Session/session"
 
 export default function MenuBox(){
   const [isLogged, setIsLogged] = useState(false)
@@ -29,11 +30,11 @@ export default function MenuBox(){
   const [MakeSale, setMakeSale] = useState("#637381")
   const [SessionColor, setSessionColor] = useState("#637381")
   const [MenuItems, setMenuItems] = useState([])
-  /* const { user, setUser } = useContext(UserSession); */
+  const { user, setUser } = useContext(Session);
   const navigate = useNavigate();
 
   const logout = () => {
-    /* setUser(null); */
+    setUser(null);
     navigate("/");
   }
 
@@ -76,17 +77,16 @@ export default function MenuBox(){
      
 
   useEffect(()=>{
-    const user = localStorage.getItem("user");
     let userRole = "";
     if(user && user.length > 0){
       setIsLogged(true)
       setSessionIcon(<LogoutSvg currentColor={SessionColor}/>)
-      /* try {
+      try {
         const parsedUser = JSON.parse(user);
         userRole = parsedUser.role;
       } catch (error) {
         console.error("an error occurred while parsing the user", error);
-      } */
+      } 
     }
 
     if (!user){

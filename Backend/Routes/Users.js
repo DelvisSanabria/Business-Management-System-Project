@@ -19,11 +19,11 @@ const upload = multer({ storage: storage });
 
 routerUsers.get("/", async (req, res) => {
   try {
-    const { page, limit, orderBy, role } = req.query;
+    const { page, limit, role } = req.query;
     const options = {
       page: parseInt(page, 10) || 1,
       limit: parseInt(limit, 10) || 6,
-      sort: { createdAt: orderBy === "asc" ? 1 : -1 },
+      sort: { createdAt: -1 },
       customLabels: { docs: "users", totalDocs: "count" }
     };
     let query = { deleted: false };
@@ -103,7 +103,7 @@ routerUsers.get("/:email", async (req, res) => {
   }
 });
 
-routerUsers.post("/", upload.single("avatar"), async (req, res) => {
+routerUsers.post("/newUser", upload.single("avatar"), async (req, res) => {
   try {
     const salt = await bcrypt.genSalt();
     const hash = await bcrypt.hash(req.body.password, salt);
