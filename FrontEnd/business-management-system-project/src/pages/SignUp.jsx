@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import axios from "axios";
-import { useNavigate, Link } from "react-router-dom";
-import { polar, camera, blueBg, polarSede } from "../Components/exports";
+import { /* useNavigate */ Link } from "react-router-dom";
+import { polar, camera, blueBg, polarSede } from "../exports";
 
 function SignUp() {
    const server = "http://localhost:3001";
@@ -43,7 +43,7 @@ function SignUp() {
       }
    }, [input.avatar])
    const button = useRef();
-   const navigate = useNavigate();
+   /* const navigate = useNavigate(); */
    if (user.firstname && user.lastname && user.address) {
       let firstname = "";
       let lastname = "";
@@ -324,6 +324,6 @@ function SignUp() {
          <img className="z-0 absolute bottom-0 min-[1440px]:hidden" src={blueBg} alt="background" />
       </section>
    );
-};
+}
 
 export default SignUp;
