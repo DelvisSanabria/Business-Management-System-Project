@@ -1,19 +1,17 @@
 import { useState, useEffect, useRef } from "react";
 import axios from "axios";
 import { useNavigate, Link } from "react-router-dom";
-
-import { polar, camera, blueBg, polarSede } from "../images/exports";
+import { polar, camera, blueBg, polarSede } from "../Components/exports";
 
 function SignUp() {
-   const server = "http://localhost:3000";
+   const server = "http://localhost:3001";
    const [user, setUser] = useState({
-      avatar: "",
       firstname: "",
       lastname: "",
       phone: "",
       email: "",
-      password: "",
       role: "client",
+      password: "",
       address: ""
    });
    const [error, setError] = useState({
@@ -36,8 +34,15 @@ function SignUp() {
       repPassword: "",
       address: ""
    });
-   const button = useRef();
    const inputFile = useRef();
+   const [avatarURL, setAvatarUrl] = useState(null);
+   useEffect(() => {
+      if (input.avatar) {
+         const url = URL.createObjectURL(input.avatar);
+         setAvatarUrl(url);
+      }
+   }, [input.avatar])
+   const button = useRef();
    const navigate = useNavigate();
    if (user.firstname && user.lastname && user.address) {
       let firstname = "";
@@ -54,18 +59,36 @@ function SignUp() {
    }
    const handleSubmit = async () => {
       try {
-         const formdata = new FormData();
-         for (const prop in user) {
-            formdata.append(prop, user[prop]);
-         }
-         const response = await axios.post(`${server}/users/signup`, formdata, {
+         const response = await axios.post(`${server}/users`, user, {
             headers: {
-               "Content-Type": "multipart/form-data"
+               "Content-Type": "application/json"
             }
          });
          if (response.status === 201) {
-            alert("Datos registrados con éxito");
-            navigate("/login");
+            const imageFile = new FormData();
+            imageFile.append("avatar", inputFile.current.files[0]);
+            imageFile.append("id", response.data._id);
+            const newResponse = await axios.post(`${server}/users/uploadImage`, imageFile, {
+               headers: {
+                  "Content-Type": "multipart/form-data"
+               }
+            });
+            if (newResponse.status === 200) {
+               alert("Datos registrados con éxito");
+               //navigate("/login");
+               const keys = ["avatar", "firstname", "lastname", "phone", "email", "password", "repPassword", "address"];
+               for (const key of keys) {
+                  if (input[key]) {
+                     setInput((prev) => ({...prev, [key]: ""}));
+                  }
+                  if (error[key]) {
+                     setError((prev) => ({...prev, [key]: ""}));
+                  }
+                  if (user[key]) {
+                     setUser((prev) => ({...prev, [key]: ""}));
+                  }
+               }
+            } 
          }
       } catch ({name, message, response}) {
          if (response.data.email) {
@@ -76,7 +99,7 @@ function SignUp() {
    }
    const handleChange = (event) => {
       const { name, value } = event.target;
-      setInput((prev) => ({...prev, [name]: value }));
+      setInput({...input, [name]: value });
    }
 
    const handleValidation = () => {
@@ -118,12 +141,16 @@ function SignUp() {
                switch (file.type) {
                   case "image/jpeg":
                   case "image/png":
-                     user = {...user, avatar: file };
+                     if (avatarURL) {
+                        URL.revokeObjectURL(avatarURL);
+                        setAvatarUrl(null);
+                     }
+                     setInput({...input, avatar: file});
                      errors = {...errors, avatar: "" };
                      break;
                   default:
+                     setInput({...input, avatar: null});
                      errors = {...errors, [field]: message[field]};
-                     user = {...user, avatar: null};
                      isValid = false;
                }
             } else {
@@ -146,26 +173,34 @@ function SignUp() {
          }
       }
       button.current.disabled = !isValid;
-      setError(errors);
+      setError((prev) => ({...prev, ...errors}));
       setUser((prev) => ({...prev, ...user}));
    }
    useEffect(() => {
       handleValidation();
       //eslint-disable-next-line
    }, [input]);
+   useEffect(() => {
+      return () => {
+         if (avatarURL) {
+            URL.revokeObjectURL(avatarURL);
+         }
+      };
+   }, []);
    return (
       <section className="pt-[50px] flex flex-col w-full box-border relative top-[73px] h-max pb-10 min-[1440px]:px-[45px] min-[1440px]:gap-[24px] min-[1440px]:bg-[#F1F6F9] min-[1440px]:justify-center max-[1439px]:bg-[#1A3365] max-[1439px]:items-center">
          <img className="w-[262px] max-[1439px]:hidden" src={polar} alt="Empresas Polar" />
-         <div className="w-full px-[95px] max-[1439px]:hidden">
-            <div className="flex justify-center items-center bg-[#D9D9D9] rounded-lg max-[1439px]:hidden">
-               <img className="w-[500px] h-[800px] max-[1439px]:hidden" src={polarSede} alt="" />
-               <form className="z-10 flex flex-col justify-center items-center gap-[21px] bg-[#F1F6F9] pt-[15px] pb-[25px] top-[75px] rounded-[20px] min-[1440px]:w-[500px] min-[1440px]:bg-[#FFFFFF] max-[1439px]:w-[312px]">
+         <div className="w-full px-[95px]">
+            <div className="flex justify-center items-center bg-[#D9D9D9] rounded-lg">
+               <img className="w-[500px] h-[1045px] max-[1439px]:hidden" src={polarSede} alt="" />
+               <form className="z-10 flex flex-col justify-center items-center gap-[21px] bg-[#F1F6F9] pt-[15px] pb-[25px] top-[75px] rounded-[20px] min-[1440px]:rounded-[10px] min-[1440px]:w-[500px] min-[1440px]:bg-[#FFFFFF] max-[1439px]:w-[312px]">
                   <img className="w-[224px] min-[1440px]:hidden" src={polar} alt="Empresas Polar" />
                   <p className="text-[24px] border-[#E7E7E7] border-b-[1px] text-center pb-[15px] w-full max-[1439px]:hidden">Registro</p>
                   <div className="frame flex flex-col gap-[15px] px-[44px] w-full">
                      <div className="flex justify-center">
-                        <figure className="relative rounded-full bg-[#E7E7E7] w-[125px] h-[125px] shadow-sm">
-                           <div className="absolute bottom-0 flex justify-center items-center w-[35px] h-[35px] rounded-full bg-[#FFFFFF] border-[1px] border-[#E7E7E7]"
+                        <figure className="relative flex justify-center items-center rounded-full bg-[#E7E7E7] w-[125px] h-[125px] shadow-sm">
+                           <img className={`w-[90%] ${!input.avatar && "hidden" }`} src={avatarURL} alt="imagen seleccionada" />
+                           <div className="absolute bottom-0 left-0 flex justify-center items-center w-[35px] h-[35px] rounded-full bg-[#FFFFFF] border-[1px] border-[#E7E7E7]"
                            onClick={() => inputFile.current.click()}>
                               <img className="w-[25px]"
                               src={camera} alt="camara" />
@@ -181,30 +216,38 @@ function SignUp() {
                            />
                         </figure>
                      </div>
-                     <div className="relative">
+                     <div className="relative flex justify-center">
                         <span className="error">{error.avatar}</span>
                      </div>
-                     <label className="text-[20px] text-[#394867]" htmlFor="firstname">Nombre:</label>
-                     <input
-                        className={`data ${error.firstname ? "border-[#DC3545]" : ""}`}
-                        id="firstname"
-                        type="text"
-                        name="firstname"
-                        onChange={handleChange}
-                     />
-                     <div className="relative">
-                        <span className="error">{error.firstname}</span>
-                     </div>
-                     <label className="text-[20px] text-[#394867]" htmlFor="lastname">Apellido:</label>
-                     <input
-                        className={`data ${error.lastname ? "border-[#DC3545]" : ""}`}
-                        id="lastname"
-                        type="text"
-                        name="lastname"
-                        onChange={handleChange}
-                     />
-                     <div className="relative">
-                        <span className="error">{error.lastname}</span>
+                     <div className="flex gap-[15px] min-[1440px]:gap-[11px] max-[1439px]:flex-col">
+                        <div className="flex flex-col gap-[15px] w-full">
+                           <label className="text-[20px] text-[#394867]" htmlFor="firstname">Nombre:</label>
+                           <input
+                              className={`data ${error.firstname ? "border-[#DC3545]" : ""}`}
+                              id="firstname"
+                              type="text"
+                              name="firstname"
+                              value={input.firstname}
+                              onChange={handleChange}
+                           />
+                           <div className="relative">
+                              <span className="error">{error.firstname}</span>
+                           </div>
+                        </div>
+                        <div className="flex flex-col gap-[15px] w-full">
+                           <label className="text-[20px] text-[#394867]" htmlFor="lastname">Apellido:</label>
+                           <input
+                              className={`data ${error.lastname ? "border-[#DC3545]" : ""}`}
+                              id="lastname"
+                              type="text"
+                              name="lastname"
+                              value={input.lastname}
+                              onChange={handleChange}
+                           />
+                           <div className="relative">
+                              <span className="error">{error.lastname}</span>
+                           </div>
+                        </div>
                      </div>
                      <label className="text-[20px] text-[#394867]" htmlFor="phone">Número de teléfono:</label>
                      <input
@@ -212,7 +255,8 @@ function SignUp() {
                         id="phone"
                         type="tel"
                         name="phone"
-                        onBlur={handleChange}
+                        value={input.phone}
+                        onChange={handleChange}
                      />
                      <div className="relative">
                         <span className="error">{error.phone}</span>
@@ -223,7 +267,8 @@ function SignUp() {
                         id="email"
                         type="email"
                         name="email"
-                        onBlur={handleChange}
+                        value={input.email}
+                        onChange={handleChange}
                      />
                      <div className="relative">
                         <span className="error">{error.email}</span>
@@ -234,7 +279,8 @@ function SignUp() {
                         id="password"
                         type="password"
                         name="password"
-                        onBlur={handleChange}
+                        value={input.password}
+                        onChange={handleChange}
                         title={"La contraseña debe contener entre 8 y 16 caracteres y al menos uno de los siguientes:\n- Mayúscula\n- Minúcula\n- Dígito\n- Un caracter especial de entre: !@#$%^&*/"}
                      />
                      <div className="relative">
@@ -246,7 +292,8 @@ function SignUp() {
                         id="repPassword"
                         type="password"
                         name="repPassword"
-                        onBlur={handleChange}
+                        value={input.repPassword}
+                        onChange={handleChange}
                      />
                      <div className="relative">
                         <span className="error">{error.repPassword}</span>
@@ -256,6 +303,7 @@ function SignUp() {
                         className={`data focus:h-[100px] transition-[height] duration-500 ease-in ${error.address ? "border-[#DC3545]" : ""}`}
                         name="address" 
                         id="address"
+                        value={input.address}
                         onChange={handleChange}
                      >
                      </textarea>
@@ -268,7 +316,7 @@ function SignUp() {
                         onClick={handleSubmit} 
                         type="button">Registrarse
                      </button>
-                     <p className="text-[#ADADAD] text-[16px] tracking-tight">¿Ya eres miembro? <Link to="/login" className="text-[#3056D3] underline">Iniciar sesión</Link></p>
+                     <p className="text-[#ADADAD] text-[16px] tracking-tight min-[1440px]:text-center">¿Ya eres miembro? <Link to="/login" className="text-[#3056D3] underline">Iniciar sesión</Link></p>
                   </div>
                </form>
             </div>
@@ -276,7 +324,6 @@ function SignUp() {
          <img className="z-0 absolute bottom-0 min-[1440px]:hidden" src={blueBg} alt="background" />
       </section>
    );
-}
+};
 
 export default SignUp;
-
