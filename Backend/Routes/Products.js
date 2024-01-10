@@ -1,11 +1,14 @@
 const productRouter = require("express").Router();
-const Product = require("../Models/Products");
+const Product = require("../Models/Product");
 const multer = require("multer");
+const fs = require("fs");
 const domain = process.env.DOMAIN || "http://localhost:3000";
 
 const storage = multer.diskStorage({
    destination: (req, file, callback) => {
-      callback(null, "./images/products");
+      const dir = "./images/products";
+      fs.mkdirSync(dir, { recursive: true });
+      callback(null, dir);
    },
    filename: (req, file, callback) => {
       callback(null, `${Date.now()}_${file.originalname.replace(/\s/g, "_")}`);
@@ -25,7 +28,7 @@ productRouter.get("/", async (req, res) => {
          }
       }
       const options = {page: parseInt(fields.page) || 1, limit: parseInt(fields.limit) || 6};
-      let query = {deleted: false};
+      let query = { deleted: false };
       if (fields.search) {
          const search = fields.search.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
          query = {
@@ -45,19 +48,43 @@ productRouter.get("/", async (req, res) => {
    }
 });
 
+productRouter.get("/productsList", async (req, res) => {
+   try {
+      const products = await Product.find({deleted: false}, {name: 1, imageURL: 1, price: 1, stock: 1});
+      return res.status(200).json(products);
+   } catch (error) {
+      console.error(`${error.name}: ${error.message}`);
+      return res.status(405).json({name: error.name, message: error.message});
+   }
+});
+
 //Rutas POST
 
-productRouter.post("/", upload.single("image"), async (req, res) => {
+productRouter.post("/", async (req, res) => {
    try {
       let product = new Product(req.body);
-      if (req.file) {
-         product.imageURL = `${domain}/images/products/${req.file.filename}`;
-      }
       await product.save();
       return res.status(201).json(product);
    } catch (error) {
       console.error(`${error.name}: ${error.message}`);
       return res.status(500).json({ name: error.name, message: error.message });
+   }
+});
+
+productRouter.post("/uploadImage", upload.single("image"), async (req, res) => {
+   try {
+      let product = await Product.findById(req.body.id);
+      if (!product) {
+         return res.status(404).json({product: "Producto no encontrado"});
+      }
+      if (req.file) {
+         product.imageURL = req.file.path;
+         await product.save();
+      }
+      return res.status(200).json(product);
+   } catch (error) {
+      console.error(`${error.name}: ${error.message}`);
+      return res.status(500).json({name: error.name, message: error.message});
    }
 });
 
@@ -78,15 +105,15 @@ productRouter.post("/cart", async (req, res) => {
 
 //Rutas PATCH
 
-productRouter.patch("/", async (req, res) => {
+productRouter.patch("/", upload.single("image"), async (req, res) => {
    try {
       let fields = {};
-      for (let field in req.body) {
-         if (req.body[field]) {
-            fields[field] = req.body[field];
+      for (const key in req.body) {
+         if (req.body[key]) {
+            fields[key] = req.body[key];
          }
       }
-      const product = await Product.findById(fields.Id);
+      const product = await Product.findById(fields.id);
       if (!product) {
          return res.status(404).json({ error: "Producto no encontrado" });
       }
@@ -94,16 +121,15 @@ productRouter.patch("/", async (req, res) => {
       if (fields.deleted) {
          product.deleted = fields.deleted;
          await product.save();
-         return res.status(202).json(product);
+         return res.status(200).json(product);
       }
-      let errors = {};
-      for (const field in fields) {
-         if (fields[field] === product[field]) {
-            errors[field] = "El nuevo valor debe ser distinto del anterior";
+      if (req.file) {
+         fields.imageURL = `${domain}/images/products/${req.file.filename}`;
+      }
+      for (const value in fields) {
+         if (fields[value] === product[value]) {
+            delete fields[value];
          }
-      }
-      if (Object.keys(errors).length > 0) {
-         return res.status(400).json(errors);
       }
       Object.assign(product, fields);
       await product.save();

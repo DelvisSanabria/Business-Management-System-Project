@@ -2,88 +2,74 @@ import { useState, useEffect, useRef } from "react";
 import axios from "axios";
 import { camera, checkmark } from "../components/exportsImports";
 
-function EditProduct({ _id, name, category, price, stock, description, imageURL }) {
+function ProductForm() {
    const server = "http://localhost:3001/";
-   const [product, setProduct] = useState({
-      id: _id
-   });
+   const [product, setProduct] = useState({});
+   const [error, setError] = useState({});
    const [input, setInput] = useState({
-      name: name,
-      price: price,
-      stock: stock,
-      description: description,
-      category: category,
+      name: "",
+      price: "",
+      stock: "",
+      description: "",
+      category: "",
       image: ""
    });
-   const [error, setError] = useState({});
    const [success, setSuccess] = useState(false);
    const successRef = useRef();
    const button = useRef();
    const inputFile = useRef();
-   const [imageState, setImageState] = useState(null);
+   const [imageUrl, setImageUrl] = useState(null);
+
    useEffect(() => {
       if (input.image) {
          const url = URL.createObjectURL(input.image);
-         setImageState(url);
+         setImageUrl(url);
       }
    }, [input.image]);
    useEffect(() => {
+
       return () => {
-         if (imageState) {
-            URL.revokeObjectURL(imageState);
-            setImageState(null);
+         if (imageUrl) {
+            URL.revokeObjectURL(imageUrl);
+            setImageUrl(null);
          }
       };
-   }, [imageState]);
+   }, [imageUrl]);
+
    const handleSubmit = async () => {
       try {
-         const productData = new FormData();
-         for (let key in product) {
-            productData.append(key, product[key]);
-         }
-         for (let pair of productData.entries()) {
-            console.log(pair[0] + ': ' + pair[1]);
-         }         
-         const response = await axios.patch(`${server}products`, productData, {
+         const response = await axios.post(`${server}products`, product, {
             headers: {
-               "Content-Type": "multipart/form-data"
+               "Content-Type": "application/json"
             }
          });
-         if (response.status === 202) {
-            setSuccess(true);
-            const fields = ["image", "name", "price", "stock", "description", "category"];
-            for (const key of fields) {
-               if (product[key]) {
-                  setProduct((prev) => ({...prev, [key]: ""}));
+         if (response.status === 201) {
+            const imageFile = new FormData();
+            imageFile.append("image", inputFile.current.files[0]);
+            imageFile.append("id", response.data._id);
+            const newResponse = await axios.post(`${server}products/uploadImage`, imageFile, {
+               headers: {
+                  "Content-Type": "multipart/form-data"
                }
-               if (error[key]) {
-                  setError((prev) => ({...prev, [key]: ""}));
+            });
+            if (newResponse.status === 200) {
+               setSuccess(true);
+               const keys = ["image", "name", "price", "stock", "description", "category"];
+               for (const key of keys) {
+                  if (product[key]) {
+                     setProduct((prev) => ({...prev, [key]: ""}));
+                  }
+                  if (input[key]) {
+                     setInput((prev) => ({...prev, [key]: ""}));
+                  }
+                  if (error[key]) {
+                     setError((prev) => ({...prev, [key]: ""}));
+                  }
                }
             }
          }
-      } catch ({response, request, message, config}) {
-         if (response.data) {
-            const errors = response.data;
-            console.log(response.status);
-            console.log(response.headers);
-            let errorList = {};
-            for (let key in errors) {
-               if (errors[key]) {
-                  errorList = {...errorList, [key]: errors[key]};
-               }
-            }
-            if (Object.keys(errorList).length > 0) {
-               setError((prev) => ({...prev, ...errorList}));
-            }
-            if (errors.name && errors.message) {
-               console.log(`${errors.name}: ${errors.message}`);
-            }
-         } else if (request) {
-            console.log(request);
-         } else {
-            console.log("Error", message);
-         }
-         console.log(config);
+      } catch ({name, message}) {
+         console.error(`Ha ocurrido un error: ${name}. Con el mensaje: ${message}.`);
       }
    }
    const handleChange = (event) => {
@@ -105,18 +91,18 @@ function EditProduct({ _id, name, category, price, stock, description, imageURL 
          description: "Descripción inválida",
          image: "Sólo archivos en formato: png, jpg, jpeg"
       };
-      let productData = {};
+      let product = {};
       let errors = {};
       let isValid = true;
       for (let field in input) {
          if (input[field]) {
             if (regexList[field] && !regexList[field].test(input[field])) {
                errors = {...errors, [field]: message[field]};
-               productData = {...productData, [field]: ""};
+               product = {...product, [field]: ""};
                isValid = false;
             } else {
                errors = {...errors, [field]: ""};
-               productData = {...productData, [field]: input[field]};
+               product = {...product, [field]: input[field]};
             }
          } else if (field === "image") {
             if (inputFile.current.files.length > 0) {
@@ -131,20 +117,25 @@ function EditProduct({ _id, name, category, price, stock, description, imageURL 
                      errors = {...errors, [field]: message[field]};
                      isValid = false;
                }
+            } else {
+               isValid = false;
             }
          } else if (field === "category") {
             if (input[field] === "") {
-               productData = {...productData, [field]: ""};
+               product = {...product, [field]: ""};
                isValid = false;
             } else {
                errors = {...errors, [field]: ""};
-               productData = {...productData, [field]: input[field]};
+               product = {...product, [field]: input[field]};
             }
+         }
+         else {
+            isValid = false;
          }
       }
       button.current.disabled = !isValid;
       setError(errors);
-      setProduct((prev) => ({...prev, ...productData}));
+      setProduct(product);
    }
    useEffect(() => {
       let timer;
@@ -166,21 +157,21 @@ function EditProduct({ _id, name, category, price, stock, description, imageURL 
       //eslint-disable-next-line
    }, [input]);
    return (
-      <form ref={successRef} className="flex flex-col relative w-[310px] min-[1440px]:w-[636px] box-border items-center border-[1px] border-[#EAECF0] rounded-[20px]">
+      <form ref={successRef} className="flex flex-col relative w-[310px] min-[1440px]:w-[640px] box-border items-center border-[1px] border-[#EAECF0] rounded-[20px]">
          <div className="flex w-full justify-center items-center border-b-[1px] border-[#EAECF0] h-[50px]">
-            <p className="text-[20px] font-semibold">Editar producto</p>
+            <p className="text-[20px] font-semibold">Crear un nuevo producto</p>
          </div>
          <div className="flex relative w-full flex-col box-border">
-            <div className={`flex h-[42px] w-full justify-center items-center transition-[display] duration-500 ease-in border-b-[1px] border-[#EAECF0] bg-[#C4F9E2] ${success ? "" : "hidden"}`}>
+            <div className={`flex h-[42px] w-full justify-center items-center border-b-[1px] border-[#EAECF0] bg-[#C4F9E2] ${success ? "" : "hidden"}`}>
                <div className="flex gap-[8px]">
                   <img src={checkmark} alt="Checkmark" />
-                  <p className="text-[#004434] text-[12px]">Producto actualizado</p>
+                  <p className="text-[#004434] text-[12px]">Nuevo producto creado</p>
                </div>
             </div>
             <div className="flex flex-col w-full gap-[8px] p-[25px] border-b-[1px] border-[#EAECF0]">
                <div className="flex justify-center">
                   <figure className="relative flex justify-center items-center rounded-full bg-[#E7E7E7] w-[100px] h-[100px] shadow-sm">
-                     <img className={`w-[60px] ${!imageState || !imageURL && "hidden" }`} src={imageState ? imageState : server + imageURL} key={imageState} alt="imagen seleccionada" />
+                     <img className={`w-[60px] ${!imageUrl && "hidden" }`} src={imageUrl} key={imageUrl} alt="imagen seleccionada" />
                      <div className="absolute bottom-0 left-0 flex justify-center items-center w-[35px] h-[35px] rounded-full bg-[#FFFFFF] border-[1px] border-[#E7E7E7]"
                      onClick={() => inputFile.current.click()}>
                         <img className="w-[25px]"
@@ -203,9 +194,9 @@ function EditProduct({ _id, name, category, price, stock, description, imageURL 
                </div>
                <div className="flex max-[1439px]:flex-col gap-[8px]">
                   <div className="flex flex-col gap-[8px] min-[1440px]:w-full">
-                     <label htmlFor={`${_id}1`}>Nombre:</label>
+                     <label htmlFor="name">Nombre:</label>
                      <input
-                        id={`${_id}1`}
+                        id="name"
                         className={`data w-full rounded-[7px] ${error.name ? "border-[#DC3545]" : ""}`}
                         type="text"
                         name="name"
@@ -218,20 +209,20 @@ function EditProduct({ _id, name, category, price, stock, description, imageURL 
                      </div>
                   </div>
                   <div className="flex flex-col gap-[8px] min-[1440px]:w-full">
-                     <label htmlFor={`${_id}2`}>Categoría:</label>
+                     <label htmlFor="category">Categoría:</label>
                      <select
-                        id={`${_id}2`}
-                        className={`data max-[1439px]:w-[50%] rounded-[7px] ${error.category ? "border-[#DC3545]" : ""}`}
+                        id="category"
+                        className={`data max-[1439px]:w-[50%] rounded-[7px] ${!input.category ? "text-[#9BA4B4]" : ""} ${error.category ? "border-[#DC3545]" : ""}`}
                         name="category"
                         title="categoría"
                         value={input.category}
                         onChange={handleChange}
                      >
-                        <option className="text-[#9BA4B4]" value="">--Ninguno--</option>
-                        <option value="Alimentos">Alimentos</option>
-                        <option value="Bebidas">Bebidas</option>
-                        <option value="Mascotas">Mascotas</option>
-                        <option value="Limpieza">Limpieza</option>
+                        <option value="">--Ninguna--</option>
+                        <option className="text-black" value="Alimentos">Alimentos</option>
+                        <option className="text-black" value="Bebidas">Bebidas</option>
+                        <option className="text-black" value="Mascotas">Mascotas</option>
+                        <option className="text-black" value="Limpieza">Limpieza</option>
                      </select>
                      <div className="relative">
                         <span className="error">{error.category}</span>
@@ -240,9 +231,9 @@ function EditProduct({ _id, name, category, price, stock, description, imageURL 
                </div>
                <div className="flex w-full gap-[10px] ">
                   <div className="flex flex-col gap-[8px] min-[1440px]:w-full">
-                     <label htmlFor={`${_id}3`}>Precio:</label>
+                     <label htmlFor="price">Precio:</label>
                      <input
-                        id={`${_id}3`}
+                        id="price"
                         className={`data w-full rounded-[7px] ${error.price ? "border-[#DC3545]" : ""}`}
                         type="text"
                         min="0"
@@ -258,9 +249,9 @@ function EditProduct({ _id, name, category, price, stock, description, imageURL 
                      </div>
                   </div>
                   <div className="flex flex-col gap-[8px] min-[1440px]:w-full">
-                     <label htmlFor={`${_id}4`}>Inventario:</label>
+                     <label htmlFor="stock">Inventario:</label>
                      <input
-                        id={`${_id}4`}
+                        id="stock"
                         className={`data w-full rounded-[7px] ${error.stock ? "border-[#DC3545]" : ""}`}
                         type="text"
                         min="0"
@@ -275,9 +266,9 @@ function EditProduct({ _id, name, category, price, stock, description, imageURL 
                      </div>
                   </div>
                </div>
-               <label htmlFor={`${_id}5`}>Descripción:</label>
+               <label htmlFor="description">Descripción:</label>
                <textarea
-                  id={`${_id}5`}
+                  id="description"
                   className={`data w-full rounded-[7px] focus:h-[100px] transition-[height] duration-500 ease-in ${error.description ? "border-[#DC3545]" : ""}`}
                   name="description"
                   value={input.description}
@@ -293,11 +284,11 @@ function EditProduct({ _id, name, category, price, stock, description, imageURL 
             <button className={button.current && button.current.disabled === true ? "btn text-[20px] bg-[#3056D3] text-[#FFFFFF] w-full rounded-[6px] h-[50px] opacity-50" : "btn text-[20px] bg-[#3056D3] text-[#FFFFFF] w-full rounded-[6px] h-[50px]"}
                ref={button}
                onClick={handleSubmit}
-               type="button">Actualizar
+               type="button">Añadir producto
             </button>
          </div>
       </form>
    );
 };
 
-export default EditProduct;
+export default ProductForm;

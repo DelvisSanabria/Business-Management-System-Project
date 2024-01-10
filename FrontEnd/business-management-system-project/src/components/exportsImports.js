@@ -1,6 +1,14 @@
 export { default as Session } from '../Session/session';
 export { default as SignUp } from '../pages/SignUp';
 export { default as LogIn } from '../pages/Login';
+export { default as ProductForm } from '../pages/ProductForm';
+export { default as ProductsDashboard } from '../pages/ProductsDashboard';
+export { default as CartModal } from '../pages/CartModal';
+export { default as Products } from '../pages/Products';
+export { default as EditProduct } from '../pages/EditProduct';
+export { default as SalesDashboard } from '../pages/SalesDashboard';
+export { default as EditSale } from '../pages/EditSale';
+export { default as SaleForm } from '../pages/SaleForm';
 //images
 
 
@@ -40,6 +48,19 @@ import camera from "../images/icons/camera.png";
 import blueBg from "../images/various/bg.png";
 import bg_login from "../images/various/bg_login.png";
 import polarSede from "../images/various/Sede_Polar.jpeg";
+import plus from "../images/SVG/Add.svg";
+import lens from "../images/icons/search.png";
+import deleteIcon from "../images/SVG/deleteIcon.svg";
+import editIcon from "../images/SVG/editIcon.svg";
+import cancel from "../images/icons/error.png";
+import checkmark from "../images/SVG/checkmark.svg";
+import lens2 from "../images/SVG/lens2.svg";
+import plusDesktop from "../images/SVG/plusDesktop.svg";
+import more from "../images/SVG/plus.svg";
+import less from "../images/SVG/hyphen.svg";
+import cart_black from "../images/SVG/shopping_cart(black).svg";
+import cart_white from "../images/SVG/shopping_cart(white).svg";
 
 
-export { polar, menuIco, home, box, log_in, signup, shopping_bag, cart, log_out, settings, userIco, camera, blueBg, bg_login, polarSede,EmpresasPolar, Hamburger, MenuBox, UserSession, HomeSvg, Login, Products, ReportsSvg, SalesSvg, SettingsSvg, UserSvg, LogoutSvg, Cart, ContactUsSvg, AccountSvg }
+export { polar, menuIco, home, box, log_in, signup, shopping_bag, cart, log_out, settings, userIco, camera, blueBg, bg_login, polarSede,EmpresasPolar, Hamburger, MenuBox, UserSession, HomeSvg, Login, Products, ReportsSvg, SalesSvg, SettingsSvg, UserSvg, LogoutSvg, Cart, ContactUsSvg, AccountSvg,
+    plus, lens, deleteIcon, editIcon, cancel, checkmark, lens2, plusDesktop, more, less, cart_black, cart_white };
