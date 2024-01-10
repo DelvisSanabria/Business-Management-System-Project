@@ -1,4 +1,4 @@
-const mongoose = require("mongoose");
+const mongoose = require("mongoose"); 
 const User = require("../Models/Users");
 const routerUsers = require("express").Router();
 const ObjectId = mongoose.Types.ObjectId;
@@ -12,19 +12,19 @@ const storage = multer.diskStorage({
   },
   filename: (req, file, callback) => {
     callback(null, `${Date.now()}_${file.originalname.replace(/\s/g, "_")}`);
-  },
+ }
 });
 
 const upload = multer({ storage: storage });
 
 routerUsers.get("/", async (req, res) => {
   try {
-    const { page, limit, orderBy, role } = req.query;
+    const { page, limit, role } = req.query;
     const options = {
       page: parseInt(page, 10) || 1,
       limit: parseInt(limit, 10) || 6,
-      sort: { createdAt: orderBy === "asc" ? 1 : -1 },
-      customLabels: { docs: "users", totalDocs: "count" },
+      sort: { createdAt: -1 },
+      customLabels: { docs: "users", totalDocs: "count" }
     };
     let query = { deleted: false };
     if (role === "vendor") {
@@ -46,12 +46,12 @@ routerUsers.get("/allUsers/:role?", async (req, res) => {
     const { orderBy } = req.query;
     const { role } = req.params;
 
-    let query = { deleted: false };
+    let query = {deleted: false};
 
-    if (role === "vendors") {
-      query = { ...query, role: "vendor" };
-    } else if (role === "clients") {
-      query = { ...query, role: "client" };
+    if (role === 'vendors') {
+      query = { ...query, role: 'vendor' };
+    } else if (role === 'clients') {
+      query = { ...query, role: 'client' };
     }
 
     let users = [];
@@ -82,8 +82,8 @@ routerUsers.get("/search", async (req, res) => {
           { name: userData.toLocaleLowerCase() },
           { lastName: userData.toLocaleLowerCase() },
           { email: userData.toLocaleLowerCase() },
-          { phone: userData },
-        ],
+          { phone: userData}
+        ]
       });
     }
     res.status(200).json(filteredUser);
@@ -103,7 +103,7 @@ routerUsers.get("/:email", async (req, res) => {
   }
 });
 
-routerUsers.post("/", async (req, res) => {
+routerUsers.post("/", upload.single("avatar"), async (req, res) => {
   try {
     const { email } = req.body;
     let user = User.findOne({ email: email });
@@ -112,15 +112,15 @@ routerUsers.post("/", async (req, res) => {
     }
     const salt = await bcrypt.genSalt();
     const hash = await bcrypt.hash(req.body.password, salt);
-    newUser = new User({ ...req.body, password: hash });
+    let NewUser = new User({...req.body, password: hash});
     if (req.file) {
-      newUser.imageURL = `${domain}/images/users/${req.file.filename}`;
+      NewUser.avatar = `${domain}/images/users/${req.file.filename}`;
     }
-    await newUser.save();
-    return res.status(201).json(newUser);
+    await NewUser.save();
+    res.status(201).json(user);
   } catch (error) {
-    console.error(`${error.name}: ${error.message}`);
-    return res.status(500).json({ name: error.name, message: error.message });
+    console.log(error);
+    res.status(500).json({ message: error.message });
   }
 });
 
@@ -148,9 +148,7 @@ routerUsers.patch("/:email", upload.single("avatar"), async (req, res) => {
     try {
       const user = await User.findOne({ email: usEmail });
       if (!user) {
-        return res
-          .status(404)
-          .json({ message: "No se encontró un usuario con ese correo" });
+        return res.status(404).json({ message: "No se encontró un usuario con ese correo" });
       }
       if (newData.password) {
         const match = await bcrypt.compare(newData.password, user.password);
@@ -163,9 +161,7 @@ routerUsers.patch("/:email", upload.single("avatar"), async (req, res) => {
       if (req.file) {
         newData.avatar = req.file.path;
       }
-      const updated = await User.findOneAndUpdate({ email: usEmail }, newData, {
-        new: true,
-      });
+      const updated = await User.findOneAndUpdate({ email: usEmail }, newData, { new: true });
       res.status(201).json(updated);
     } catch (error) {
       console.log(error);
@@ -177,34 +173,27 @@ routerUsers.patch("/:email", upload.single("avatar"), async (req, res) => {
   }
 });
 
-routerUsers.patch(
-  "/:email/deleted",
-  upload.single("avatar"),
-  async (req, res) => {
+routerUsers.patch("/:email/deleted", upload.single("avatar"), async (req, res) => {
+  try {
+    const usEmail = req.params.email;
+  
     try {
-      const usEmail = req.params.email;
-
-      try {
-        const updated = await User.findOneAndUpdate(
-          { email: usEmail },
-          { deleted: true },
-          { new: true }
-        );
-
-        if (!updated) {
-          return res.status(404).json({ message: "User not was updated" });
-        }
-
-        res.json(updated);
-      } catch (error) {
-        console.log(error);
-        res.status(500).json({ message: error.message });
+      const updated = await User.findOneAndUpdate({ email: usEmail }, { deleted: true }, { new: true });
+      
+      if (!updated) {
+        return res.status(404).json({ message: 'User not was updated' });
       }
+      
+      res.json(updated);
     } catch (error) {
       console.log(error);
       res.status(500).json({ message: error.message });
     }
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ message: error.message });
   }
-);
+});
+
 
 module.exports = routerUsers;

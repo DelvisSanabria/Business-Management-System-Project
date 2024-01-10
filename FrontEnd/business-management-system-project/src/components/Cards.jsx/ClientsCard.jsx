@@ -2,6 +2,7 @@
 import {  motion } from "framer-motion"
 import { useEffect, useState,useRef } from "react";
 import axios from "axios";
+import camera from "./../../images/camera.png"
 
 
 
@@ -182,10 +183,11 @@ const ClientsCard = ({ isOpen,type, onClose,clientEmail}) => {
           user = { ...user, [field]: input[field] };
         }
       } else if (field === "avatar") {
-        if (input[field] && inputFile.current && inputFile.current.files.length > 0) {
+        if (inputFile.current && inputFile.current.files.length > 0) {
           const file = inputFile.current.files[0];
           switch (file.type) {
-            case "image/*":
+            case "image/png":
+            case "image/jpeg":
               user = { ...user, avatar: file };
               errors = { ...errors, avatar: "" };
               break;
@@ -215,7 +217,7 @@ const ClientsCard = ({ isOpen,type, onClose,clientEmail}) => {
     if(button.current){
       button.current.disabled = !isValid;
       setError(errors);
-      setUser(user);
+      setUser((prevState) => ({...prevState, ...user}));
     }
   }
 
@@ -299,7 +301,7 @@ const ClientsCard = ({ isOpen,type, onClose,clientEmail}) => {
                       id="avatar"
                       type="file"
                       name="avatar"
-                      accept="image/*"
+                      accept="image/png, image/jpeg"
                       onChange={handleValidation}
                     />
                     <div className="p-3 absolute top-0 right-0">

@@ -3,10 +3,12 @@
 
 import { useEffect,useState,useContext } from "react"
 import { Link, useNavigate } from "react-router-dom"
+import Session from "./../Session/session"
 import { EmpresasPolar, Hamburger, MenuBox, HomeSvg, Login, Products, ReportsSvg, SalesSvg, SettingsSvg, UserSvg, LogoutSvg, Cart, ContactUsSvg, AccountSvg } from "./exportsImports";
 
 export default function Menu () {
   const [isOpen, setOpen] = useState(false)
+  
 
   const [isLogged, setIsLogged] = useState(false)
   const [activeTab, setIsActiveTab] = useState("Home")
@@ -25,9 +27,9 @@ export default function Menu () {
   const [MenuItems, setMenuItems] = useState([])
   const navigate = useNavigate();
   const [sessionIcon, setSessionIcon] = useState(<Login currentColor={SessionColor}/>)
-  /* const {user, setUser} = useContext(UserSession) */
+  const {user, setUser} = useContext(Session)
   const logout = () => {
-    /* setUser(null); */
+    setUser(null);
     navigate("/");
   }
   const adminPages = [
@@ -64,17 +66,16 @@ export default function Menu () {
           {name: "Session" , title: sessionItem, path: "/login", icon: sessionIcon},]
 
   useEffect(()=>{
-    const user = localStorage.getItem("user");
     let userRole = "";
     if(user && user.length > 0){
       setIsLogged(true)
       setSessionIcon(<LogoutSvg currentColor={SessionColor}/>)
-      /* try {
+      try {
         const parsedUser = JSON.parse(user);
         userRole = parsedUser.role;
       } catch (error) {
         console.error("an error occurred while parsing the user", error);
-      } */
+      }
     }
 
     if (!user){
