@@ -2,74 +2,168 @@
 /* eslint-disable react/prop-types */
 
 import { useEffect,useState,useContext } from "react"
-import { Link, useNavigate } from "react-router-dom"
+import { Link, useLocation, useNavigate } from "react-router-dom"
 import Session from "./../Session/session"
-import { EmpresasPolar, Hamburger, MenuBox, HomeSvg, Login, Products, ReportsSvg, SalesSvg, SettingsSvg, UserSvg, LogoutSvg, Cart, ContactUsSvg, AccountSvg } from "./exportsImports";
+import { EmpresasPolar, Hamburger, MenuBox, HomeSvg, LoginSvg, Products, ReportsSvg, SalesSvg, SettingsSvg, UserSvg, LogoutSvg, Cart, ContactUsSvg, AccountSvg } from "./exportsImports";
 
 export default function Menu () {
   const [isOpen, setOpen] = useState(false)
-  
-
   const [isLogged, setIsLogged] = useState(false)
-  const [activeTab, setIsActiveTab] = useState("Home")
+  const [activeTab, setIsActiveTab] = useState("")
   const [sessionItem, setSessionItem] = useState("Iniciar Sesion")
-  const [Home, setHome] = useState("#3056d3")
-  const [User, setUsers] = useState("#637381")
-  const [Customers, setCustomers] = useState("#637381")
-  const [Vendors, setVendors] = useState("#637381")
-  const [Inventory, setInventory] = useState("#637381")
-  const [Sales, setSales] = useState("#637381")
-  const [Reports, setReports] = useState("#637381")
-  const [Settings, setSettings] = useState("#637381")
-  const [MakeSale, setMakeSale] = useState("#637381")
-  const [SessionColor, setSessionColor] = useState("#637381")
-  const [Contact, setContact] = useState("#637381")
-  const [MenuItems, setMenuItems] = useState([])
+  const [sessionName, setSessionName] = useState("Login")
+  const location = useLocation();
+
   const navigate = useNavigate();
-  const [sessionIcon, setSessionIcon] = useState(<Login currentColor={SessionColor}/>)
   const {user, setUser} = useContext(Session)
   const logout = () => {
     setUser(null);
     navigate("/");
   }
+  const activeColor = "#3056d3"
+  const defaultColor = "#637381"
+  const svgs = {
+    Home: <HomeSvg currentColor={activeTab === "Home" ? activeColor : (defaultColor)}/>,
+    User: <UserSvg currentColor={activeTab === "User" ? activeColor : (defaultColor)}/>,
+    Customers: <UserSvg currentColor={activeTab === "Customers" ? activeColor : (defaultColor)}/>,
+    Vendors: <UserSvg currentColor={activeTab === "Vendors" ? activeColor : (defaultColor)}/>,
+    Inventory: <Products currentColor={activeTab === "Inventory" ? activeColor : (defaultColor)}/>,
+    Sales: <SalesSvg currentColor={activeTab === "Sales" ? activeColor : (defaultColor)}/>,
+    Reports: <ReportsSvg currentColor={activeTab === "Reports" ? activeColor : (defaultColor)}/>,
+    Settings: <SettingsSvg currentColor={activeTab === "Settings" ? activeColor : (defaultColor)}/>,
+    MakeSale: <Cart currentColor={activeTab === "MakeSale" ? activeColor : (defaultColor)}/>,
+    SessionColor: <LoginSvg currentColor={activeTab === "SessionColor" ? activeColor : (defaultColor)}/>,
+    Contact: <ContactUsSvg currentColor={activeTab === "Contact" ? activeColor : (defaultColor)}/>,
+    Logout: <LogoutSvg currentColor={activeTab === "Logout" ? activeColor : (defaultColor)}/>,
+    Account: <AccountSvg currentColor={activeTab === "Account" ? activeColor : (defaultColor)}/>,
+    Login: <LoginSvg currentColor={activeTab === "Login" ? activeColor : (defaultColor)}/>,
+    SignUp: <UserSvg currentColor={activeTab === "SignUp" ? activeColor : (defaultColor)}/>,
+  }
   const adminPages = [
-   {name: "Home" , title:"Inicio", path: "/", icon: <HomeSvg currentColor={Home}/>},
-   {name:"Users", title: "Usuarios", path: "/users", icon: <UserSvg currentColor={User}/>},
-   {name: "Customers", title: "Clientes", path: "/customers", icon: <UserSvg currentColor={Customers}/>},
-   {name: "Vendors" , title: "Vendedores", path: "/vendors", icon: <UserSvg currentColor={Vendors}/>},
-   {name: "Inventory" , title: "Inventario", path: "/products", icon: <Products currentColor={Inventory}/>},
-   {name: "Sales" , title: "Ventas", path: "/sales", icon: <SalesSvg currentColor={Sales}/>},
-   {name:"MakeSale" , title: "Realizar una Venta", path: "/makeSale", icon: <SalesSvg currentColor={MakeSale}/>},
-   {name: "Reports" , title: "Reportes", path: "/reports", icon: <ReportsSvg currentColor={Reports}/>},]
+    {
+      name: "Home",
+      title: "Inicio",
+      path: "/",
+    },
+    {
+      name: "Users",
+      title: "Usuarios",
+      path: "/users",
+    },
+    {
+      name: "Customers",
+      title: "Clientes",
+      path: "/customers",
+    },
+    {
+      name: "Vendors",
+      title: "Vendedores",
+      path: "/vendors",
+    },
+    {
+      name: "Inventory",
+      title: "Inventario",
+      path: "/products",
+    },
+    {
+      name: "Sales",
+      title: "Ventas",
+      path: "/sales",
+    },
+    {
+      name: "MakeSale",
+      title: "Realizar una Venta",
+      path: "/makeSale",
+    },
+    {
+      name: "Reports",
+      title: "Reportes",
+      path: "/reports",
+    },
+  ];
 
-   const vendorsPages = [
-    {name: "Home" , title:"Inicio", path: "/", icon: <HomeSvg currentColor={Home}/>},
-    {name: "Customers", title: "Clientes", path: "/customers", icon: <UserSvg currentColor={Customers}/>},
-    {name: "Inventory" , title: "Inventario", path: "/products", icon: <Products currentColor={Inventory}/>},
-    {name: "Sales" , title: "Ventas", path: "/sales", icon: <SalesSvg currentColor={Sales}/>},
-    {name:"MakeSale" , title: "Realizar una Venta", path: "/makeSale", icon: <SalesSvg currentColor={MakeSale}/>},]
- 
-    const clientsPages = [
-      {name: "Home" , title:"Inicio", path: "/", icon: <HomeSvg currentColor={Home}/>},
-      {name: "Inventory" , title: "Productos", path: "/products", icon: <Products currentColor={Inventory}/>},
-      {name: "Sales" , title: "Carrito", path: "/cart", icon: <Cart currentColor={Sales}/>},
-      {name: "Customers", title: "Contactanos", path: "/contacUs", icon: <ContactUsSvg currentColor={Customers}/>},]
-   
-      const generalMenu = [
-        {name: "Home" , title:"Inicio", path: "/", icon: <HomeSvg currentColor={Home}/>},
-        {name: "Inventory" , title: "Productos", path: "/products", icon: <Products currentColor={Inventory}/>},
-        {name: "Customers", title: "Contactanos", path: "/contacUs", icon: <ContactUsSvg currentColor={Customers}/>},
-        {name: "Users" , title: "Registrarse", path: "/register", icon: <UserSvg currentColor={User}/>},]
-        const SubMenuItems = [
-          {name: "Contact", title: "Contactanos", path: "/contacUs", icon: <ContactUsSvg currentColor={Contact}/>},
-          {name: "Settings" , title: "Ajustes" , path: "/settings", icon: <SettingsSvg currentColor={Settings}/>},
-          {name: "Session" , title: sessionItem, path: "/login", icon: sessionIcon},]
+  const vendorsPages = [
+    {
+      name: "Home",
+      title: "Inicio",
+      path: "/",
+    },
+    {
+      name: "Customers",
+      title: "Clientes",
+      path: "/customers",
+    },
+    {
+      name: "Inventory",
+      title: "Inventario",
+      path: "/products",
+    },
+    {
+      name: "Sales",
+      title: "Ventas",
+      path: "/sales",
+    },
+    {
+      name: "MakeSale",
+      title: "Realizar una Venta",
+      path: "/makeSale",
+    },
+  ];
 
+  const clientsPages = [
+    {
+      name: "Home",
+      title: "Inicio",
+      path: "/",
+    },
+    {
+      name: "Inventory",
+      title: "Productos",
+      path: "/products",
+    },
+    {
+      name: "Sales",
+      title: "Carrito",
+      path: "/cart",
+    },
+  ];
+
+  const generalMenu = [
+    {
+      name: "Home",
+      title: "Inicio",
+      path: "/",
+    },
+    {
+      name: "Inventory",
+      title: "Productos",
+      path: "/products",
+    },
+    {
+      name: "SignUp",
+      title: "Registrarse",
+      path: "/SignUp",
+    },
+  ];
+  const SubMenuItems = [
+    {
+      name: "Contact",
+      title: "Contactanos",
+      path: "/contacUs",
+    },
+    {
+      name: "Settings",
+      title: "Ajustes",
+      path: "/settings",
+    },
+    { name: sessionName, title: sessionItem, path: "/login" },
+  ];
+
+  const [MenuItems, setMenuItems] = useState(generalMenu)
   useEffect(()=>{
     let userRole = "";
     if(user && user.length > 0){
       setIsLogged(true)
-      setSessionIcon(<LogoutSvg currentColor={SessionColor}/>)
       try {
         const parsedUser = JSON.parse(user);
         userRole = parsedUser.role;
@@ -78,65 +172,54 @@ export default function Menu () {
       }
     }
 
-    if (!user){
-      setIsLogged(false)
-      setSessionIcon(<Login currentColor={SessionColor}/>)
-    }
-
-    
     if (userRole === "admin") {
       setMenuItems(adminPages)
     } else if (userRole === "vendor") {
       setMenuItems(vendorsPages)
     } else if (userRole === "client") {
       setMenuItems(clientsPages)
+    }
+
+    if (isLogged === true) {
+      setSessionItem("Cerrar Sesion");
+      setSessionName("Logout");
     } else {
-      setMenuItems(generalMenu)
+      setSessionItem("Iniciar Sesion");
+      setSessionName("Login");
     }
 
-    if(isLogged === true){
-      return setSessionItem("Cerrar Sesion")
-    }else{
-      return setSessionItem("Iniciar Sesion")
-    }
-
-  }, [SessionColor, adminPages, clientsPages, generalMenu, isLogged, vendorsPages])
+  }, [isLogged])
 
   const handleActive = (tab) => {
-    const colors = {
-      Home: "#3056d3",
-      Users: "#3056d3",
-      Customers: "#3056d3",
-      Vendors: "#3056d3",
-      Inventory: "#3056d3",
-      Sales: "#3056d3",
-      Reports: "#3056d3",
-      Settings: "#3056d3",
-      MakeSale: "#3056d3",
-      Session: "#3056d3",
-      Contact: "#3056d3"
-    };
-  
     setIsActiveTab(tab.name);
-    
-    Object.keys(colors).forEach(key => {
-      const color = key === tab.name ? colors[key] : "#637381";
-      const setKey = {
-        Home: setHome,
-        Users: setUsers,
-        Customers: setCustomers,
-        Vendors: setVendors,
-        Inventory: setInventory,
-        Sales: setSales,
-        Reports: setReports,
-        Settings: setSettings,
-        MakeSale: setMakeSale,
-        Session: setSessionColor,
-        Contact: setContact
-      };
-      setKey[key](color);
-    });
   };
+
+  useEffect(() => {
+    const savedActiveTab = sessionStorage.getItem('activeTab');
+  
+    if (savedActiveTab) {
+      setIsActiveTab(savedActiveTab);
+    } else {
+      setIsActiveTab('Home');
+      sessionStorage.setItem('activeTab', 'Home');
+    }
+  }, []); 
+
+  useEffect(() => {
+    const pathname = location.pathname;
+
+    if (pathname === '/') {
+      setIsActiveTab('Home');
+    } else {
+      const menuItem = MenuItems.find(item => item.path === pathname);
+      if (menuItem) {
+        setIsActiveTab(menuItem.name);
+      } else {
+        setIsActiveTab('Home');
+      }
+    }
+  }, [location.pathname]);
+
   return (
     <>
       <div className="grid grid-rows-[73px_1fr] justify-center md:hidden lg:hidden xl:hidden">
@@ -165,7 +248,6 @@ export default function Menu () {
           </div>
         </header>
       </div>
-
       <div className="hidden md:block w-[375px] h-fit">
         <div className="fixed w-[220px] h-[100vh] top-0 left-0 bg-white shadow-[0px_1px_4px_#0000001f]">
           <div className="flex m-4">
@@ -179,20 +261,16 @@ export default function Menu () {
             <div>
               {MenuItems.map((page) => (
                 <Link
-                  to={`http://localhost:5173${page.path}`}
+                  to={page.path}
                   onClick={() => {
-                    if (page.title === "Cerrar Sesion") {
-                      logout();
-                    } else {
-                      handleActive(page);
-                    }
+                    handleActive(page);
                   }}
                   key={page.name}
                   className={`grid grid-cols-[29px_1fr_4px] items-center justify-center w-[220px] h-[35px] ${
                     activeTab === page.name ? "bg-[#d6dfff]" : "bg-[#FFFFFF]"
                   }`}
                 >
-                  <div className="w-[22px] px-2 h-[21px]">{page.icon}</div>
+                  <div className="w-[22px] px-2 h-[21px]">{svgs[page.name]}</div>
                   <div
                     className={`w-[55px] px-3 font-medium text-[16px] tracking-[0] leading-[24px] whitespace-nowrap ${
                       activeTab === page.name
@@ -214,16 +292,20 @@ export default function Menu () {
               <div className="bg-[#E7E7E7] w-[190px] h-[1px] m-4"></div>
               {SubMenuItems.map((page) => (
                 <Link
-                  to={`http://localhost:5174${page.path}`}
+                  to={page.path}
                   onClick={() => {
-                    handleActive(page);
+                    if (page.title === "Cerrar Sesion") {
+                      logout();
+                    } else {
+                      handleActive(page);
+                    }
                   }}
                   key={page.name}
                   className={`grid grid-cols-[29px_1fr_4px] items-center justify-center w-[220px] h-[35px] ${
                     activeTab === page.name ? "bg-[#d6dfff]" : "bg-[#FFFFFF]"
                   }`}
                 >
-                  <div className="w-[22px] px-2 h-[21px]">{page.icon}</div>
+                  <div className="w-[22px] px-2 h-[21px]">{svgs[page.name]}</div>
                   <div
                     className={`w-[55px] px-3 font-medium text-[16px] tracking-[0] leading-[24px] whitespace-nowrap ${
                       activeTab === page.name
@@ -244,7 +326,7 @@ export default function Menu () {
               <div className="w-[255px] h-[80px]">
                 <div className="w-[259px] h-[80px]">
                   <div className="grid grid-cols-[29px_1fr] gap-2 my-3 mx-7 items-center justify-center w-[220px]">
-                    <Link to="http://localhost:5174/settings">
+                    <Link to="/settings">
                       <AccountSvg></AccountSvg>
                     </Link>
                     <div>

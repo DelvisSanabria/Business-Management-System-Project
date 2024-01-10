@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import axios from "axios";
 import { /* useNavigate */ Link } from "react-router-dom";
-import { polar, camera, blueBg, polarSede } from "../exports";
+import { polar, camera, blueBg, polarSede } from "./../components/exportsImports";
 
 function SignUp() {
    const server = "http://localhost:3001";
@@ -73,7 +73,7 @@ function SignUp() {
                   "Content-Type": "multipart/form-data"
                }
             });
-            if (newResponse.status === 200) {
+            if (newResponse.status === 201) {
                alert("Datos registrados con éxito");
                //navigate("/login");
                const keys = ["avatar", "firstname", "lastname", "phone", "email", "password", "repPassword", "address"];

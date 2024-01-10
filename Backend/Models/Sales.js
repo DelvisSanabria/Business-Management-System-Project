@@ -19,15 +19,11 @@ const SaleSchema = new mongoose.Schema({
     min: 0,
     required: true,
   },
-  subtotal: {
-    type: Number,
-    required: true
-  },
-  tax: {
-    type: Number,
-    required: true
-  },
   total: {
+    type: Number,
+    required: true
+  },
+  iva: {
     type: Number,
     required: true
   },

@@ -1,6 +1,6 @@
 /* eslint-disable react/prop-types */
 
-const Login = ({ currentColor }) => {
+const LoginSvg = ({ currentColor }) => {
   return (
     <svg
       width="24px"
@@ -37,4 +37,4 @@ const Login = ({ currentColor }) => {
   );
 };
 
-export default Login;
+export default LoginSvg;

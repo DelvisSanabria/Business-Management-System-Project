@@ -4,18 +4,21 @@ const routerUsers = require("express").Router();
 const ObjectId = mongoose.Types.ObjectId;
 const bcrypt = require("bcryptjs");
 const multer = require("multer");
+const fs = require("fs");
 const domain = process.env.DOMAIN || "http://localhost:3001";
 
 const storage = multer.diskStorage({
-  destination: (req, file, callback) => {
-    callback(null, "./images/users");
+  destination: function (req, file, cb) {
+    cb(null, "./images/users");
   },
-  filename: (req, file, callback) => {
-    callback(null, `${Date.now()}_${file.originalname.replace(/\s/g, "_")}`);
- }
+  filename: function (req, file, cb) {
+    cb(null, Date.now() + "-" + file.originalname);
+  },
 });
 
-const upload = multer({ storage: storage });
+const upload = multer({ 
+  storage: storage,
+});
 
 routerUsers.get("/", async (req, res) => {
   try {
@@ -106,7 +109,7 @@ routerUsers.get("/:email", async (req, res) => {
 routerUsers.post("/", upload.single("avatar"), async (req, res) => {
   try {
     const { email } = req.body;
-    let user = User.findOne({ email: email });
+    let user = await User.findOne({ email: email });
     if (user) {
       return res.status(409).json({ email: "Correo ya registrado" });
     }
@@ -117,7 +120,7 @@ routerUsers.post("/", upload.single("avatar"), async (req, res) => {
       NewUser.avatar = `${domain}/images/users/${req.file.filename}`;
     }
     await NewUser.save();
-    res.status(201).json(user);
+    res.status(201).json(NewUser);
   } catch (error) {
     console.log(error);
     res.status(500).json({ message: error.message });
@@ -145,28 +148,63 @@ routerUsers.patch("/:email", upload.single("avatar"), async (req, res) => {
   try {
     const usEmail = req.params.email;
     const newData = req.body;
-    try {
-      const user = await User.findOne({ email: usEmail });
-      if (!user) {
-        return res.status(404).json({ message: "No se encontró un usuario con ese correo" });
-      }
-      if (newData.password) {
-        const match = await bcrypt.compare(newData.password, user.password);
-        if (!match) {
-          const salt = await bcrypt.genSalt();
-          const hash = await bcrypt.hash(newData.password, salt);
-          newData.password = hash;
-        }
-      }
-      if (req.file) {
-        newData.avatar = req.file.path;
-      }
-      const updated = await User.findOneAndUpdate({ email: usEmail }, newData, { new: true });
-      res.status(201).json(updated);
-    } catch (error) {
-      console.log(error);
-      res.status(500).json({ message: error.message });
+    const user = await User.findOne({ email: usEmail });
+
+    if (!user) {
+      return res
+        .status(404)
+        .json({ message: "No se encontró un usuario con ese correo" });
     }
+
+    const imagePath = req.file ? req.file.path : undefined;
+    
+
+    let update = { $set: {} };
+
+    if (imagePath) {
+      update.$set.avatar = `${domain}/${imagePath}`;
+      const startIndex = user.avatar.indexOf("images");
+      const avatarFilePathPrev = user.avatar.substring(startIndex);
+      const filePath = avatarFilePathPrev
+      if (fs.existsSync(filePath)) {
+        fs.unlinkSync(filePath);
+        console.log("Archivo eliminado:", filePath);
+      } else {
+        console.log("El archivo no existe:", filePath);
+      }
+    }
+    if (newData.name) {
+      update.$set.name = newData.name;
+    }
+    if (newData.email) {
+      update.$set.email = newData.email;
+    }
+    if (newData.password) {
+      const match = await bcrypt.compare(newData.password, user.password);
+      if (!match) {
+        const salt = await bcrypt.genSalt();
+        const hash = await bcrypt.hash(newData.password, salt);
+        update.$set.password = hash;
+      }
+    }
+    if (newData.lastName) {
+      update.$set.lastName = newData.lastName;
+    }
+    if (newData.phone) {
+      update.$set.phone = newData.phone;
+    }
+    if (newData.address) {
+      update.$set.address = newData.address;
+    }
+    if (newData.role) {
+      update.$set.role = newData.role;
+    }
+    const updated = await User.findOneAndUpdate({ email: usEmail }, update, {
+      new: true,
+    });
+
+    console.log(updated);
+    res.status(201).json(updated);
   } catch (error) {
     console.log(error);
     res.status(500).json({ message: error.message });

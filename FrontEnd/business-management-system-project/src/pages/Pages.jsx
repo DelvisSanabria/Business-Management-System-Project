@@ -26,15 +26,13 @@ import NoPage from './NoPage.jsx'
 import SignUp from './SignUp'
 import Profile from './Profile.jsx'
 import MakeSale from './MakeSale.jsx'
-
+import SingleProduct from './SingleProduct';
 export {
   Layout,
   Home,
   LogIn,
   Products,
-  /* AddProduct,
-  EditProduct,
-  ViewProduct, */
+  SingleProduct,
   Users,
   /* AddUser,
   EditUser, */

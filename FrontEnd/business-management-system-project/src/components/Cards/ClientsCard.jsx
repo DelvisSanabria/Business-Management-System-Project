@@ -2,7 +2,7 @@
 import {  motion } from "framer-motion"
 import { useEffect, useState,useRef } from "react";
 import axios from "axios";
-import camera from "./../../images/camera.png"
+import {camera,userIco} from "../exportsImports"
 
 
 
@@ -45,105 +45,105 @@ const ClientsCard = ({ isOpen,type, onClose,clientEmail}) => {
    });
    const button = useRef();
    const inputFile = useRef();
-   if (user.name && user.lastName && user.address) {
-      let name = "";
-      let lastName = "";
-      for (let word of user.name.split(" ")) {
-         name += word[0].toLowerCase() + word.slice(1) + " ";
+   const [image, setImage] = useState("")
+   const handleCleanInput = () => {
+    const keys = ["avatar", "name", "lastName", "phone", "email", "password", "repPassword", "address"];
+    for (const key of keys) {
+      if (input[key]) {
+          setInput((prev) => ({...prev, [key]: ""}));
       }
-      for (let word of user.lastName.split(" ")) {
-         lastName += word[0].toLowerCase() + word.slice(1) + " ";
+      if (error[key]) {
+          setError((prev) => ({...prev, [key]: ""}));
       }
-      user.name = name.trim();
-      user.lastName = lastName.trim();
-      user.address = user.address.trim();
+      if (user[key]) {
+          setUser((prev) => ({...prev, [key]: ""}));
+      }
+    }
    }
 
-   
    const handleSubmit = async () => {
-      try {
-        
-         const formdata = new FormData();
-         for (const prop in user) {
-            formdata.append(prop, user[prop]);
-         }
-         
-         const response = await axios.post(`${server}/users`, formdata, {
-            headers: {
-               "Content-Type": "multipart/form-data"
-            }
-         });
-         if (response.status === 201) {
-            console.log(user)
-            setInput({
-               avatar: "",
-               name: "",
-               lastName: "",
-               phone: "",
-               email: "",
-               password: "",
-               repPassword: "",
-               address: "",
-               role: "client"
-            })
-            setStatusMsg("El usuario se ha creado correctamente");
-         }else if (response.status === 500) {
-            setStatusMsg("Error al crear el usuario");
-         }
-      } catch ({name, message, response}) {
-         if (response.data.email) {
-            setError((prev) => ({...prev, email: response.data.email}));
-         }
-         console.error(`${name}: ${message}`);
+    try {
+      for (const prop in user) {
+        if (user[prop] === "") {
+          setStatusMsg("Debe llenar todos los campos");
+          return;
+        }
       }
-   }
+      const formdata = new FormData();
+      for (const prop in user) {
+        let value = user[prop];
+        if (typeof value === "string") {
+          value = value.trim().toLowerCase();
+        }
+        formdata.append(prop, value);
+      }
+      const response = await axios.post(`${server}/users`, formdata, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
+      if (response.status === 201) {
+        handleCleanInput();
+        setImage("")
+        if(inputFile.current){
+          inputFile.current.value = ""
+        }
+        setStatusMsg("El usuario se ha creado correctamente");
+      } else if (response.status === 500) {
+        setStatusMsg("Error al crear el usuario");
+      }
+    } catch ({ name, message, response }) {
+      if (response.data.email) {
+        setError((prev) => ({ ...prev, email: response.data.email }));
+      }
+      console.error(`${name}: ${message}`);
+    }
+  }
 
-   const handleUpdate = async () => {
-     try {
-       const formdata = new FormData();
-       for (const prop in user) {
-         formdata.append(prop, user[prop]);
-       }
-
-       const response = await axios.patch(
-         `${server}/users/${clientEmail}`,
-         formdata,
-         {
-           headers: {
-             "Content-Type": "multipart/form-data",
-           },
-         }
-       );
-       if (response.status === 201) {
-         setInput({
-           avatar: "",
-           name: "",
-           lastName: "",
-           phone: "",
-           email: "",
-           password: "",
-           repPassword: "",
-           address: "",
-           role: "client",
-         });
-         setStatusMsg("El usuario ha sido editado correctamente");
-       } else if (response.status === 500) {
-         setStatusMsg("Error al editar el usuario");
-       }
-     } catch ({ name, message, response }) {
-       if (response.data.email) {
-         setError((prev) => ({ ...prev, email: response.data.email }));
-       }
-       console.error(`${name}: ${message}`);
-     }
-   };
+  const handleUpdate = async () => {
+    try {
+      const formdata = new FormData();
+      for (const prop in input) {
+        let value = input[prop];
+        if (typeof value === "string") {
+          value = value.trim().toLowerCase();
+        }
+        formdata.append(prop, value);
+      }
+      if (inputFile.current && inputFile.current.files.length > 0) {
+        const file = inputFile.current.files[0];
+        formdata.append("avatar", file);
+      }
+      const response = await axios.patch(
+        `${server}/users/${clientEmail}`,
+        formdata,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
+  
+      if (response.status === 201) {
+        setStatusMsg("El usuario ha sido editado correctamente");
+      } else if (response.status === 500) {
+        setStatusMsg("Error al editar el usuario");
+      }
+    } catch ({ name, message, response }) {
+      if (response.data.email) {
+        setError((prev) => ({ ...prev, email: response.data.email }));
+      }
+      console.error(`${name}: ${message}`);
+    }
+  };
 
    const handleChange = (event) => {
       const { name, value } = event.target;
-      setInput((prev) => ({...prev, [name]: value }));
+      setInput({...input, [name]: value });
    }
 
-   const handleValidation = (previousDates) => {
+
+  const handleValidation = (type) => {
     const { password, repPassword } = input;
     const regexList = { 
       name: /^[a-zñ áéíóúñÁÉÍÓÚÑ]+$/i, 
@@ -151,7 +151,7 @@ const ClientsCard = ({ isOpen,type, onClose,clientEmail}) => {
       email: /^[a-z0-9.-]+@[a-z0-9-]+(\.[a-z]{2,4}){1,3}$/i, 
       phone: /^(\+[\d]{2})?\d{3,4}\d{3}\d{2}\d{2}$/, 
       password: /^(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])(?=.*[!@#$%^&.*/])[^<>{}:;'"?,]{8,16}$/, 
-      address: /^[a-z0-9-,. áéíóúñÁÉÍÓÚÑ]+$/i,
+      address: /^[a-z0-9-,. áéíóúñÁÉÍÓÚÑ]{15,}$/i,
       role: /^[a-zñ áéíóúñÁÉÍÓÚÑ]+$/i, 
     };
   
@@ -161,7 +161,7 @@ const ClientsCard = ({ isOpen,type, onClose,clientEmail}) => {
       email: "El correo es inválido",
       phone: "El teléfono es inválido",
       password: "La contraseña es inválida",
-      address: "La dirección es inválida",
+      address: "La dirección es inválida la longitud debe ser de almenos 15 caracteres",
       avatar: "Sólo en formato: png, jpg, jpeg"
     };
     
@@ -170,10 +170,7 @@ const ClientsCard = ({ isOpen,type, onClose,clientEmail}) => {
     let isValid = true;
     
     for (let field in input) {
-      if(input[field] === ""){
-        user = { ...user, [field]: previousDates[field] };
-      }
-      else if (input[field]) {
+      if (input[field]) {
         if (regexList[field] && !regexList[field].test(input[field])) {
           errors = { ...errors, [field]: message[field] };
           user = { ...user, [field]: "" };
@@ -182,9 +179,11 @@ const ClientsCard = ({ isOpen,type, onClose,clientEmail}) => {
           errors = { ...errors, [field]: "" };
           user = { ...user, [field]: input[field] };
         }
-      } else if (field === "avatar") {
+      }else if (field === "avatar") {
         if (inputFile.current && inputFile.current.files.length > 0) {
           const file = inputFile.current.files[0];
+          setImage(file);
+          isValid = true;
           switch (file.type) {
             case "image/png":
             case "image/jpeg":
@@ -193,7 +192,7 @@ const ClientsCard = ({ isOpen,type, onClose,clientEmail}) => {
               break;
             default:
               errors = { ...errors, [field]: message[field] };
-              user = { ...user, avatar: null };
+              user = { ...user, avatar: "" };
               isValid = false;
           }
         } else {
@@ -215,9 +214,13 @@ const ClientsCard = ({ isOpen,type, onClose,clientEmail}) => {
       }
     }
     if(button.current){
-      button.current.disabled = !isValid;
-      setError(errors);
-      setUser((prevState) => ({...prevState, ...user}));
+      if (type === "updateClient") {
+        button.current.disabled = false;
+    } else {
+        button.current.disabled = !isValid;
+        setError(errors);
+        setUser((prevState) => ({...prevState, ...user}));
+    }
     }
   }
 
@@ -231,7 +234,6 @@ const ClientsCard = ({ isOpen,type, onClose,clientEmail}) => {
   
       if (response.status === 200) {
         const data = response.data;
-        console.log(data);
         setPreviosDates(data);
       } else {
         alert("Error");
@@ -242,19 +244,19 @@ const ClientsCard = ({ isOpen,type, onClose,clientEmail}) => {
   };
 
    useEffect(() => {
-      handleValidation(previousDates);
+      handleValidation(type);
       //eslint-disable-next-line
    }, [input]);
 
    useEffect(() => {
      getClient(clientEmail)
    // eslint-disable-next-line react-hooks/exhaustive-deps
-   }, [clientEmail])
+   }, [clientEmail, isOpen]);
 
   return (
     <>
       {isOpen && type === "createClient" && (
-        <motion.div className="fixed inset-0  bg-black bg-opacity-50 flex items-center justify-center z-50">
+        <motion.div className="fixed inset-0  bg-black bg-opacity-50 flex items-center justify-center z-[120]">
           <div className="bg-white p-6 rounded-lg overflow-auto h-[95vh] w-[460px]">
             <form className="z-10 flex flex-col justify-center items-center gap-[21px]   rounded-[20px]">
               <div className="relative grid grid-cols-[1fr_30px]">
@@ -267,6 +269,7 @@ const ClientsCard = ({ isOpen,type, onClose,clientEmail}) => {
                   onClick={() => {
                     onClose();
                     setStatusMsg("");
+                    setImage("");
                   }}
                   className="absolute top-0 right-[-100px] flex px-4 hover:text-white hover:bg-red-500 rounded-[8px] border border-[#394867]"
                 >
@@ -292,8 +295,15 @@ const ClientsCard = ({ isOpen,type, onClose,clientEmail}) => {
                     onClick={() => inputFile.current.click()}
                     className="cursor-pointer relative rounded-full bg-[#E7E7E7] w-[125px] h-[125px] shadow-sm"
                   >
-                    <div className="absolute bottom-0 flex justify-center items-center w-[35px] h-[35px] rounded-full bg-[#FFFFFF] border-[1px] border-[#E7E7E7]">
-                      <img className="w-[25px]" src={"camera"} alt="camara" />
+                    <div className="absolute z-10 bottom-0 flex justify-center items-center w-[35px] h-[35px] rounded-full bg-[#FFFFFF] border-[1px] border-[#E7E7E7]">
+                      <img className="w-[25px]" src={camera} alt="camara" />
+                    </div>
+                    <div className=" h-[100px] w-[100px] absolute top-4 right-3">
+                      {image && image !== "" ? (
+                        <img className="w-[100%] h-[100%] rounded-full" src={URL.createObjectURL(image)} alt="avatar" />
+                      ): (
+                        <img className="h-[100px] rounded-full" src={userIco} alt="avatar" />
+                      )}
                     </div>
                     <input
                       className="hidden"
@@ -304,9 +314,6 @@ const ClientsCard = ({ isOpen,type, onClose,clientEmail}) => {
                       accept="image/png, image/jpeg"
                       onChange={handleValidation}
                     />
-                    <div className="p-3 absolute top-0 right-0">
-                      <img src={input.avatar} alt="image" />
-                    </div>
                   </figure>
                 </div>
                 <div className="relative">
@@ -334,6 +341,7 @@ const ClientsCard = ({ isOpen,type, onClose,clientEmail}) => {
                       id="name"
                       type="text"
                       name="name"
+                      value={input.name}
                       onChange={handleChange}
                     />
                     <div className="relative">
@@ -356,6 +364,7 @@ const ClientsCard = ({ isOpen,type, onClose,clientEmail}) => {
                       id="lastName"
                       type="text"
                       name="lastName"
+                      value={input.lastName}
                       onChange={handleChange}
                     />
                     <div className="relative">
@@ -378,7 +387,8 @@ const ClientsCard = ({ isOpen,type, onClose,clientEmail}) => {
                       id="phone"
                       type="tel"
                       name="phone"
-                      onBlur={handleChange}
+                      value={input.phone}
+                      onChange={handleChange}
                     />
                     <div className="relative">
                       <span className="error text-[14px]">{error.phone}</span>
@@ -398,7 +408,8 @@ const ClientsCard = ({ isOpen,type, onClose,clientEmail}) => {
                       id="email"
                       type="email"
                       name="email"
-                      onBlur={handleChange}
+                      value={input.email}
+                      onChange={handleChange}
                     />
                     <div className="relative">
                       <span className="error text-[14px]">{error.email}</span>
@@ -418,7 +429,8 @@ const ClientsCard = ({ isOpen,type, onClose,clientEmail}) => {
                       id="password"
                       type="password"
                       name="password"
-                      onBlur={handleChange}
+                      value={input.password}
+                      onChange={handleChange}
                       title={
                         "La contraseña debe contener entre 8 y 16 caracteres y al menos uno de los siguientes:\n- Mayúscula\n- Minúcula\n- Dígito\n- Un caracter especial de entre: !@#$%^&*/"
                       }
@@ -443,7 +455,8 @@ const ClientsCard = ({ isOpen,type, onClose,clientEmail}) => {
                       id="repPassword"
                       type="password"
                       name="repPassword"
-                      onBlur={handleChange}
+                      value={input.repPassword}
+                      onChange={handleChange}
                     />
                     <div className="relative">
                       <span className="error text-[14px]">
@@ -465,6 +478,7 @@ const ClientsCard = ({ isOpen,type, onClose,clientEmail}) => {
                     }`}
                     name="address"
                     id="address"
+                    value={input.address}
                     onChange={handleChange}
                   ></textarea>
                   <div className="relative">
@@ -492,7 +506,7 @@ const ClientsCard = ({ isOpen,type, onClose,clientEmail}) => {
         </motion.div>
       )}
       {isOpen && type === "updateClient" && (
-        <motion.div className="fixed inset-0  bg-black bg-opacity-50 flex items-center justify-center z-50">
+        <motion.div className="fixed inset-0  bg-black bg-opacity-50 flex items-center justify-center z-[120]">
           <div className="bg-white p-6 rounded-lg overflow-auto h-[95vh] w-[460px]">
             <form className="z-10 flex flex-col justify-center items-center gap-[21px]  rounded-[20px]">
               <div className="relative grid grid-cols-[1fr_30px]">
@@ -505,6 +519,8 @@ const ClientsCard = ({ isOpen,type, onClose,clientEmail}) => {
                   onClick={() => {
                     onClose();
                     setStatusMsg("");
+                    setImage("");
+                    handleCleanInput();
                   }}
                   className="absolute top-0 right-[-100px] flex px-4 hover:text-white hover:bg-red-500 rounded-[8px] border border-[#394867]"
                 >
@@ -531,7 +547,17 @@ const ClientsCard = ({ isOpen,type, onClose,clientEmail}) => {
                     className="cursor-pointer relative rounded-full bg-[#E7E7E7] w-[125px] h-[125px] shadow-sm"
                   >
                     <div className="absolute bottom-0 flex justify-center items-center w-[35px] h-[35px] rounded-full bg-[#FFFFFF] border-[1px] border-[#E7E7E7]">
-                      <img className="w-[25px]" src={"camera"} alt="camara" />
+                      <img className="w-[25px]" src={camera} alt="camara" />
+                    </div>
+                    <div className="absolute z-10 bottom-0 flex justify-center items-center w-[35px] h-[35px] rounded-full bg-[#FFFFFF] border-[1px] border-[#E7E7E7]">
+                      <img className="w-[25px]" src={camera} alt="camara" />
+                    </div>
+                    <div className="absolute top-3 right-3">
+                      {image ? (
+                        <img className="h-[100px] w-[100px] rounded-full" src={URL.createObjectURL(image)} alt="avatar" />
+                      ): (
+                        <img className="h-[100px] w-[100px] rounded-full"  src={previousDates.avatar} alt={previousDates.name} />
+                      )}
                     </div>
                     <input
                       className="hidden"
@@ -542,9 +568,6 @@ const ClientsCard = ({ isOpen,type, onClose,clientEmail}) => {
                       accept="image/jpeg, image/png"
                       onChange={handleValidation}
                     />
-                    <div className="p-3 absolute top-0 right-0">
-                      <img src={input.avatar} alt="image" />
-                    </div>
                   </figure>
                 </div>
                 <div className="relative">
@@ -619,7 +642,7 @@ const ClientsCard = ({ isOpen,type, onClose,clientEmail}) => {
                       type="tel"
                       name="phone"
                       placeholder={previousDates.phone}
-                      onBlur={handleChange}
+                      onChange={handleChange}
                     />
                     <div className="relative">
                       <span className="error text-[14px]">{error.phone}</span>
@@ -640,7 +663,7 @@ const ClientsCard = ({ isOpen,type, onClose,clientEmail}) => {
                       type="email"
                       name="email"
                       placeholder={previousDates.email}
-                      onBlur={handleChange}
+                      onChange={handleChange}
                     />
                     <div className="relative">
                       <span className="error text-[14px]">{error.email}</span>
@@ -661,7 +684,7 @@ const ClientsCard = ({ isOpen,type, onClose,clientEmail}) => {
                       type="password"
                       name="password"
                       placeholder={previousDates.password}
-                      onBlur={handleChange}
+                      onChange={handleChange}
                       title={
                         "La contraseña debe contener entre 8 y 16 caracteres y al menos uno de los siguientes:\n- Mayúscula\n- Minúcula\n- Dígito\n- Un caracter especial de entre: !@#$%^&*/"
                       }
@@ -687,7 +710,7 @@ const ClientsCard = ({ isOpen,type, onClose,clientEmail}) => {
                       type="password"
                       name="repPassword"
                       placeholder={previousDates.password}
-                      onBlur={handleChange}
+                      onChange={handleChange}
                     />
                     <div className="relative">
                       <span className="error text-[14px]">
@@ -725,7 +748,7 @@ const ClientsCard = ({ isOpen,type, onClose,clientEmail}) => {
                     }
                     ref={button}
                     id="submit"
-                    onClick={handleUpdate}
+                    onClick={()=>{handleUpdate()}}
                     type="button"
                   >
                     Editar Cliente
@@ -738,6 +761,6 @@ const ClientsCard = ({ isOpen,type, onClose,clientEmail}) => {
       )}
     </>
   );
-};
+}
 
 export default ClientsCard;

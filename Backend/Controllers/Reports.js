@@ -30,7 +30,7 @@ reportsRouter.get("/generalDataReportPerMonth", async (req, res) => {
       {
         $group: {
           _id: null,
-          totalSales: { $sum: 1 },
+          totalSales: { $sum: "$total" },
           bestSeller: { $max: "$vendor" },
           bestCustomer: { $max: "$client" },
           bestSellingProduct: { $max: "$products" },
@@ -58,7 +58,13 @@ reportsRouter.get("/generalDataReportPerMonth", async (req, res) => {
 reportsRouter.get("/sellersReportMonthly", async (req, res) => {
   
   try {
-    const { year, month } = req.query;
+    const { page,year, month } = req.query;
+    const options = {
+      page: parseInt(page, 10) || 1,
+      limit: parseInt(limit, 10) || 6,
+      sort: { createdAt: -1 },
+      customLabels: { docs: "users", totalDocs: "count" }
+    };
     const currentDate = new Date();
     const currentYear = currentDate.getFullYear();
     const currentMonth = currentDate.getMonth() + 1;
@@ -91,7 +97,9 @@ reportsRouter.get("/sellersReportMonthly", async (req, res) => {
         },
       },
     ])
-    res.status(200).json(totalSalesVendors);
+    let result = await Sales.aggregatePaginate(totalSalesVendors, options);
+
+    res.status(200).json(result);
   } catch (error) {
     throw new Error(error);
   }

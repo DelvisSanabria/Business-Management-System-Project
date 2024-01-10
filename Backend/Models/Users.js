@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const mongoosePaginate = require('mongoose-paginate-v2');
+const moment = require('moment');
 
 const UserSchema = new mongoose.Schema({
   avatar: {
@@ -53,13 +54,13 @@ const UserSchema = new mongoose.Schema({
   },
   createdAt: {
     type: Date,
-    default: Date.now(),
-    required:true
+    default: moment().format(),
+    required: true
   },
-  updateAt: {
+  updatedAt: {
     type: Date,
-    default: Date.now(),
-    required:true
+    default: moment().format(),
+    required: true
   },
   deleted: {
     type: Boolean,
@@ -69,7 +70,7 @@ const UserSchema = new mongoose.Schema({
 });
 
 UserSchema.pre('save', function (next) {
-  this.updateAt = new Date();
+  this.updateAt = moment().format();
   next();
 });
 

@@ -2,7 +2,7 @@ import EditSvg from "../components/Svgs/Edit";
 import { useState, useEffect } from "react";
 import axios from "axios";
 import DeleteSvg from "../components/Svgs/Delete";
-import VendorsCard from "../components/Cards.jsx/VendorsCard";
+import VendorsCard from "../components/Cards/VendorsCard";
 
 export default function Customers() {
   const [vendors, setVendors] = useState(undefined);
@@ -53,9 +53,8 @@ export default function Customers() {
       };
   
       fetchData();
-      console.log(vendors)
     }
-  }, [currentPage, vendors]);
+  }, [currentPage,vendors]);
   
   const handlePrevPage = () => {
     setCurrentPage(prevState => {
@@ -77,6 +76,7 @@ export default function Customers() {
       } else {
         newValue = prevState + 1;
       }
+      console.log(newValue);
       return newValue;
     });
   };
@@ -95,6 +95,7 @@ export default function Customers() {
           console.log(error);
         });
   };
+  
   
   return (
     <>
@@ -159,7 +160,7 @@ export default function Customers() {
                     <label className="flex justify-end mt-2 mb-1 w-[100px] h-[30px] font-semibold text-[#667085] text-[15px] text-right tracking-[0] leading-[15px]">
                       Nombre:
                     </label>
-                    <span className="w-[66px] py-[0.20em] h-[30px] font-semibold text-black text-[12px] tracking-[0] leading-[15px]">
+                    <span className="w-[150px] py-[0.20em] h-[30px] font-semibold text-black text-[12px] tracking-[0] leading-[15px]">
                       {vendor.name}
                     </span>
                   </div>
@@ -167,7 +168,7 @@ export default function Customers() {
                     <label className="flex justify-end mt-2 mb-1 w-[100px] h-[30px] font-semibold text-[#667085] text-[15px] text-right tracking-[0] leading-[15px]">
                       Apellido:
                     </label>
-                    <span className="w-[66px] py-[0.20em] h-[30px] font-semibold text-black text-[12px] tracking-[0] leading-[15px]">
+                    <span className="w-[150px] py-[0.20em] h-[30px] font-semibold text-black text-[12px] tracking-[0] leading-[15px]">
                       {vendor.lastName}
                     </span>
                   </div>
@@ -402,7 +403,7 @@ export default function Customers() {
         isOpen={isModalOpen}
         type={modalType}
         onClose={closeModal}
-        vendorsEmail={vendorToUp}
+        vendorEmail={vendorToUp}
       ></VendorsCard>
     </>
   );

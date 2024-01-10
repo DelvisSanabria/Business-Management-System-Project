@@ -56,7 +56,7 @@ saleRouter.get("/", async (req, res) => {
 saleRouter.post("/", async (req, res) => {
    try {
       let { client, vendor, products} = req.body;
-      const Client = await User.findOne({_id: client}, {email: 1});
+      const Client = await User.findOne({email: client}, {email: 1});
       const ProductsList = await Product.find({_id: { $in: products }}, {name: 1});
       let sale;
       if (Client && ProductsList) {
@@ -68,7 +68,7 @@ saleRouter.post("/", async (req, res) => {
          });
       }
       if (vendor) {
-         const Vendor = await User.findOne({_id: vendor}, {email: 1});
+         const Vendor = await User.findOne({email: vendor}, {email: 1});
          sale.vendor = Vendor.email;
       }
       await sale.save();

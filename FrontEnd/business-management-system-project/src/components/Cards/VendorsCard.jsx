@@ -2,7 +2,7 @@
 import {  motion } from "framer-motion"
 import { useEffect, useState,useRef } from "react";
 import axios from "axios";
-
+import {camera,userIco} from "../exportsImports"
 
 
 const VendorsCard = ({ isOpen,type, onClose,vendorEmail}) => {
@@ -12,13 +12,14 @@ const VendorsCard = ({ isOpen,type, onClose,vendorEmail}) => {
 
   const server = "http://localhost:3001";
    const [user, setUser] = useState({
+      avatar:"",
       name: "",
       lastName: "",
       phone: "",
       email: "",
       password: "",
       address: "",
-      role: "client"
+      role: "vendor"
    });
    const [error, setError] = useState({
       avatar: "",
@@ -39,68 +40,82 @@ const VendorsCard = ({ isOpen,type, onClose,vendorEmail}) => {
       password: "",
       repPassword: "",
       address: "",
-      role: "client"
+      role: "vendor"
    });
    const button = useRef();
    const inputFile = useRef();
-   if (user.name && user.lastName && user.address) {
-      let name = "";
-      let lastName = "";
-      for (let word of user.name.split(" ")) {
-         name += word[0].toLowerCase() + word.slice(1) + " ";
-      }
-      for (let word of user.lastName.split(" ")) {
-         lastName += word[0].toLowerCase() + word.slice(1) + " ";
-      }
-      user.name = name.trim();
-      user.lastName = lastName.trim();
-      user.address = user.address.trim();
-   }
-
+   const [image, setImage] = useState("");
    
-   const handleSubmit = async () => {
-      try {
-         const formdata = new FormData();
-         for (const prop in user) {
-            formdata.append(prop, user[prop]);
-         }
-         
-         const response = await axios.post(`${server}/users/${vendorEmail}`, formdata, {
-            headers: {
-               "Content-Type": "multipart/form-data"
-            }
-         });
-         if (response.status === 201) {
-            setInput({
-               avatar: "",
-               name: "",
-               lastName: "",
-               phone: "",
-               email: "",
-               password: "",
-               repPassword: "",
-               address: "",
-               role: "vendor"
-            })
-            setStatusMsg("El vendedor ha sido creado correctamente");
-         }else if (response.status === 500) {
-            setStatusMsg("Error al crear el vendedor");
-         }
-      } catch ({name, message, response}) {
-         if (response.data.email) {
-            setError((prev) => ({...prev, email: response.data.email}));
-         }
-         console.error(`${name}: ${message}`);
+   const handleCleanInput = () => {
+    const keys = ["avatar", "name", "lastName", "phone", "email", "password", "repPassword", "address"];
+    for (const key of keys) {
+      if (input[key]) {
+          setInput((prev) => ({...prev, [key]: ""}));
       }
+      if (error[key]) {
+          setError((prev) => ({...prev, [key]: ""}));
+      }
+      if (user[key]) {
+          setUser((prev) => ({...prev, [key]: ""}));
+      }
+    }
    }
 
-   const handleUpdate = async () => {
+   const handleSubmit = async () => {
     try {
+      for (const prop in user) {
+        if (user[prop] === "") {
+          setStatusMsg("Debe llenar todos los campos");
+          return;
+        }
+      }
       const formdata = new FormData();
       for (const prop in user) {
-        formdata.append(prop, user[prop]);
+        let value = user[prop];
+        if (typeof value === "string") {
+          value = value.trim().toLowerCase();
+        }
+        formdata.append(prop, value);
       }
+      console.log(formdata);
+      const response = await axios.post(`${server}/users`, formdata, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
+      if (response.status === 201) {
+        setImage("")
+        handleCleanInput();
+        if(inputFile.current){
+          inputFile.current.value = ""
+        }
+        setStatusMsg("El vendedor se ha creado correctamente");
+      } else if (response.status === 500) {
+        setStatusMsg("Error al crear el vendedor");
+      }
+    } catch ({ name, message, response }) {
+      if (response.data.email) {
+        setError((prev) => ({ ...prev, email: response.data.email }));
+      }
+      console.error(`${name}: ${message}`);
+    }
+  }
 
+  const handleUpdate = async () => {
+    try {
+      const formdata = new FormData();
+      for (const prop in input) {
+        let value = input[prop];
+        if (typeof value === "string") {
+          value = value.trim().toLowerCase();
+        }
+        formdata.append(prop, value);
+      }
+      if (inputFile.current && inputFile.current.files.length > 0) {
+        const file = inputFile.current.files[0];
+        formdata.append("avatar", file);
+      }
+  
       const response = await axios.patch(
         `${server}/users/${vendorEmail}`,
         formdata,
@@ -110,18 +125,9 @@ const VendorsCard = ({ isOpen,type, onClose,vendorEmail}) => {
           },
         }
       );
+      
       if (response.status === 201) {
-        setInput({
-          avatar: "",
-          name: "",
-          lastName: "",
-          phone: "",
-          email: "",
-          password: "",
-          repPassword: "",
-          address: "",
-          role: "vendor",
-        });
+        console.log(formdata);
         setStatusMsg("El vendedor ha sido editado correctamente");
       } else if (response.status === 500) {
         setStatusMsg("Error al editar el vendedor");
@@ -136,10 +142,11 @@ const VendorsCard = ({ isOpen,type, onClose,vendorEmail}) => {
 
    const handleChange = (event) => {
       const { name, value } = event.target;
-      setInput((prev) => ({...prev, [name]: value }));
+      setInput({...input, [name]: value });
    }
 
-   const handleValidation = (previousDates) => {
+
+   const handleValidation = (type) => {
     const { password, repPassword } = input;
     const regexList = { 
       name: /^[a-zñ áéíóúñÁÉÍÓÚÑ]+$/i, 
@@ -166,10 +173,7 @@ const VendorsCard = ({ isOpen,type, onClose,vendorEmail}) => {
     let isValid = true;
     
     for (let field in input) {
-      if(input[field] === ""){
-        user = { ...user, [field]: previousDates[field] };
-      }
-      else if (input[field]) {
+      if (input[field]) {
         if (regexList[field] && !regexList[field].test(input[field])) {
           errors = { ...errors, [field]: message[field] };
           user = { ...user, [field]: "" };
@@ -181,22 +185,22 @@ const VendorsCard = ({ isOpen,type, onClose,vendorEmail}) => {
       } else if (field === "avatar") {
         if (inputFile.current && inputFile.current.files.length > 0) {
           const file = inputFile.current.files[0];
+          setImage(file);
+          isValid = true;
           switch (file.type) {
-            case "image/jpeg":
             case "image/png":
+            case "image/jpeg":
               user = { ...user, avatar: file };
               errors = { ...errors, avatar: "" };
               break;
             default:
               errors = { ...errors, [field]: message[field] };
-              user = { ...user, avatar: null };
+              user = { ...user, avatar: "" };
               isValid = false;
           }
         } else {
           isValid = false;
         }
-      } else {
-        isValid = false;
       }
     }
     
@@ -213,9 +217,13 @@ const VendorsCard = ({ isOpen,type, onClose,vendorEmail}) => {
       }
     }
     if(button.current){
-      button.current.disabled = !isValid;
-      setError(errors);
-      setUser(user);
+      if (type === "updateVendor") {
+        button.current.disabled = false;
+    } else if (type === "createVendor") {
+        button.current.disabled = !isValid;
+        setError(errors);
+        setUser((prevState) => ({...prevState, ...user}));
+    }
     }
   }
 
@@ -240,23 +248,22 @@ const VendorsCard = ({ isOpen,type, onClose,vendorEmail}) => {
   };
 
    useEffect(() => {
-      handleValidation(previousDates);
+      handleValidation(type);
       //eslint-disable-next-line
    }, [input]);
 
    useEffect(() => {
      getVendor(vendorEmail)
-     console.log(previousDates)
    // eslint-disable-next-line react-hooks/exhaustive-deps
-   }, [vendorEmail])
+   }, [vendorEmail, isOpen]);
 
   return (
     <>
       {isOpen && type === "createVendor" && (
-        <motion.div className="fixed inset-0  bg-black bg-opacity-50 flex items-center justify-center z-50">
+        <motion.div className="fixed inset-0  bg-black bg-opacity-50 flex items-center justify-center z-[120]">
           <div className="bg-white p-6 rounded-lg overflow-auto h-[95vh] w-[460px]">
             <form className="z-10 flex flex-col justify-center items-center gap-[21px]   rounded-[20px]">
-              <div className="relative grid grid-cols-[1fr_30px]">
+              <div className="relative grid grid-cols-[1fr_5px]">
                 <div>
                   <p className="text-[24px] border-[#E7E7E7] border-b-[1px] text-center w-full">
                     Crear nuevo Vendedor
@@ -266,6 +273,7 @@ const VendorsCard = ({ isOpen,type, onClose,vendorEmail}) => {
                   onClick={() => {
                     onClose();
                     setStatusMsg("");
+                    setImage("")
                   }}
                   className="absolute top-0 right-[-100px] flex px-4 hover:text-white hover:bg-red-500 rounded-[8px] border border-[#394867]"
                 >
@@ -277,7 +285,7 @@ const VendorsCard = ({ isOpen,type, onClose,vendorEmail}) => {
               {statusMsg && (
                 <div
                   className={`${
-                    statusMsg == "El vendedor ha sido creado correctamente"
+                    statusMsg == "El vendedor se ha creado correctamente"
                       ? "bg-green-200 text-green-500 p-3"
                       : "bg-red-200 text-red-500 p-3"
                   }`}
@@ -291,8 +299,15 @@ const VendorsCard = ({ isOpen,type, onClose,vendorEmail}) => {
                     onClick={() => inputFile.current.click()}
                     className="cursor-pointer relative rounded-full bg-[#E7E7E7] w-[125px] h-[125px] shadow-sm"
                   >
-                    <div className="absolute bottom-0 flex justify-center items-center w-[35px] h-[35px] rounded-full bg-[#FFFFFF] border-[1px] border-[#E7E7E7]">
-                      <img className="w-[25px]" src={"camera"} alt="camara" />
+                    <div className="absolute z-10 bottom-0 flex justify-center items-center w-[35px] h-[35px] rounded-full bg-[#FFFFFF] border-[1px] border-[#E7E7E7]">
+                      <img className="w-[25px]" src={camera} alt="camara" />
+                    </div>
+                    <div className="p-3 absolute top-0 right-3">
+                      {image ? (
+                        <img className="h-[100px] w-[100px] rounded-full" src={URL.createObjectURL(image)} alt="avatar" />
+                      ): (
+                        <img className="h-[100px] ml-1 rounded-full" src={userIco} alt="avatar" />
+                      )}
                     </div>
                     <input
                       className="hidden"
@@ -300,12 +315,10 @@ const VendorsCard = ({ isOpen,type, onClose,vendorEmail}) => {
                       id="avatar"
                       type="file"
                       name="avatar"
-                      accept="image/jpeg, image/png"
+                      accept="image/png, image/jpeg"
                       onChange={handleValidation}
                     />
-                    <div className="p-3 absolute top-0 right-0">
-                      <img src={input.avatar} alt="image" />
-                    </div>
+                    
                   </figure>
                 </div>
                 <div className="relative">
@@ -333,6 +346,7 @@ const VendorsCard = ({ isOpen,type, onClose,vendorEmail}) => {
                       id="name"
                       type="text"
                       name="name"
+                      value={input.name}
                       onChange={handleChange}
                     />
                     <div className="relative">
@@ -355,6 +369,7 @@ const VendorsCard = ({ isOpen,type, onClose,vendorEmail}) => {
                       id="lastName"
                       type="text"
                       name="lastName"
+                      value={input.lastName}
                       onChange={handleChange}
                     />
                     <div className="relative">
@@ -377,7 +392,8 @@ const VendorsCard = ({ isOpen,type, onClose,vendorEmail}) => {
                       id="phone"
                       type="tel"
                       name="phone"
-                      onBlur={handleChange}
+                      value={input.phone}
+                      onChange={handleChange}
                     />
                     <div className="relative">
                       <span className="error text-[14px]">{error.phone}</span>
@@ -397,7 +413,8 @@ const VendorsCard = ({ isOpen,type, onClose,vendorEmail}) => {
                       id="email"
                       type="email"
                       name="email"
-                      onBlur={handleChange}
+                      value={input.email}
+                      onChange={handleChange}
                     />
                     <div className="relative">
                       <span className="error text-[14px]">{error.email}</span>
@@ -417,7 +434,8 @@ const VendorsCard = ({ isOpen,type, onClose,vendorEmail}) => {
                       id="password"
                       type="password"
                       name="password"
-                      onBlur={handleChange}
+                      value={input.password}
+                      onChange={handleChange}
                       title={
                         "La contraseña debe contener entre 8 y 16 caracteres y al menos uno de los siguientes:\n- Mayúscula\n- Minúcula\n- Dígito\n- Un caracter especial de entre: !@#$%^&*/"
                       }
@@ -442,7 +460,8 @@ const VendorsCard = ({ isOpen,type, onClose,vendorEmail}) => {
                       id="repPassword"
                       type="password"
                       name="repPassword"
-                      onBlur={handleChange}
+                      value={input.repPassword}
+                      onChange={handleChange}
                     />
                     <div className="relative">
                       <span className="error text-[14px]">
@@ -464,6 +483,7 @@ const VendorsCard = ({ isOpen,type, onClose,vendorEmail}) => {
                     }`}
                     name="address"
                     id="address"
+                    value={input.address}
                     onChange={handleChange}
                   ></textarea>
                   <div className="relative">
@@ -491,7 +511,7 @@ const VendorsCard = ({ isOpen,type, onClose,vendorEmail}) => {
         </motion.div>
       )}
       {isOpen && type === "updateVendor" && (
-        <motion.div className="fixed inset-0  bg-black bg-opacity-50 flex items-center justify-center z-50">
+        <motion.div className="fixed inset-0  bg-black bg-opacity-50 flex items-center justify-center z-[120]">
           <div className="bg-white p-6 rounded-lg overflow-auto h-[95vh] w-[460px]">
             <form className="z-10 flex flex-col justify-center items-center gap-[21px]  rounded-[20px]">
               <div className="relative grid grid-cols-[1fr_30px]">
@@ -504,6 +524,7 @@ const VendorsCard = ({ isOpen,type, onClose,vendorEmail}) => {
                   onClick={() => {
                     onClose();
                     setStatusMsg("");
+                    setImage("")
                   }}
                   className="absolute top-0 right-[-100px] flex px-4 hover:text-white hover:bg-red-500 rounded-[8px] border border-[#394867]"
                 >
@@ -530,7 +551,14 @@ const VendorsCard = ({ isOpen,type, onClose,vendorEmail}) => {
                     className="cursor-pointer relative rounded-full bg-[#E7E7E7] w-[125px] h-[125px] shadow-sm"
                   >
                     <div className="absolute bottom-0 flex justify-center items-center w-[35px] h-[35px] rounded-full bg-[#FFFFFF] border-[1px] border-[#E7E7E7]">
-                      <img className="w-[25px]" src={"camera"} alt="camara" />
+                      <img className="w-[25px]" src={camera} alt="camara" />
+                    </div>
+                    <div className="absolute top-3 right-3">
+                      {image ? (
+                        <img className="h-[100px] w-[100px] rounded-full" src={URL.createObjectURL(image)} alt="avatar" />
+                      ): (
+                        <img className="h-[100px] w-[100px] rounded-full"  src={previousDates.avatar} alt={previousDates.name} />
+                      )}
                     </div>
                     <input
                       className="hidden"
@@ -541,9 +569,7 @@ const VendorsCard = ({ isOpen,type, onClose,vendorEmail}) => {
                       accept="image/jpeg, image/png"
                       onChange={handleValidation}
                     />
-                    <div className="p-3 absolute top-0 right-0">
-                      <img src={input.avatar} alt="image" />
-                    </div>
+                    
                   </figure>
                 </div>
                 <div className="relative">
@@ -724,7 +750,7 @@ const VendorsCard = ({ isOpen,type, onClose,vendorEmail}) => {
                     }
                     ref={button}
                     id="submit"
-                    onClick={handleUpdate}
+                    onClick={()=>{handleUpdate()}}
                     type="button"
                   >
                     Editar Vendedor

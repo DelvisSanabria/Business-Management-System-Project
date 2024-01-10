@@ -2,7 +2,7 @@ import EditSvg from "../components/Svgs/Edit";
 import { useState, useEffect } from "react";
 import axios from "axios";
 import DeleteSvg from "../components/Svgs/Delete";
-import ClientsCard from "../components/Cards.jsx/ClientsCard";
+import ClientsCard from "../components/Cards/ClientsCard";
 
 export default function Customers() {
   const [clients, setClients] = useState(undefined);
@@ -54,7 +54,7 @@ export default function Customers() {
   
       fetchData();
     }
-  }, [currentPage, clients]);
+  }, [currentPage,clients]);
   
   const handlePrevPage = () => {
     setCurrentPage(prevState => {
@@ -159,7 +159,7 @@ export default function Customers() {
                     <label className="flex justify-end mt-2 mb-1 w-[100px] h-[30px] font-semibold text-[#667085] text-[15px] text-right tracking-[0] leading-[15px]">
                       Nombre:
                     </label>
-                    <span className="w-[66px] py-[0.20em] h-[30px] font-semibold text-black text-[12px] tracking-[0] leading-[15px]">
+                    <span className="w-[150px] py-[0.20em] h-[30px] font-semibold text-black text-[12px] tracking-[0] leading-[15px]">
                       {client.name}
                     </span>
                   </div>
@@ -167,7 +167,7 @@ export default function Customers() {
                     <label className="flex justify-end mt-2 mb-1 w-[100px] h-[30px] font-semibold text-[#667085] text-[15px] text-right tracking-[0] leading-[15px]">
                       Apellido:
                     </label>
-                    <span className="w-[66px] py-[0.20em] h-[30px] font-semibold text-black text-[12px] tracking-[0] leading-[15px]">
+                    <span className="w-[150px] py-[0.20em] h-[30px] font-semibold text-black text-[12px] tracking-[0] leading-[15px]">
                       {client.lastName}
                     </span>
                   </div>
