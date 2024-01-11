@@ -1,6 +1,14 @@
 export { default as Session } from '../Session/session';
 export { default as SignUp } from '../pages/SignUp';
-export { default as LogIn } from '../pages/Login';
+export { default as LogIn } from '../pages/LogIn';
+export { default as ProductForm } from '../pages/ProductForm';
+export { default as ProductsDashboard } from '../pages/ProductsDashboard';
+export { default as CartModal } from '../pages/CartModal';
+export { default as Products } from '../pages/Products';
+export { default as EditProduct } from '../pages/EditProduct';
+export { default as SalesDashboard } from '../pages/SalesDashboard';
+export { default as EditSale } from '../pages/EditSale';
+export { default as SaleForm } from '../pages/SaleForm';
 //images
 
 
@@ -12,7 +20,7 @@ import MenuBox from "./MenuBox";
 import UserSession from "../Session/session";
 import HomeSvg from "./Svgs/Home"
 import LoginSvg from "./Svgs/Login"
-import Products from "./Svgs/Products"
+import ProductSvg from "./Svgs/Products"
 import ReportsSvg from "./Svgs/Reports"
 import SalesSvg from "./Svgs/Sales"
 import SettingsSvg from "./Svgs/Settings"
@@ -44,6 +52,7 @@ import camera from "../images/icons/camera.png";
 import blueBg from "../images/various/bg.png";
 import bg_login from "../images/various/bg_login.png";
 import polarSede from "../images/various/Sede_Polar.jpeg";
+
 import banner1 from "../images/various/banner1.png"
 import banner2 from "../images/various/banner2.png"
 import cachapas from "../images/various/cachapas.jpg"
@@ -78,6 +87,20 @@ import toddy2 from "../images/various/toddy2.png"
 import voluntariado1 from "../images/various/voluntariado1.png"
 import voluntariado2 from "../images/various/voluntariado2.png"
 import voluntariado3 from "../images/various/voluntariado3.png"
+
+
+import plus from "../images/SVG/Add.svg";
+import lens from "../images/icons/search.png";
+import deleteIcon from "../images/SVG/deleteIcon.svg";
+import editIcon from "../images/SVG/editIcon.svg";
+import cancel from "../images/icons/error.png";
+import checkmark from "../images/SVG/checkmark.svg";
+import lens2 from "../images/SVG/lens2.svg";
+import plusDesktop from "../images/SVG/plusDesktop.svg";
+import more from "../images/SVG/plus.svg";
+import less from "../images/SVG/hyphen.svg";
+import cart_black from "../images/SVG/shopping_cart(black).svg";
+import cart_white from "../images/SVG/shopping_cart(white).svg";
 
 export {
   polar,
@@ -135,7 +158,7 @@ export {
   UserSession,
   HomeSvg,
   LoginSvg,
-  Products,
+  ProductSvg,
   ReportsSvg,
   SalesSvg,
   SettingsSvg,
@@ -148,4 +171,17 @@ export {
   Reports2Svg,
   Reports3Svg,
   Reports4Svg,
+  plus,
+  lens,
+  deleteIcon,
+  editIcon,
+  cancel,
+  checkmark,
+  lens2,
+  plusDesktop,
+  more,
+  less,
+  cart_black,
+  cart_white
+
 };

@@ -13,16 +13,15 @@ saleRouter.get("/", async (req, res) => {
             fields[field] = req.query[field];
          }
       }
-      const options = {page: parseInt(fields.page) || 1, limit: parseInt(fields.limit) || 6};
+      const options = {page: parseInt(fields.page) || 1, limit: parseInt(fields.limit) || 10, populate: {path: "products", select: "name price"}};
       let query = {deleted: false};
-      const search = fields.search.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
       if (fields.search) {
+         const search = fields.search.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
          query = {
             ...query,
             $or: [
                { client: { $regex: search, $options: "i" } },
                { vendor: { $regex: search, $options: "i" } },
-               { products: { $regex: search, $options: "i" } }
             ]
          };
       }
@@ -33,12 +32,12 @@ saleRouter.get("/", async (req, res) => {
          };
          if (fields.search) {
             delete query.$or;
+            const search = fields.search.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
             query = {
                ...query,
                vendor: fields.vendor,
                $or: [
-                  { client: { $regex: search, $options: "i" } },
-                  { products: { $regex: search, $options: "i" } }
+                  { client: { $regex: search, $options: "i" } }
                ]
             };
          }
@@ -55,21 +54,21 @@ saleRouter.get("/", async (req, res) => {
 
 saleRouter.post("/", async (req, res) => {
    try {
-      let { client, vendor, products} = req.body;
+      let { client, quantity } = req.body;
       const Client = await User.findOne({email: client}, {email: 1});
-      const ProductsList = await Product.find({_id: { $in: products }}, {name: 1});
       let sale;
-      if (Client && ProductsList) {
+      if (Client) {
          sale = new Sale({
             ...req.body, 
-            client: Client.email,
-            vendor: "N/A",
-            products: ProductsList.map(product => product.name)
+            client: Client.email
          });
-      }
-      if (vendor) {
-         const Vendor = await User.findOne({email: vendor}, {email: 1});
-         sale.vendor = Vendor.email;
+         for (let id in quantity) {
+            await Product.updateOne({_id: id}, {$inc: {stock: -quantity[id]}});
+         }
+      } else if (!Client) {
+         return res.status(404).json({client: "Cliente no encontrado"});
+      } else {
+         return res.status(404).json({products: "Producto(s) no encontrado(s)"});
       }
       await sale.save();
       return res.status(201).json(sale);
@@ -89,7 +88,7 @@ saleRouter.patch("/", async (req, res) => {
             fields[field] = req.body[field];
          }
       }
-      const sale = await Sale.findById(fields.Id);
+      const sale = await Sale.findById(fields.id);
       if (!sale) {
          return res.status(404).json({error: "Venta no encontrada"});
       }
@@ -97,16 +96,24 @@ saleRouter.patch("/", async (req, res) => {
       if (fields.deleted) {
          sale.deleted = fields.deleted;
          await sale.save();
-         return res.status(202).json(sale);
+         return res.status(200).json(sale);
       }
-      let errors = {};
-      for (const field in fields) {
-         if (fields[field] === sale[field]) {
-            errors[field] = "El nuevo valor debe ser distinto del anterior";
+      for (const value in fields) {
+         if (fields[value] === sale[value]) {
+            delete fields[value];
          }
       }
-      if (Object.keys(errors).length > 0) {
-         return res.status(400).json(errors);
+      if (fields.quantity) {
+         let operation;
+         for (let id in fields.quantity) {
+            if(fields.quantity[id] > sale.quantity[id]) {
+               operation = fields.quantity[id] - sale.quantity[id];
+               await Product.updateOne({_id: id}, {$inc: {stock: -operation}});
+            } else if (fields.quantity[id] < sale.quantity[id]) {
+               operation = sale.quantity[id] - fields.quantity[id];
+               await Product.updateOne({_id: id}, {$inc: {stock: operation}});
+            }
+         }
       }
       Object.assign(sale, fields);
       await sale.save();

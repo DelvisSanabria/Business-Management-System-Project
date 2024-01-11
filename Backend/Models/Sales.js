@@ -1,15 +1,14 @@
-const mongoose = require('mongoose');
-const mongoosePaginate = require('mongoose-paginate-v2');
+const mongoose = require("mongoose");
+const mongoosePaginate = require("mongoose-paginate-v2");
 const aggregatePaginate = require("mongoose-aggregate-paginate-v2");
 
-const SaleSchema = new mongoose.Schema({
-  client: {
-    type: String,
-    minlength: 1,
-    maxlength: 100,
-    required: true,
-  },
-  vendor: {
+const SaleSchema = mongoose.Schema(
+  {
+    client: {
+      type: String,
+      required: true,
+    },
+    vendor: {
     type: String,
     minlength: 1,
     maxlength: 100,
@@ -46,7 +45,7 @@ const SaleSchema = new mongoose.Schema({
 SaleSchema.pre("save", function (next) {
   this.updateAt = new Date();
   next();
-});
+})
 
 SaleSchema.plugin(mongoosePaginate);
 SaleSchema.plugin(aggregatePaginate);
