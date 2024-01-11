@@ -101,6 +101,7 @@ import more from "../images/SVG/plus.svg";
 import less from "../images/SVG/hyphen.svg";
 import cart_black from "../images/SVG/shopping_cart(black).svg";
 import cart_white from "../images/SVG/shopping_cart(white).svg";
+import cart_green from "../images/SVG/shopping_cart(green).svg";
 
 export {
   polar,
@@ -182,6 +183,7 @@ export {
   more,
   less,
   cart_black,
-  cart_white
+  cart_white,
+  cart_green
 
 };
