@@ -1,13 +1,17 @@
-import { useState, useEffect, useContext } from "react";
+import { useState, useEffect, useContext, useRef } from "react";
 import Session from "../Session/session";
 import axios from "axios";
 import { more, less } from "../components/exportsImports";
 
 function CartModal({products}) {
    const {user} = useContext(Session);
+   const {cartProducts, setCartProducts} = useContext(shoppingCart);
+   const navigate = useNavigate();
    const [product, setProduct] = useState([]);
    const [order, setOrder] = useState({
-      client: (user && user._id) || "",
+      client: (user && user.email) || "",
+      vendor: "--",
+      products: [],
       subtotal: 0,
       tax: 0,
       total: 0
@@ -16,8 +20,8 @@ function CartModal({products}) {
       price: {},
       quantity: {}
    });
+   const button = useRef();
    const server = "http://localhost:3001/";
-   console.log(input);
 
    useEffect(() => {
       if (products && products.length > 0) {
@@ -34,7 +38,7 @@ function CartModal({products}) {
                   let productsQuantity = {};
                   for(let doc of response.data) {
                      productsPrice = {...productsPrice, [doc._id]: doc.price};
-                     productsQuantity = {...productsQuantity, [doc._id]: 1};
+                     productsQuantity = {...productsQuantity, [doc._id]: input.quantity[doc._id] || 1};
                   }
                   setInput({price: productsPrice, quantity: productsQuantity});
                }
@@ -43,6 +47,7 @@ function CartModal({products}) {
             }
          };
          bringProducts();
+         setOrder((prev) => ({...prev, products: products}));
       }
    }, [products]);
 
@@ -66,64 +71,60 @@ function CartModal({products}) {
       calculateTotal();
    }, [input]);
 
-   const handleSubmit = async (event) => {
-      event.preventDefault();
-      const sale = {...order, products: input.products};
-      try {
-         const response = await axios.post(`${server}/sales`, sale, {
-            headers: {
-               'Content-Type': 'application/json'
-            }
-         });
-         if (response.status === 201) {
-            alert("Comprado con éxito");
-         }
-      } catch ({name, message}) {
-         console.error(`${name}: ${message}`);
-      }
+   const checkOut = () => {
+      /* navigate("/checkout"); */
    };
-   console.log(product);
+
+   useEffect(() => {
+      console.log(cartProducts);
+   }, [cartProducts]);
+
+   useEffect(() => {
+      if (order.products && order.products.length > 0) {
+         setCartProducts({...order, quantity: input.quantity});
+      }
+   }, [order])
+
    return (
-      <>
-         <form id="orderForm" className="flex w-[90%] items-start gap-[50px]">
-            <div className="flex gap-[50px] w-full">
-               {product.map((product) => (
-                  <div key={product._id}>
-                     <img className="" src={product.imageURL} alt={product.name} />
-                     <p>Producto: {product.name}</p>
-                     <p>Precio: {product.price}$</p>
-                     <p>Disponible: {product.stock}</p>
-                     <p>Categoría: {product.category}</p>
-                     <div className="bg-[#F1F6F9] gap-[5px] flex h-fit rounded-full min-[1440px]:gap-[10px]">
+      <form id="orderForm" className="flex flex-col bg-[#f1f6f9] items-start rounded-[15px] gap-[15px] pb-[15px] px-[15px]">
+         <div className="flex flex-col w-full max-h-[276px] overflow-y-auto">
+            {product.map((product) => (
+               <div className="flex justify-between max-h-[150px] py-[15px] border-[#EBF0FF] border-b-[1px]" key={product._id}>
+                  <div className="flex flex-col justify-center items-center">
+                     <img className="w-[70px] max-h-[100px] " src={server + product.imageURL} alt={product.name} />
+                  </div>
+                  <div className="flex flex-col gap-[7px] items-end w-fit max-w-[110px] ">
+                     <p className="max-h-[2lh] overflow-y-auto">{product.name}</p>
+                     <p className="text-right text-[#3056D3] ">${product.price.toFixed(2)}</p>
+                     <div className="bg-white gap-[5px] w-fit flex h-fit rounded-full min-[1440px]:gap-[10px]">
                         <div className="bg-[#14274E] w-[30px] h-[30px] rounded-full flex justify-center items-center" onClick={() => decrementQuantity(product._id)}>
                            <img className="w-[15px]" type="image" src={less} alt="Reducir" />
                         </div>
-                        <p className="w-[15px] flex items-center justify-center">{input.quantity[product._id] || 0}</p>
+                        <p className="w-[25px] flex items-center justify-center">{input.quantity[product._id] || 0}</p>
                         <div className="bg-[#14274E] w-[30px] h-[30px] rounded-full flex justify-center items-center" onClick={() => incrementQuantity(product._id, product.stock)}>
                            <img className="w-[15px]" type="image" src={more} alt="Aumentar" />
                         </div>
                      </div>
                   </div>
-                  
-               ))}
+               </div>
+            ))}
+         </div>
+         <div className="flex flex-col gap-[15px] pb-[15px] w-full border-[#EBF0FF] border-b-[1px]">
+            <div className="flex justify-between items-end h-[20px]">
+               <p className="text-[#9098B1] text-[0.8em]">Subtotal:</p><p className="text-[#223263] ">{order.subtotal ? "$" + order.subtotal.toFixed(2) : ""}</p>
             </div>
-            <div className="flex flex-col gap-[15px] w-[140px]">
-               <div className="flex justify-between items-end h-[20px]">
-                  <p className="text-[#9098B1] text-[0.8em]">Subtotal:</p><p>{order.subtotal ? "$" + order.subtotal.toFixed(2) : ""}</p>
-               </div>
-               <div className="flex justify-between items-end h-[20px]">
-                  <p className="text-[#9098B1] text-[0.8em]">IVA 16%:</p><p>{order.tax ? "$" + order.tax.toFixed(2) : ""}</p>
-               </div>
-               <div className="flex justify-between items-end h-[20px]">
-                  <p className="text-[#9098B1] text-[0.8em]">Total:</p><p>{order.total ? "$" + order.total.toFixed(2) : ""}</p>
-               </div>
+            <div className="flex justify-between items-end h-[20px]">
+               <p className="text-[#9098B1] text-[0.8em]">IVA 16%:</p><p className="text-[#223263] ">{order.tax ? "$" + order.tax.toFixed(2) : ""}</p>
             </div>
-            <button className="btn bg-[#000000] border-x-indigo-700 border-y-indigo-500 border-2 border-solid"
-               type="submit"
-               onClick={handleSubmit}>Comprar
-            </button>
-         </form>
-      </>
+            <div className="flex justify-between items-end h-[20px]">
+               <p className="text-[#9098B1] text-[0.8em]">Total:</p><p className="text-[#223263] ">{order.total ? "$" + order.total.toFixed(2) : ""}</p>
+            </div>
+         </div>
+         <button ref={button} className={`h-[40px] text-[#FFFFFF] btn text-[20px] bg-[#3056D3] w-full rounded-[6px] ${button.current && button.current.disabled && "opacity-50"}`}
+            type="button"
+            onClick={checkOut}>Ir a la compra
+         </button>
+      </form>
    );
 };
 
