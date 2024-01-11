@@ -1,8 +1,8 @@
 import React, { useState, useEffect, useRef, useContext } from "react";
 import Session from "../Session/session";
 import axios from "axios";
-import { plus, lens, lens2, deleteIcon, editIcon, cancel, plusDesktop } from "./exports";
-import { SaleForm, EditSale } from "./exports";
+import { plus, lens, lens2, deleteIcon, editIcon, cancel, plusDesktop } from "./../components/exportsImports";
+import { SaleForm, EditSale } from "./../components/exportsImports";
 
 function SalesDashboard() {
    const { user } = useContext(Session);
@@ -240,6 +240,6 @@ function SalesDashboard() {
          </div>
       </section>
    );
-};
+}
 
 export default SalesDashboard;

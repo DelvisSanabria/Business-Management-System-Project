@@ -1,6 +1,6 @@
 /* eslint-disable react/prop-types */
 
-const Products = ({ currentColor }) => {
+const ProductSvg = ({ currentColor }) => {
   return (
     <svg
       width="24px"
@@ -36,4 +36,4 @@ const Products = ({ currentColor }) => {
   );
 };
 
-export default Products;
+export default ProductSvg;
