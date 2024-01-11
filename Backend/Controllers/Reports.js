@@ -14,6 +14,7 @@ reportsRouter.get("/generalDataReportPerMonth", async (req, res) => {
     const monthValue =
       typeof month !== "undefined" ? parseInt(month) : currentMonth;
 
+
     const generalDataReportPerMonth = await Sales.aggregate([
       {
         $match: {
@@ -32,14 +33,33 @@ reportsRouter.get("/generalDataReportPerMonth", async (req, res) => {
         $group: {
           _id: null,
           totalSales: { $sum: "$total" },
-          bestSeller: { $max: "$vendor" },
-          bestCustomer: { $max: "$client" },
-          bestSellingProduct: { $max: "$products" },
+          bestSeller: {
+            $max: {
+              name: "$vendor",
+              salesCount: { $sum: 1 },
+            },
+          },
+          bestCustomer: {
+            $max: {
+              name: "$client",
+              purchasesCount: { $sum: 1 },
+            },
+          },
+          bestSellingProduct: {
+            $max: {
+              name: "$products",
+              purchasesCount: { $sum: 1 },
+            },
+          },
         },
       },
       {
         $project: {
           _id: 0,
+          totalSales: 1,
+          bestSeller: 1,
+          bestCustomer: 1,
+          bestSellingProduct: 1,
         },
       },
     ]);
@@ -60,7 +80,7 @@ reportsRouter.get("/generalDataReportPerMonth", async (req, res) => {
 
 reportsRouter.get("/sellersReportMonthly", async (req, res) => {
   try {
-    const { page,year, month } = req.query;
+    const { page,year, month, limit } = req.query;
     const options = {
       page: parseInt(page, 10) || 1,
       limit: parseInt(limit, 10) || 6,
@@ -76,7 +96,7 @@ reportsRouter.get("/sellersReportMonthly", async (req, res) => {
     const monthValue =
       typeof month !== "undefined" ? parseInt(month) : currentMonth;
 
-    const totalSalesVendors = await Sales.aggregate([
+    const totalSalesVendors = Sales.aggregate([
       {
         $match: {
           $expr: {

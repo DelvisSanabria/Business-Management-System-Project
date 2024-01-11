@@ -1,8 +1,8 @@
 const productRouter = require("express").Router();
-const Product = require("../Models/Product");
+const Product = require("../Models/Products");
 const multer = require("multer");
 const fs = require("fs");
-const domain = process.env.DOMAIN || "http://localhost:3000";
+const domain = process.env.DOMAIN || "http://localhost:3001";
 
 const storage = multer.diskStorage({
    destination: (req, file, callback) => {

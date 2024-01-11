@@ -325,6 +325,6 @@ function SaleForm() {
          </div>
       </form>
    );
-};
+}
 
 export default SaleForm;

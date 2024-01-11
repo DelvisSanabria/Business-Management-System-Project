@@ -23,7 +23,7 @@ function App() {
             <Route path="users" element={<Page.Users />}/>
             <Route path="customers" element={<Page.Customers />}/>
             <Route path="vendors" element={<Page.Vendors />}/>
-            <Route path="sales" element={<Page.Sales />}/>
+            <Route path="sales" element={<Page.SalesDashboard />}/>
             <Route path="makeSale" element={<Page.MakeSale />} />
             <Route path="settings" element={<Page.Settings />} />
             <Route path="login" element={<Page.LogIn />} />

@@ -3,10 +3,14 @@ import axios from "axios";
 import { Reports1Svg } from "../components/exportsImports";
 
 export default function DayReport() {
+  const currentDate = new Date();
+  const currentYear = currentDate.getFullYear();
+  const currentMonth = currentDate.getMonth() + 1;
+  const currentDay = currentDate.getDate();
   const [showList, setShowList] = useState(false);
-  const [selectedDay, setSelectedDay] = useState("");
-  const [selectedMonth, setSelectedMonth] = useState("");
-  const [selectedYear, setSelectedYear] = useState("");
+  const [selectedDay, setSelectedDay] = useState(currentDay);
+  const [selectedMonth, setSelectedMonth] = useState(currentMonth);
+  const [selectedYear, setSelectedYear] = useState(currentYear);
   const [DayReport, setDayReport] = useState("");
 
   const [input, setInput] = useState({
@@ -15,9 +19,7 @@ export default function DayReport() {
     anio: "",
   });
 
-  
 
-  console.log(selectedDay, selectedMonth, selectedYear);
   const days = [
     1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21,
     22, 23, 24, 25, 26, 27, 28, 29, 30, 31,
@@ -69,8 +71,6 @@ export default function DayReport() {
           .then((response) => {
             const data = response.data;
             setDayReport(data);
-            console.log(data);
-            console.log(selectedDay, selectedMonth, selectedYear);
           })
           .catch((error) => {
             console.log(error);
@@ -91,7 +91,7 @@ export default function DayReport() {
                 <Reports1Svg />
                 <div className="grid grid-rows-2 w-[100px]">
                   <span className="font-bold text-xl">
-                    ${DayReport !== "" && DayReport.docs[0].totalSales}k
+                    ${DayReport !== "" && DayReport.docs[0].totalSold}k
                   </span>
                   <span className="text-[#61697b] font-semibold tracking-wide">
                     Ventas totales
@@ -101,7 +101,7 @@ export default function DayReport() {
             </div>
           </div>
           <div className="grid grid-rows-[60px_60px_60px] select-none">
-            <div className="z-[100]">
+            <div className="z-[97]">
               <ul className="p-3 border border-[#eaecf0] active:border-blue-500 hover:border-blue-500  rounded-[15px] h-[50px]">
                 <li
                   className={`data outline-none cursor-pointer font-bold${
@@ -138,7 +138,7 @@ export default function DayReport() {
                 </div>
               </ul>
             </div>
-            <div className="z-[99]">
+            <div className="z-[96]">
               <ul className="p-3 border border-[#eaecf0] active:border-blue-500 hover:border-blue-500  rounded-[15px] h-[50px]">
                 <li
                   className={`data outline-none cursor-pointer font-bold${
@@ -177,7 +177,7 @@ export default function DayReport() {
                 </div>
               </ul>
             </div>
-            <div className="z-[98]">
+            <div className="z-[95]">
               <ul className="p-3 border border-[#eaecf0] active:border-blue-500 hover:border-blue-500  rounded-[15px] h-[50px]">
                 <li
                   className={`data outline-none cursor-pointer font-bold${

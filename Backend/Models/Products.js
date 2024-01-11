@@ -5,7 +5,7 @@ const ProductSchema = new mongoose.Schema(
   {
     imageURL: {
       type: String,
-      minlength: 50,
+      minlength: 10,
       maxlength: 600,
       required: true,
     },
@@ -27,7 +27,7 @@ const ProductSchema = new mongoose.Schema(
     },
     description: {
       type: String,
-      minlength: 50,
+      minlength: 30,
       maxlength: 400,
       required: true,
     },
