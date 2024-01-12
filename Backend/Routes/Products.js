@@ -41,8 +41,9 @@ productRouter.get("/", async (req, res) => {
          };
       }
       if (fields.id) {
-         query = { ...query, _id: fields.id };
-      }
+         const ObjectId = mongoose.Types.ObjectId(fields.id);
+         query = { ...query, _id: ObjectId };
+       }
    
       const products = await Product.paginate(query, options);
       return res.status(200).json(products);
