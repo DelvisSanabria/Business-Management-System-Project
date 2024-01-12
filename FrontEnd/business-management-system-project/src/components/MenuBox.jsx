@@ -4,7 +4,7 @@ import { useEffect,useContext } from "react"
 import { useState } from "react"
 import {Session} from "./../Session/session"
 import { Link,useNavigate } from "react-router-dom"
-import {  HomeSvg, LoginSvg, Products, ReportsSvg, SalesSvg, SettingsSvg, UserSvg, LogoutSvg, Cart, ContactUsSvg } from "./exportsImports";
+import {  HomeSvg, LoginSvg, ProductSvg, ReportsSvg, SalesSvg, SettingsSvg, UserSvg, LogoutSvg, Cart, ContactUsSvg } from "./exportsImports";
 
 export default function MenuBox(){
   const [isLogged, setIsLogged] = useState(false)
@@ -26,7 +26,7 @@ export default function MenuBox(){
     User: <UserSvg currentColor={activeTab === "User" ? activeColor : (defaultColor)}/>,
     Customers: <UserSvg currentColor={activeTab === "Customers" ? activeColor : (defaultColor)}/>,
     Vendors: <UserSvg currentColor={activeTab === "Vendors" ? activeColor : (defaultColor)}/>,
-    Inventory: <Products currentColor={activeTab === "Inventory" ? activeColor : (defaultColor)}/>,
+    Inventory: <ProductSvg currentColor={activeTab === "Inventory" ? activeColor : (defaultColor)}/>,
     Sales: <SalesSvg currentColor={activeTab === "Sales" ? activeColor : (defaultColor)}/>,
     Reports: <ReportsSvg currentColor={activeTab === "Reports" ? activeColor : (defaultColor)}/>,
     Settings: <SettingsSvg currentColor={activeTab === "Settings" ? activeColor : (defaultColor)}/>,
@@ -112,6 +112,32 @@ export default function MenuBox(){
   const handleActive = (tab) => {
     setIsActiveTab(tab.name);
   };
+
+  useEffect(() => {
+    const savedActiveTab = sessionStorage.getItem('activeTab');
+  
+    if (savedActiveTab) {
+      setIsActiveTab(savedActiveTab);
+    } else {
+      setIsActiveTab('Home');
+      sessionStorage.setItem('activeTab', 'Home');
+    }
+  }, []); 
+
+  useEffect(() => {
+    const pathname = location.pathname;
+
+    if (pathname === '/') {
+      setIsActiveTab('Home');
+    } else {
+      const menuItem = MenuItems.find(item => item.path === pathname);
+      if (menuItem) {
+        setIsActiveTab(menuItem.name);
+      } else {
+        setIsActiveTab('Home');
+      }
+    }
+  }, [location.pathname]);
   return (
     <>
       <div className="h-fit w-[183px] left-0 bg-[#f1f6f9] shadow-md rounded-[0px_0px_0px_25px] overflow-hidden border-b [border-bottom-style:solid] border-[#9ba4b4]">
