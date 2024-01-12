@@ -1,33 +1,35 @@
-import { useState,useEffect } from 'react'
+import { useState, useEffect } from 'react'
 import './index.css'
+import "./tailwind.css"
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import * as Page from './pages/Pages';
-import {Session,shoppingCart} from './Session/session';
+import { Session, shoppingCart } from './Session/session';
 
 
 
 function App() {
   const [user, setUser] = useState(JSON.parse(localStorage.getItem("user")) || null);
-   const [cartProducts, setCartProducts] = useState(JSON.parse(localStorage.getItem("cart")) || null);
-   useEffect(() => {
-      localStorage.setItem("user", JSON.stringify(user));
-      localStorage.setItem("cart", JSON.stringify(cartProducts));
-   }, [user, cartProducts]);
+  const [cartProducts, setCartProducts] = useState(JSON.parse(localStorage.getItem("cart")) || null);
+  useEffect(() => {
+    localStorage.setItem("user", JSON.stringify(user));
+    localStorage.setItem("cart", JSON.stringify(cartProducts));
+  }, [user, cartProducts]);
   return (
     <BrowserRouter>
       <Session.Provider value={{ user, setUser }}>
-        <shoppingCart.Provider value={{cartProducts,setCartProducts}}>
+        <shoppingCart.Provider value={{ cartProducts, setCartProducts }}>
           <Routes>
             <Route path="/" element={<Page.Layout />}>
               <Route path='/' element={<Page.Home />} />
               <Route path="products" element={<Page.Products />}>
                 <Route path="cart" element={<Page.Cart />} />
               </Route>
-              <Route path='products/singleProduct/:id' element={<Page.SingleProduct/>}/>
-              <Route path="users" element={<Page.Users />}/>
-              <Route path="customers" element={<Page.Customers />}/>
-              <Route path="vendors" element={<Page.Vendors />}/>
-              <Route path="sales" element={<Page.SalesDashboard />}/>
+              <Route path='products/singleProduct/:id' element={<Page.SingleProduct />} />
+              <Route path="users" element={<Page.Users />} />
+              <Route path="customers" element={<Page.Customers />} />
+              <Route path="vendors" element={<Page.Vendors />} />
+              <Route path="sales" element={<Page.SalesDashboard />} />
+              <Route path="productsDashboard" element={<Page.ProductsDashboard />} />
               <Route path="makeSale" element={<Page.MakeSale />} />
               <Route path="settings" element={<Page.Settings />} />
               <Route path="login" element={<Page.LogIn />} />

@@ -20,6 +20,7 @@ import Profile from './Profile.jsx'
 import MakeSale from './MakeSale.jsx'
 import SingleProduct from './SingleProduct';
 import SalesDashboard from './SalesDashboard.jsx'
+import ProductsDashboard from './ProductsDashboard.jsx'
 export {
   Layout,
   Home,
@@ -30,6 +31,7 @@ export {
   Customers,
   Vendors,
   SalesDashboard,
+  ProductsDashboard,
   Settings,
   Contact,
   Reports,
