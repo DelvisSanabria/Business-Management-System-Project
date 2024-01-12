@@ -49,6 +49,7 @@ export default function DayReport() {
     setShowList();
   };
 
+
   useEffect(() => {
     const fetchData = async () => {
       axios
@@ -60,13 +61,16 @@ export default function DayReport() {
         .then((response) => {
           const data = response.data;
           setMonthReport(data);
+          console.log(data)
         })
         .catch((error) => {
           console.log(error);
         });
     };
+    
     fetchData();
 }, [selectedMonth,selectedYear]);
+
   return (
     <>
       <section>

@@ -89,6 +89,7 @@ export default function CategoryReport () {
         .then((response) => {
           const data = response.data;
           setCategoryReport(data);
+          console.log(data);
         })
         .catch((error) => {
           console.log(error);
@@ -196,13 +197,13 @@ export default function CategoryReport () {
             </thead>
             <tbody>
               {categoryReport &&
-                categoryReport.users.map((category) => (
+                categoryReport.map((category) => (
                   <tr
-                    key={category.email}
+                    key={category.category}
                     className="text-[#637381] text-center"
                   >
-                    <td className="border-b p-2">{category.email}</td>
-                    <td className="border-b p-2">{category.totalSales}</td>
+                    <td className="border-b p-2">{category.category}</td>
+                    <td className="border-b p-2"><span className=" text-[#468bbc]">{category.totalSales}</span></td>
                   </tr>
                 ))}
             </tbody>

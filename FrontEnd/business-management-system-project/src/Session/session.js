@@ -2,4 +2,6 @@ import { createContext } from "react";
 
 const Session = createContext();
 
-export default Session;
+const shoppingCart = createContext();
+
+export  {Session, shoppingCart};

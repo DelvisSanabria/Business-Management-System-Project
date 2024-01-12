@@ -89,7 +89,6 @@ export default function ProductsReport () {
         .then((response) => {
           const data = response.data;
           setProductsReport(data);
-          console.log(data);
         })
         .catch((error) => {
           console.log(error);

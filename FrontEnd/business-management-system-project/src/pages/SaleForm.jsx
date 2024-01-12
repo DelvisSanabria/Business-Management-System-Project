@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef, useContext } from "react";
-import Session from "../Session/session";
+import {Session} from "../Session/session";
 import axios from "axios";
 import { checkmark, more, less } from "../components/exportsImports";
 

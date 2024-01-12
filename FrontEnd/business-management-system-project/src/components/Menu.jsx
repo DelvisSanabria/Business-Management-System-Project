@@ -3,7 +3,7 @@
 
 import { useEffect,useState,useContext } from "react"
 import { Link, useLocation, useNavigate } from "react-router-dom"
-import Session from "./../Session/session"
+import {Session} from "./../Session/session"
 import { EmpresasPolar, Hamburger, MenuBox, HomeSvg, LoginSvg, Products, ReportsSvg, SalesSvg, SettingsSvg, UserSvg, LogoutSvg, Cart, ContactUsSvg, AccountSvg } from "./exportsImports";
 
 export default function Menu () {

@@ -1,4 +1,4 @@
-export { default as Session } from '../Session/session';
+export {  Session } from '../Session/session';
 export { default as SignUp } from '../pages/SignUp';
 export { default as LogIn } from '../pages/LogIn';
 export { default as ProductForm } from '../pages/ProductForm';
@@ -16,7 +16,6 @@ import EmpresasPolar from "../assets/EmpresasPolar2010.webp";
 import { Sling as Hamburger } from 'hamburger-react'
 import MenuBox from "./MenuBox";
 
-import UserSession from "../Session/session";
 import HomeSvg from "./Svgs/Home"
 import LoginSvg from "./Svgs/Login"
 import ProductSvg from "./Svgs/Products"
@@ -155,7 +154,6 @@ export {
   EmpresasPolar,
   Hamburger,
   MenuBox,
-  UserSession,
   HomeSvg,
   LoginSvg,
   ProductSvg,

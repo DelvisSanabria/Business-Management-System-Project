@@ -2,7 +2,7 @@
 /* eslint-disable no-undef */
 import { useEffect,useContext } from "react"
 import { useState } from "react"
-import Session from "./../Session/session"
+import {Session} from "./../Session/session"
 import { Link,useNavigate } from "react-router-dom"
 import {  HomeSvg, LoginSvg, Products, ReportsSvg, SalesSvg, SettingsSvg, UserSvg, LogoutSvg, Cart, ContactUsSvg } from "./exportsImports";
 

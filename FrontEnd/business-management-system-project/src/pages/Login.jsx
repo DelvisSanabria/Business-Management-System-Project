@@ -1,6 +1,6 @@
 import { useState, useContext, useEffect } from "react";
 import { useNavigate, Link } from 'react-router-dom';
-import Session from "../Session/session";
+import {Session} from "../Session/session";
 import axios from "axios";
 import { polar, bg_login } from "./../components/exportsImports";
 

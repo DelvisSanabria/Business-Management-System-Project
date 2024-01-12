@@ -40,6 +40,10 @@ productRouter.get("/", async (req, res) => {
             ]
          };
       }
+      if (fields.id) {
+         query = { ...query, _id: fields.id };
+      }
+   
       const products = await Product.paginate(query, options);
       return res.status(200).json(products);
    } catch (error) {
