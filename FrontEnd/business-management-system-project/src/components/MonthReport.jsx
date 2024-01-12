@@ -11,6 +11,8 @@ export default function DayReport() {
   const [selectedMonth, setSelectedMonth] = useState(currentMonth);
   const [selectedYear, setSelectedYear] = useState(currentYear);
   const [monthReport, setMonthReport] = useState("");
+  const [product, setProduct] = useState([]);
+  const [productId, setProductId] = useState("");
   const months = [
     { name: "Enero", value: 1 },
     { name: "Febrero", value: 2 },
@@ -50,7 +52,21 @@ export default function DayReport() {
     setShowList();
   };
 
-
+  const fetchProduct = async ({ productId }) => {
+    axios
+      .get(`http://localhost:3001/products?id=${productId}`, {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      })
+      .then((response) => {
+        const data = response.data;
+        setProduct(data);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }
   useEffect(() => {
     const fetchData = async () => {
       axios
@@ -62,6 +78,7 @@ export default function DayReport() {
         .then((response) => {
           const data = response.data;
           setMonthReport(data);
+          setProductId(monthReport.bestSellingProduct.name)
         })
         .catch((error) => {
           console.log(error);
@@ -69,7 +86,8 @@ export default function DayReport() {
     };
     
     fetchData();
-}, [selectedMonth,selectedYear]);
+    fetchProduct({ productId });
+}, [selectedMonth, selectedYear, productId]);
 
   return (
     <>
@@ -160,7 +178,11 @@ export default function DayReport() {
                   </ul>
                 </div>
                 <div className="z-[94]">
-                  <ExportMonthReport ReportData={monthReport} month={selectedMonth} year={selectedYear}/>
+                  <ExportMonthReport
+                    ReportData={monthReport}
+                    month={selectedMonth}
+                    year={selectedYear}
+                  />
                 </div>
               </div>
             </div>
@@ -168,7 +190,9 @@ export default function DayReport() {
               <div className="rounded-[15px] bg-[#ffe2e5] grid grid-rows-[50px_60px] py-4 px-6 w-[350px] h-[160px]">
                 <Reports1Svg />
                 <div className="grid grid-rows-2 w-[200px]">
-                  <span className="font-bold text-xl">${monthReport.totalSales}k</span>
+                  <span className="font-bold text-xl">
+                    ${monthReport.totalSales}k
+                  </span>
                   <span className="text-[#61697b] font-semibold tracking-wide">
                     Ventas totales
                   </span>
@@ -178,7 +202,9 @@ export default function DayReport() {
                 <Reports2Svg />
                 <div className="grid grid-rows-2 w-[300px] gap-3">
                   <span className="font-bold text-xl">
-                    {monthReport.bestSeller && monthReport.bestSeller.salesCount} <span className="font-normal text-base">Ventas</span>
+                    {monthReport.bestSeller &&
+                      monthReport.bestSeller.salesCount}{" "}
+                    <span className="font-normal text-base">Ventas</span>
                   </span>
                   <span className="text-[#61697b] font-semibold tracking-wide">
                     Mejor Vendedor:{" "}
@@ -192,12 +218,15 @@ export default function DayReport() {
                 <Reports3Svg />
                 <div className="grid grid-rows-2 w-[300px] gap-3">
                   <span className="font-bold text-xl">
-                    {monthReport.bestCustomer && monthReport.bestCustomer.purchasesCount} <span className="font-normal text-base">Compras</span>
+                    {monthReport.bestCustomer &&
+                      monthReport.bestCustomer.purchasesCount}{" "}
+                    <span className="font-normal text-base">Compras</span>
                   </span>
                   <span className="text-[#61697b] font-semibold tracking-wide">
                     Mejor Cliente:{" "}
                     <span className="text-blue-500 font-semibold text-base">
-                      {monthReport.bestCustomer && monthReport.bestCustomer.name}
+                      {monthReport.bestCustomer &&
+                        monthReport.bestCustomer.name}
                     </span>
                   </span>
                 </div>
@@ -206,12 +235,15 @@ export default function DayReport() {
                 <Reports4Svg />
                 <div className="grid grid-rows-2 w-[300px] gap-3">
                   <span className="font-bold text-xl">
-                    {monthReport.bestSellingProduct && monthReport.bestSellingProduct.purchasesCount} <span className="font-normal text-base">Unidades</span>
+                    {monthReport.bestSellingProduct &&
+                      monthReport.bestSellingProduct.purchasesCount}{" "}
+                    <span className="font-normal text-base">Unidades</span>
                   </span>
                   <span className="text-[#61697b] font-semibold tracking-wide">
                     Producto mas Vendido:{" "}
                     <span className="text-blue-500 font-semibold text-base">
-                      {monthReport.bestSellingProduct && monthReport.bestSellingProduct.name}
+                      {monthReport.bestSellingProduct &&
+                        monthReport.bestSellingProduct.name}
                     </span>
                   </span>
                 </div>
@@ -256,7 +288,9 @@ export default function DayReport() {
                               }`}
                               onClick={() => {
                                 setSelectedMonth(month.value);
-                                handleChange({ target: { value: month.value } });
+                                handleChange({
+                                  target: { value: month.value },
+                                });
                                 handleCloseList();
                               }}
                             >
@@ -307,14 +341,20 @@ export default function DayReport() {
                   </div>
                 </div>
                 <div className="z-[94]">
-                    <ExportMonthReport ReportData={monthReport} month={selectedMonth} year={selectedYear}/>
-                  </div>
+                  <ExportMonthReport
+                    ReportData={monthReport}
+                    month={selectedMonth}
+                    year={selectedYear}
+                  />
+                </div>
               </div>
               <div className="grid grid-cols-4 gap-5">
                 <div className="rounded-[15px] bg-[#ffe2e5] grid grid-rows-[50px_60px] py-4 px-6 w-[180px] h-[170px]">
                   <Reports1Svg />
                   <div className="grid grid-rows-2 w-[100px]">
-                    <span className="font-bold text-xl">${monthReport.totalSales}k</span>
+                    <span className="font-bold text-xl">
+                      ${monthReport.totalSales}k
+                    </span>
                     <span className="text-[#61697b] font-semibold tracking-wide">
                       Ventas totales
                     </span>
@@ -324,7 +364,9 @@ export default function DayReport() {
                   <Reports2Svg />
                   <div className="grid grid-rows-2 w-[100px] gap-3">
                     <span className="font-bold text-xl">
-                      {monthReport.bestSeller && monthReport.bestSeller.salesCount} <span className="font-normal text-base">Ventas</span>
+                      {monthReport.bestSeller &&
+                        monthReport.bestSeller.salesCount}{" "}
+                      <span className="font-normal text-base">Ventas</span>
                     </span>
                     <span className="text-[#61697b] text-sm font-semibold tracking-wide">
                       Mejor Vendedor:{" "}
@@ -338,12 +380,15 @@ export default function DayReport() {
                   <Reports3Svg />
                   <div className="grid grid-rows-2 w-[100px] gap-3">
                     <span className="font-bold text-xl">
-                      {monthReport.bestCustomer && monthReport.bestCustomer.purchasesCount} <span className="font-normal text-base">Compras</span>
+                      {monthReport.bestCustomer &&
+                        monthReport.bestCustomer.purchasesCount}{" "}
+                      <span className="font-normal text-base">Compras</span>
                     </span>
                     <span className="text-[#61697b] text-sm font-semibold tracking-wide">
                       Mejor Cliente:{" "}
                       <span className="text-blue-500 font-semibold text-sm">
-                        {monthReport.bestCustomer && monthReport.bestCustomer.name}
+                        {monthReport.bestCustomer &&
+                          monthReport.bestCustomer.name}
                       </span>
                     </span>
                   </div>
@@ -352,12 +397,18 @@ export default function DayReport() {
                   <Reports4Svg />
                   <div className="grid grid-rows-2 w-[150px] gap-3">
                     <span className="font-bold text-xl w-[140px]">
-                      {monthReport.bestSellingProduct && monthReport.bestSellingProduct.purchasesCount} <span className="font-normal text-base">Unidades</span>
+                      {monthReport.bestSellingProduct &&
+                        monthReport.bestSellingProduct.purchasesCount}{" "}
+                      <span className="font-normal text-base">Unidades</span>
                     </span>
                     <span className="text-[#61697b] w-[140px] text-sm font-semibold tracking-normal">
                       Producto mas Vendido:{" "}
                       <p className="text-blue-500 font-semibold text-sm overflow-hidden text-ellipsis">
-                        {monthReport.bestSellingProduct && monthReport.bestSellingProduct.name}
+                        {product.docs && product.docs.length > 0 ? (
+                          product.docs[0].name
+                        ) : (
+                          <span>0</span>
+                        )}
                       </p>
                     </span>
                   </div>
