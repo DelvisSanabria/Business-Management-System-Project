@@ -1,4 +1,4 @@
-const Sales = require("./../Models/Sales");
+const Sale = require("./../Models/Sales");
 const Product = require("./../Models/Products");
 const reportsRouter = require("express").Router();
 
@@ -15,7 +15,7 @@ reportsRouter.get("/generalDataReportPerMonth", async (req, res) => {
       typeof month !== "undefined" ? parseInt(month) : currentMonth;
 
 
-    const generalDataReportPerMonth = await Sales.aggregate([
+    const generalDataReportPerMonth = await Sale.aggregate([
       {
         $match: {
           $expr: {
@@ -96,7 +96,7 @@ reportsRouter.get("/sellersReportMonthly", async (req, res) => {
     const monthValue =
       typeof month !== "undefined" ? parseInt(month) : currentMonth;
 
-    const totalSalesVendors = Sales.aggregate([
+    const totalSalesVendors = Sale.aggregate([
       {
         $match: {
           $expr: {
@@ -121,7 +121,7 @@ reportsRouter.get("/sellersReportMonthly", async (req, res) => {
         },
       },
     ])
-    let result = await Sales.aggregatePaginate(totalSalesVendors, options);
+    let result = await Sale.aggregatePaginate(totalSalesVendors, options);
 
     res.status(200).json(result);
   } catch (error) {
@@ -141,7 +141,7 @@ reportsRouter.get("/salesPerCategory", async (req, res) => {
     const monthValue =
       typeof month !== "undefined" ? parseInt(month) : currentMonth;
 
-    const salesPerCategory = await Sales.aggregate([
+    const salesPerCategory = await Sale.aggregate([
       {
         $match: {
           $expr: {
@@ -231,7 +231,7 @@ reportsRouter.get("/salesPerDay", async (req, res) => {
       limit: parseInt(fields.limit) || 6,
     };
 
-    let newAggregate = Sales.aggregate();
+    let newAggregate = Sale.aggregate();
     if (day && month && year) {
       newAggregate
         .match({
@@ -248,7 +248,7 @@ reportsRouter.get("/salesPerDay", async (req, res) => {
           totalSold: { $sum: "$total" },
         });
     }
-    let result = await Sales.aggregatePaginate(newAggregate, options);
+    let result = await Sale.aggregatePaginate(newAggregate, options);
     return res.status(200).json(result);
   } catch (error) {
     console.error(`${error.name}: ${error.message}`);
@@ -270,7 +270,7 @@ reportsRouter.get("/salesPerClients", async (req, res) => {
       limit: parseInt(fields.limit) || 10,
     };
 
-    let newAggregate = Sales.aggregate();
+    let newAggregate = Sale.aggregate();
     if (month && year) {
       newAggregate
         .match({
@@ -291,8 +291,8 @@ reportsRouter.get("/salesPerClients", async (req, res) => {
       newAggregate
         .match({
           createdAt: {
-            $gte: new Date(Date.UTC(year)),
-            $lt: new Date(Date.UTC(year + 1)),
+            $gte: new Date(Date.UTC(year, 0)),
+            $lt: new Date(Date.UTC(year + 1, 0)),
           },
         })
         .group({
@@ -304,7 +304,7 @@ reportsRouter.get("/salesPerClients", async (req, res) => {
           totalSales: -1,
         });
     }
-    let result = await Sales.aggregatePaginate(newAggregate, options);
+    let result = await Sale.aggregatePaginate(newAggregate, options);
     return res.status(200).json(result);
   } catch (error) {
     console.error(`${error.name}: ${error.message}`);
@@ -326,7 +326,7 @@ reportsRouter.get("/salesPerProducts", async (req, res) => {
       limit: parseInt(fields.limit) || 10,
     };
 
-    let newAggregate = Sales.aggregate();
+    let newAggregate = Sale.aggregate();
     if (month && year) {
       newAggregate
         .match({
@@ -361,8 +361,8 @@ reportsRouter.get("/salesPerProducts", async (req, res) => {
       newAggregate
         .match({
           createdAt: {
-            $gte: new Date(Date.UTC(year)),
-            $lt: new Date(Date.UTC(year + 1)),
+            $gte: new Date(Date.UTC(year, 0)),
+            $lt: new Date(Date.UTC(year + 1, 0)),
           },
         })
         .unwind("$products")
@@ -388,7 +388,7 @@ reportsRouter.get("/salesPerProducts", async (req, res) => {
           totalSales: -1,
         });
     }
-    let result = await Sales.aggregatePaginate(newAggregate, options);
+    let result = await Sale.aggregatePaginate(newAggregate, options);
     return res.status(200).json(result);
   } catch (error) {
     console.error(`${error.name}: ${error.message}`);

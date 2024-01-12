@@ -3,11 +3,14 @@ export { default as SignUp } from '../pages/SignUp';
 export { default as LogIn } from '../pages/LogIn';
 export { default as ProductForm } from '../pages/ProductForm';
 export { default as ProductsDashboard } from '../pages/ProductsDashboard';
+export { default as EditProduct } from "../pages/EditProduct";
 export { default as CartModal } from '../pages/CartModal';
 export { default as Products } from '../pages/Products';
 export { default as SingleProduct } from '../pages/SingleProduct';
 export { default as SalesDashboard } from '../pages/SalesDashboard';
 export { default as SaleForm } from '../pages/SaleForm';
+export { default as EditSale } from '../pages/EditSale';
+
 //images
 
 

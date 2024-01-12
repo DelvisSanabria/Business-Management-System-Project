@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import axios from "axios";
 import { plus, lens, lens2, deleteIcon, editIcon, cancel, plusDesktop } from "../components/exportsImports";
-import { ProductForm } from "../components/exportsImports";
+import { ProductForm, EditProduct } from "../components/exportsImports";
 
 function ProductsDashboard() {
    const server = "http://localhost:3001/";
