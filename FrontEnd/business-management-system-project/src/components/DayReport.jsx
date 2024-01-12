@@ -8,9 +8,9 @@ export default function DayReport() {
   const currentMonth = currentDate.getMonth() + 1;
   const currentDay = currentDate.getDate();
   const [showList, setShowList] = useState(false);
-  const [selectedDay, setSelectedDay] = useState(currentDay);
-  const [selectedMonth, setSelectedMonth] = useState(currentMonth);
-  const [selectedYear, setSelectedYear] = useState(currentYear);
+  const [selectedDay, setSelectedDay] = useState(5);
+  const [selectedMonth, setSelectedMonth] = useState(1);
+  const [selectedYear, setSelectedYear] = useState(2024);
   const [DayReport, setDayReport] = useState("");
 
   const [input, setInput] = useState({
@@ -71,6 +71,7 @@ export default function DayReport() {
           .then((response) => {
             const data = response.data;
             setDayReport(data);
+            console.log(data);
           })
           .catch((error) => {
             console.log(error);
@@ -91,7 +92,7 @@ export default function DayReport() {
                 <Reports1Svg />
                 <div className="grid grid-rows-2 w-[100px]">
                   <span className="font-bold text-xl">
-                    ${DayReport !== "" && DayReport.docs[0].totalSold}k
+                    ${DayReport && DayReport !== "" && DayReport.docs[0].totalSold.toFixed(2)}k
                   </span>
                   <span className="text-[#61697b] font-semibold tracking-wide">
                     Ventas totales

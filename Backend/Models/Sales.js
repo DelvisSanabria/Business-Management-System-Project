@@ -2,50 +2,40 @@ const mongoose = require("mongoose");
 const mongoosePaginate = require("mongoose-paginate-v2");
 const aggregatePaginate = require("mongoose-aggregate-paginate-v2");
 
-const SaleSchema = mongoose.Schema(
-  {
-    client: {
-      type: String,
-      required: true,
-    },
-    vendor: {
+const SaleSchema = new mongoose.Schema({
+  client: {
     type: String,
-    minlength: 1,
-    maxlength: 100,
+    required: true
   },
-  products: {
-    type: [String],
-    min: 0,
-    required: true,
+  vendor: {
+    type: String,
+    required: true
+  },
+  products: [{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Product"
+  }],
+  quantity: {
+    type: Object,
+    required: true
+  },
+  subtotal: {
+    type: Number,
+    required: true
+  },
+  tax: {
+    type: Number,
+    required: true
   },
   total: {
     type: Number,
     required: true
   },
-  iva: {
-    type: Number,
-    required: true
-  },
   deleted: {
     type: Boolean,
-    default: false,
-  },
-  createdAt: {
-    type: Date,
-    default: Date.now,
-    required:true
-  },
-  updateAt: {
-    type: Date,
-    default: Date.now,
-    required:true
+    default: false
   }
-});
-
-SaleSchema.pre("save", function (next) {
-  this.updateAt = new Date();
-  next();
-})
+}, { timestamps: true });
 
 SaleSchema.plugin(mongoosePaginate);
 SaleSchema.plugin(aggregatePaginate);

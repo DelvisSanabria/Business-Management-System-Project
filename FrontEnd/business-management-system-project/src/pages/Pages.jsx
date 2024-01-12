@@ -2,7 +2,7 @@
 import Layout from './../components/Layout'
 import Home from './Home.jsx'
 import LogIn from './LogIn'
-import Products from './Products.jsx'
+import ProductsDisplay from './ProductsDisplay.jsx'
 
 import Users from './Users.jsx'
 
@@ -20,16 +20,19 @@ import Profile from './Profile.jsx'
 import MakeSale from './MakeSale.jsx'
 import SingleProduct from './SingleProduct';
 import SalesDashboard from './SalesDashboard.jsx'
+import ProductsDashboard from './ProductsDashboard.jsx'
+
 export {
   Layout,
   Home,
   LogIn,
-  Products,
+  ProductsDisplay,
   SingleProduct,
   Users,
   Customers,
   Vendors,
   SalesDashboard,
+  ProductsDashboard,
   Settings,
   Contact,
   Reports,

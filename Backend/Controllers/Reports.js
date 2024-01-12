@@ -291,8 +291,8 @@ reportsRouter.get("/salesPerClients", async (req, res) => {
       newAggregate
         .match({
           createdAt: {
-            $gte: new Date(Date.UTC(year)),
-            $lt: new Date(Date.UTC(year + 1)),
+            $gte: new Date(Date.UTC(year, 0)),
+            $lt: new Date(Date.UTC(year + 1, 0)),
           },
         })
         .group({
@@ -361,8 +361,8 @@ reportsRouter.get("/salesPerProducts", async (req, res) => {
       newAggregate
         .match({
           createdAt: {
-            $gte: new Date(Date.UTC(year)),
-            $lt: new Date(Date.UTC(year + 1)),
+            $gte: new Date(Date.UTC(year, 0)),
+            $lt: new Date(Date.UTC(year + 1, 0)),
           },
         })
         .unwind("$products")

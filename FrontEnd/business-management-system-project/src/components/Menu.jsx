@@ -3,8 +3,8 @@
 
 import { useEffect,useState,useContext } from "react"
 import { Link, useLocation, useNavigate } from "react-router-dom"
-import Session from "./../Session/session"
-import { EmpresasPolar, Hamburger, MenuBox, HomeSvg, LoginSvg, Products, ReportsSvg, SalesSvg, SettingsSvg, UserSvg, LogoutSvg, Cart, ContactUsSvg, AccountSvg } from "./exportsImports";
+import {Session} from "./../Session/session"
+import { EmpresasPolar, Hamburger, MenuBox, HomeSvg, LoginSvg, ProductSvg, ReportsSvg, SalesSvg, SettingsSvg, UserSvg, LogoutSvg, Cart, ContactUsSvg, AccountSvg } from "./exportsImports";
 
 export default function Menu () {
   const [isOpen, setOpen] = useState(false)
@@ -27,7 +27,7 @@ export default function Menu () {
     User: <UserSvg currentColor={activeTab === "User" ? activeColor : (defaultColor)}/>,
     Customers: <UserSvg currentColor={activeTab === "Customers" ? activeColor : (defaultColor)}/>,
     Vendors: <UserSvg currentColor={activeTab === "Vendors" ? activeColor : (defaultColor)}/>,
-    Inventory: <Products currentColor={activeTab === "Inventory" ? activeColor : (defaultColor)}/>,
+    Inventory: <ProductSvg currentColor={activeTab === "Inventory" ? activeColor : (defaultColor)}/>,
     Sales: <SalesSvg currentColor={activeTab === "Sales" ? activeColor : (defaultColor)}/>,
     Reports: <ReportsSvg currentColor={activeTab === "Reports" ? activeColor : (defaultColor)}/>,
     Settings: <SettingsSvg currentColor={activeTab === "Settings" ? activeColor : (defaultColor)}/>,

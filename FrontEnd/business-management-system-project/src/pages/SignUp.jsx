@@ -1,13 +1,13 @@
 import { useState, useEffect, useRef } from "react";
 import axios from "axios";
-import { /* useNavigate */ Link } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { polar, camera, blueBg, polarSede } from "./../components/exportsImports";
 
 function SignUp() {
    const server = "http://localhost:3001";
    const [user, setUser] = useState({
-      firstname: "",
-      lastname: "",
+      name: "",
+      lastName: "",
       phone: "",
       email: "",
       role: "client",
@@ -16,8 +16,8 @@ function SignUp() {
    });
    const [error, setError] = useState({
       avatar: "",
-      firstname: "",
-      lastname: "",
+      name: "",
+      lastName: "",
       phone: "",
       email: "",
       password: "",
@@ -26,8 +26,8 @@ function SignUp() {
    });
    const [input, setInput] = useState({
       avatar: "",
-      firstname: "",
-      lastname: "",
+      name: "",
+      lastName: "",
       phone: "",
       email: "",
       password: "",
@@ -43,18 +43,18 @@ function SignUp() {
       }
    }, [input.avatar])
    const button = useRef();
-   /* const navigate = useNavigate(); */
-   if (user.firstname && user.lastname && user.address) {
+   const navigate = useNavigate();
+   if (user.name && user.lastName && user.address) {
       let firstname = "";
       let lastname = "";
-      for (let word of user.firstname.split(" ")) {
+      for (let word of user.name.split(" ")) {
          firstname += word[0].toUpperCase() + word.slice(1) + " ";
       }
-      for (let word of user.lastname.split(" ")) {
+      for (let word of user.lastName.split(" ")) {
          lastname += word[0].toUpperCase() + word.slice(1) + " ";
       }
-      user.firstname = firstname.trim();
-      user.lastname = lastname.trim();
+      user.name = firstname.trim();
+      user.lastName = lastname.trim();
       user.address = user.address.trim();
    }
    const handleSubmit = async () => {
@@ -75,8 +75,8 @@ function SignUp() {
             });
             if (newResponse.status === 201) {
                alert("Datos registrados con éxito");
-               //navigate("/login");
-               const keys = ["avatar", "firstname", "lastname", "phone", "email", "password", "repPassword", "address"];
+               navigate("/login");
+               const keys = ["avatar", "name", "lastName", "phone", "email", "password", "repPassword", "address"];
                for (const key of keys) {
                   if (input[key]) {
                      setInput((prev) => ({...prev, [key]: ""}));
@@ -105,8 +105,8 @@ function SignUp() {
    const handleValidation = () => {
       const { password, repPassword } = input;
       const regexList = { 
-         firstname: /^[a-zñ áéíóúñÁÉÍÓÚÑ]+$/i, 
-         lastname: /^[a-zñ áéíóúñÁÉÍÓÚÑ]+$/i, 
+         name: /^[a-zñ áéíóúñÁÉÍÓÚÑ]+$/i, 
+         lastName: /^[a-zñ áéíóúñÁÉÍÓÚÑ]+$/i, 
          email: /^[a-z0-9.-]+@[a-z0-9-]+(\.[a-z]{2,4}){1,3}$/i, 
          phone: /^(\+[\d]{2})?\d{3,4}\d{3}\d{2}\d{2}$/, 
          password: /^(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])(?=.*[!@#$%^&.*/])[^<>{}:;'"?,]{8,16}$/, 
@@ -114,8 +114,8 @@ function SignUp() {
       };
 
       const message = {
-         firstname: "El nombre es inválido",
-         lastname: "El apellido es inválido",
+         name: "El nombre es inválido",
+         lastName: "El apellido es inválido",
          email: "El correo es inválido",
          phone: "El teléfono es inválido",
          password: "La contraseña es inválida",
@@ -188,18 +188,18 @@ function SignUp() {
       };
    }, []);
    return (
-      <section className="pt-[50px] flex flex-col w-full box-border relative top-[73px] h-max pb-10 min-[1440px]:px-[45px] min-[1440px]:gap-[24px] min-[1440px]:bg-[#F1F6F9] min-[1440px]:justify-center max-[1439px]:bg-[#1A3365] max-[1439px]:items-center">
+      <section className="pt-[50px] flex flex-col w-full box-border relative h-max pb-10 min-[1440px]:px-[45px] min-[1440px]:gap-[24px] min-[1440px]:bg-[#F1F6F9] min-[1440px]:justify-center max-[1439px]:bg-[#1A3365] max-[1439px]:items-center">
          <img className="w-[262px] max-[1439px]:hidden" src={polar} alt="Empresas Polar" />
          <div className="w-full px-[95px]">
-            <div className="flex justify-center items-center bg-[#D9D9D9] rounded-lg">
+            <div className="flex justify-center items-center bg-[#D9D9D9] rounded-[25px]">
                <img className="w-[500px] h-[1045px] max-[1439px]:hidden" src={polarSede} alt="" />
-               <form className="z-10 flex flex-col justify-center items-center gap-[21px] bg-[#F1F6F9] pt-[15px] pb-[25px] top-[75px] rounded-[20px] min-[1440px]:rounded-[10px] min-[1440px]:w-[500px] min-[1440px]:bg-[#FFFFFF] max-[1439px]:w-[312px]">
+               <form className="z-10 flex flex-col justify-center items-center gap-[21px] bg-[#F1F6F9] pt-[15px] pb-[25px] top-[75px] rounded-[25px] min-[1440px]:rounded-[10px] min-[1440px]:w-[500px] min-[1440px]:bg-[#FFFFFF] max-[1439px]:w-[312px]">
                   <img className="w-[224px] min-[1440px]:hidden" src={polar} alt="Empresas Polar" />
                   <p className="text-[24px] border-[#E7E7E7] border-b-[1px] text-center pb-[15px] w-full max-[1439px]:hidden">Registro</p>
                   <div className="frame flex flex-col gap-[15px] px-[44px] w-full">
                      <div className="flex justify-center">
                         <figure className="relative flex justify-center items-center rounded-full bg-[#E7E7E7] w-[125px] h-[125px] shadow-sm">
-                           <img className={`w-[90%] ${!input.avatar && "hidden" }`} src={avatarURL} alt="imagen seleccionada" />
+                           <img className={`max-w-[90%] max-h-[90%] ${!input.avatar && "hidden" }`} src={avatarURL} alt="imagen seleccionada" />
                            <div className="absolute bottom-0 left-0 flex justify-center items-center w-[35px] h-[35px] rounded-full bg-[#FFFFFF] border-[1px] border-[#E7E7E7]"
                            onClick={() => inputFile.current.click()}>
                               <img className="w-[25px]"
@@ -221,31 +221,31 @@ function SignUp() {
                      </div>
                      <div className="flex gap-[15px] min-[1440px]:gap-[11px] max-[1439px]:flex-col">
                         <div className="flex flex-col gap-[15px] w-full">
-                           <label className="text-[20px] text-[#394867]" htmlFor="firstname">Nombre:</label>
+                           <label className="text-[20px] text-[#394867]" htmlFor="name">Nombre:</label>
                            <input
-                              className={`data ${error.firstname ? "border-[#DC3545]" : ""}`}
-                              id="firstname"
+                              className={`data ${error.name ? "border-[#DC3545]" : ""}`}
+                              id="name"
                               type="text"
-                              name="firstname"
-                              value={input.firstname}
+                              name="name"
+                              value={input.name}
                               onChange={handleChange}
                            />
                            <div className="relative">
-                              <span className="error">{error.firstname}</span>
+                              <span className="error">{error.name}</span>
                            </div>
                         </div>
                         <div className="flex flex-col gap-[15px] w-full">
-                           <label className="text-[20px] text-[#394867]" htmlFor="lastname">Apellido:</label>
+                           <label className="text-[20px] text-[#394867]" htmlFor="lastName">Apellido:</label>
                            <input
-                              className={`data ${error.lastname ? "border-[#DC3545]" : ""}`}
-                              id="lastname"
+                              className={`data ${error.lastName ? "border-[#DC3545]" : ""}`}
+                              id="lastName"
                               type="text"
-                              name="lastname"
-                              value={input.lastname}
+                              name="lastName"
+                              value={input.lastName}
                               onChange={handleChange}
                            />
                            <div className="relative">
-                              <span className="error">{error.lastname}</span>
+                              <span className="error">{error.lastName}</span>
                            </div>
                         </div>
                      </div>
@@ -321,7 +321,7 @@ function SignUp() {
                </form>
             </div>
          </div>
-         <img className="z-0 absolute bottom-0 min-[1440px]:hidden" src={blueBg} alt="background" />
+         <img className="z-0 absolute w-full -bottom-[20px] min-[1440px]:hidden" src={blueBg} alt="background" />
       </section>
    );
 }

@@ -1,10 +1,10 @@
-export { default as Session } from '../Session/session';
+export { Session } from '../Session/session';
 export { default as SignUp } from '../pages/SignUp';
 export { default as LogIn } from '../pages/LogIn';
 export { default as ProductForm } from '../pages/ProductForm';
 export { default as ProductsDashboard } from '../pages/ProductsDashboard';
 export { default as CartModal } from '../pages/CartModal';
-export { default as Products } from '../pages/Products';
+export { default as ProductsDisplay } from '../pages/ProductsDisplay';
 export { default as SingleProduct } from '../pages/SingleProduct';
 export { default as SalesDashboard } from '../pages/SalesDashboard';
 export { default as SaleForm } from '../pages/SaleForm';
@@ -16,7 +16,6 @@ import EmpresasPolar from "../assets/EmpresasPolar2010.webp";
 import { Sling as Hamburger } from 'hamburger-react'
 import MenuBox from "./MenuBox";
 
-import UserSession from "../Session/session";
 import HomeSvg from "./Svgs/Home"
 import LoginSvg from "./Svgs/Login"
 import ProductSvg from "./Svgs/Products"
@@ -155,7 +154,6 @@ export {
   EmpresasPolar,
   Hamburger,
   MenuBox,
-  UserSession,
   HomeSvg,
   LoginSvg,
   ProductSvg,

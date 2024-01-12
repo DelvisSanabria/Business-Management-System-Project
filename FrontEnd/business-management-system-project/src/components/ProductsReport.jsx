@@ -187,13 +187,13 @@ export default function ProductsReport () {
           <table className="w-[80vw] border-b-2">
             <thead>
               <tr className="text-[#637381]">
-                <th className="border-b-2 rounded-tl p-4 border-gray-200 bg-[#eaecf0] p-2">
+                <th className="border-b-2 rounded-tl p-4 border-gray-200 bg-[#eaecf0]">
                   imagen
                 </th>
-                <th className="border-b-2 border-gray-200 p-4 bg-[#eaecf0] p-2">
+                <th className="border-b-2 border-gray-200 p-4 bg-[#eaecf0]">
                   Producto
                 </th>
-                <th className="border-b-2 rounded-tr border-gray-200 p-4 bg-[#eaecf0] p-2">
+                <th className="border-b-2 rounded-tr border-gray-200 p-4 bg-[#eaecf0]">
                   Compras Totales
                 </th>
               </tr>

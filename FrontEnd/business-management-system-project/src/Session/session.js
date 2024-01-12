@@ -1,5 +1,5 @@
 import { createContext } from "react";
 
-const Session = createContext();
+export const Session = createContext();
+export const shoppingCart = createContext();
 
-export default Session;
