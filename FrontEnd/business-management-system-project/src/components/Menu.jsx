@@ -149,11 +149,11 @@ export default function Menu () {
     {
       name: "Contact",
       title: "Contactanos",
-      path: "/contacUs",
+      path: "/contactUs",
     },
     {
       name: "Settings",
-      title: "Ajustes",
+      title: "Editar usuario",
       path: "/settings",
     },
     { name: sessionName, title: sessionItem, path: "/login" },
