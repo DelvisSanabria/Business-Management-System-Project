@@ -1,6 +1,7 @@
 import { useState,useEffect } from "react";
 import axios from "axios";
 import { Reports1Svg,Reports2Svg,Reports3Svg,Reports4Svg } from "../components/exportsImports";
+import ExportMonthReport from "./ExportToExcelBtn/ExportMonthReport";
 
 export default function DayReport() {
   const currentDate = new Date();
@@ -61,7 +62,6 @@ export default function DayReport() {
         .then((response) => {
           const data = response.data;
           setMonthReport(data);
-          console.log(data)
         })
         .catch((error) => {
           console.log(error);
@@ -74,13 +74,13 @@ export default function DayReport() {
   return (
     <>
       <section>
-        <div className="flex justify-center gap-5 border border-[#eaecf0] m-5 p-4 mr-7 rounded-[15px]">
+        <div className="flex justify-center gap-5 border border-[#eaecf0] m-5 p-4 mr-7 rounded-[15px] md:w-[67vw] lg:hidden">
           <div className="grid grid-rows-[120px_1fr] justify-items-center">
             <div className="font-bold text-center grid grid-rows-2 justify-center">
               <div>
                 <h4>Ventas por Mes (general)</h4>
               </div>
-              <div className="grid grid-cols-[60px_60px] gap-5 select-none justify-center">
+              <div className="grid grid-cols-[60px_60px_60px] gap-5 select-none justify-center">
                 <div className="z-[96]">
                   <ul className="p-3 border border-[#eaecf0] active:border-blue-500 hover:border-blue-500  rounded-[15px] h-[50px]">
                     <li
@@ -159,6 +159,9 @@ export default function DayReport() {
                     </div>
                   </ul>
                 </div>
+                <div className="z-[94]">
+                  <ExportMonthReport ReportData={monthReport} month={selectedMonth} year={selectedYear}/>
+                </div>
               </div>
             </div>
             <div className="grid grid-rows-4 gap-5">
@@ -211,6 +214,153 @@ export default function DayReport() {
                       {monthReport.bestSellingProduct && monthReport.bestSellingProduct.name}
                     </span>
                   </span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div className="hidden lg:block">
+          <div className="flex justify-center gap-5 border w-[70vw] border-[#eaecf0] mx-5 px-4 pb-5 mr-7 rounded-[15px]">
+            <div className="grid grid-rows-[120px_1fr] justify-items-center">
+              <div className="font-bold text-center grid grid-cols-3 gap-10 items-center w-[70vw] justify-around">
+                <div>
+                  <h4>Ventas por Mes (general)</h4>
+                </div>
+                <div className="grid grid-cols-[60px_60px] gap-5 select-none justify-center">
+                  <div className="z-[96]">
+                    <ul className="p-3 border border-[#eaecf0] active:border-blue-500 hover:border-blue-500  rounded-[15px] h-[50px]">
+                      <li
+                        className={`data outline-none cursor-pointer font-bold${
+                          showList === false ? "text-black font-bold" : ""
+                        }`}
+                        onClick={() => {
+                          handleClick("month");
+                        }}
+                      >
+                        {selectedMonth === "" ? "Mes" : selectedMonth}
+                      </li>
+                      <div
+                        className={`h-[40vh] bg-[#fff] cursor-pointer overflow-y-auto border border-[#eaecf0] p-3 ${
+                          showList === "month" ? "" : "hidden"
+                        } `}
+                      >
+                        {showList &&
+                          showList === "month" &&
+                          months.map((month) => (
+                            <li
+                              key={month.name}
+                              className={`data outline-none font-bold hover:bg-[#eaecf0] ${
+                                selectedMonth === month.name
+                                  ? " text-black font-bold"
+                                  : ""
+                              }`}
+                              onClick={() => {
+                                setSelectedMonth(month.value);
+                                handleChange({ target: { value: month.value } });
+                                handleCloseList();
+                              }}
+                            >
+                              {month.name}
+                            </li>
+                          ))}
+                      </div>
+                    </ul>
+                  </div>
+                  <div className="z-[95]">
+                    <ul className="p-3 border border-[#eaecf0] active:border-blue-500 hover:border-blue-500  rounded-[15px] h-[50px]">
+                      <li
+                        className={`data outline-none cursor-pointer font-bold${
+                          showList === false ? "text-black font-bold" : ""
+                        }`}
+                        onClick={() => {
+                          handleClick("year");
+                        }}
+                      >
+                        {selectedYear === "" ? "Año" : selectedYear}
+                      </li>
+                      <div
+                        className={`h-[40vh] w-[120px] bg-[#fff] cursor-pointer overflow-y-auto border border-[#eaecf0] p-3 ${
+                          showList === "year" ? "" : "hidden"
+                        } `}
+                      >
+                        {showList &&
+                          showList === "year" &&
+                          years.map((year) => (
+                            <li
+                              key={year}
+                              className={`data outline-none font-bold hover:bg-[#eaecf0] ${
+                                selectedYear === year
+                                  ? " text-black font-bold"
+                                  : ""
+                              }`}
+                              onClick={() => {
+                                setSelectedYear(year);
+                                handleChange({ target: { value: year } });
+                                handleCloseList();
+                              }}
+                            >
+                              {year}
+                            </li>
+                          ))}
+                      </div>
+                    </ul>
+                  </div>
+                </div>
+                <div className="z-[94]">
+                    <ExportMonthReport ReportData={monthReport} month={selectedMonth} year={selectedYear}/>
+                  </div>
+              </div>
+              <div className="grid grid-cols-4 gap-5">
+                <div className="rounded-[15px] bg-[#ffe2e5] grid grid-rows-[50px_60px] py-4 px-6 w-[180px] h-[170px]">
+                  <Reports1Svg />
+                  <div className="grid grid-rows-2 w-[100px]">
+                    <span className="font-bold text-xl">${monthReport.totalSales}k</span>
+                    <span className="text-[#61697b] font-semibold tracking-wide">
+                      Ventas totales
+                    </span>
+                  </div>
+                </div>
+                <div className="rounded-[15px] bg-[#fff4de] grid grid-rows-[50px_60px] py-4 px-6 w-[180px] h-[170px]">
+                  <Reports2Svg />
+                  <div className="grid grid-rows-2 w-[100px] gap-3">
+                    <span className="font-bold text-xl">
+                      {monthReport.bestSeller && monthReport.bestSeller.salesCount} <span className="font-normal text-base">Ventas</span>
+                    </span>
+                    <span className="text-[#61697b] text-sm font-semibold tracking-wide">
+                      Mejor Vendedor:{" "}
+                      <span className="text-blue-500 text-sm font-semibold">
+                        {monthReport.bestSeller && monthReport.bestSeller.name}
+                      </span>
+                    </span>
+                  </div>
+                </div>
+                <div className="rounded-[15px] bg-[#f3e8ff] grid grid-rows-[50px_60px] py-4 px-6 w-[180px] h-[170px]">
+                  <Reports3Svg />
+                  <div className="grid grid-rows-2 w-[100px] gap-3">
+                    <span className="font-bold text-xl">
+                      {monthReport.bestCustomer && monthReport.bestCustomer.purchasesCount} <span className="font-normal text-base">Compras</span>
+                    </span>
+                    <span className="text-[#61697b] text-sm font-semibold tracking-wide">
+                      Mejor Cliente:{" "}
+                      <span className="text-blue-500 font-semibold text-sm">
+                        {monthReport.bestCustomer && monthReport.bestCustomer.name}
+                      </span>
+                    </span>
+                  </div>
+                </div>
+                <div className="rounded-[15px] bg-[#dcfce7] grid grid-rows-[50px_60px] py-4 px-6 w-[180px] h-[170px]">
+                  <Reports4Svg />
+                  <div className="grid grid-rows-2 w-[150px] gap-3">
+                    <span className="font-bold text-xl w-[140px]">
+                      {monthReport.bestSellingProduct && monthReport.bestSellingProduct.purchasesCount} <span className="font-normal text-base">Unidades</span>
+                    </span>
+                    <span className="text-[#61697b] w-[140px] text-sm font-semibold tracking-normal">
+                      Producto mas Vendido:{" "}
+                      <p className="text-blue-500 font-semibold text-sm overflow-hidden text-ellipsis">
+                        {monthReport.bestSellingProduct && monthReport.bestSellingProduct.name}
+                      </p>
+                    </span>
+                  </div>
                 </div>
               </div>
             </div>

@@ -7,7 +7,7 @@ import CategoryReport from "../components/CategoryReport";
 export default function Reports () {
   return (
     <>
-      <section className="flex flex-col items-start w-[88vw] my-10 mx-5">
+      <section className="flex flex-col items-start w-[70vw] my-10 mx-5">
         <div className="grid grid-rows-2 justify-items-start">
           <div className="flex w-[327px] items-center gap-[8px]">
             <div className="w-fit mt-[-1.00px] font-medium text-gray-900 text-[18px] tracking-[0] leading-[28px] whitespace-nowrap">
