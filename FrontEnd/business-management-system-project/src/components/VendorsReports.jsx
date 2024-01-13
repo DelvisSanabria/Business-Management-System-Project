@@ -110,7 +110,7 @@ export default function VendorsReports () {
               <div className="z-[96]">
                 <ul className="p-3 border border-[#eaecf0] active:border-blue-500 hover:border-blue-500  rounded-[15px] h-[50px]">
                   <li
-                    className={`data outline-none cursor-pointer font-bold${
+                    className={`outline-none cursor-pointer font-bold ${
                       showList === false ? "text-black font-bold" : ""
                     }`}
                     onClick={() => {
@@ -120,7 +120,7 @@ export default function VendorsReports () {
                     {selectedMonth === "" ? "Mes" : selectedMonth}
                   </li>
                   <div
-                    className={`h-[40vh] bg-[#fff] cursor-pointer overflow-y-auto border border-[#eaecf0] p-3 ${
+                    className={`h-[40vh] w-[25vw] bg-[#fff] cursor-pointer overflow-y-auto border border-[#eaecf0] p-3 ${
                       showList === "month" ? "" : "hidden"
                     } `}
                   >
@@ -129,7 +129,7 @@ export default function VendorsReports () {
                       months.map((month) => (
                         <li
                           key={month.name}
-                          className={`data outline-none font-bold hover:bg-[#eaecf0] ${
+                          className={`outline-none font-bold hover:bg-[#eaecf0] ${
                             selectedMonth === month.name
                               ? " text-black font-bold"
                               : ""
@@ -149,7 +149,7 @@ export default function VendorsReports () {
               <div className="z-[95]">
                 <ul className="p-3 border border-[#eaecf0] active:border-blue-500 hover:border-blue-500  rounded-[15px] h-[50px]">
                   <li
-                    className={`data outline-none cursor-pointer font-bold${
+                    className={`outline-none cursor-pointer font-bold ${
                       showList === false ? "text-black font-bold" : ""
                     }`}
                     onClick={() => {
@@ -168,7 +168,7 @@ export default function VendorsReports () {
                       years.map((year) => (
                         <li
                           key={year}
-                          className={`data outline-none font-bold hover:bg-[#eaecf0] ${
+                          className={`outline-none font-bold hover:bg-[#eaecf0] ${
                             selectedYear === year ? " text-black font-bold" : ""
                           }`}
                           onClick={() => {
@@ -281,7 +281,7 @@ export default function VendorsReports () {
                 <div className="z-[96]">
                   <ul className="p-3 border border-[#eaecf0] active:border-blue-500 hover:border-blue-500  rounded-[15px] h-[50px]">
                     <li
-                      className={`data outline-none cursor-pointer font-bold${
+                      className={`outline-none cursor-pointer font-bold ${
                         showList === false ? "text-black font-bold" : ""
                       }`}
                       onClick={() => {
@@ -291,7 +291,7 @@ export default function VendorsReports () {
                       {selectedMonth === "" ? "Mes" : selectedMonth}
                     </li>
                     <div
-                      className={`h-[40vh] bg-[#fff] cursor-pointer overflow-y-auto border border-[#eaecf0] p-3 ${
+                      className={`h-[40vh] w-[10vw] bg-[#fff] cursor-pointer overflow-y-auto border border-[#eaecf0] p-3 ${
                         showList === "month" ? "" : "hidden"
                       } `}
                     >
@@ -300,7 +300,7 @@ export default function VendorsReports () {
                         months.map((month) => (
                           <li
                             key={month.name}
-                            className={`data outline-none font-bold hover:bg-[#eaecf0] ${
+                            className={`outline-none font-bold hover:bg-[#eaecf0] ${
                               selectedMonth === month.name
                                 ? " text-black font-bold"
                                 : ""
@@ -320,7 +320,7 @@ export default function VendorsReports () {
                 <div className="z-[95]">
                   <ul className="p-3 border border-[#eaecf0] active:border-blue-500 hover:border-blue-500  rounded-[15px] h-[50px]">
                     <li
-                      className={`data outline-none cursor-pointer font-bold${
+                      className={`outline-none cursor-pointer font-bold ${
                         showList === false ? "text-black font-bold" : ""
                       }`}
                       onClick={() => {
@@ -330,7 +330,7 @@ export default function VendorsReports () {
                       {selectedYear === "" ? "Año" : selectedYear}
                     </li>
                     <div
-                      className={`h-[40vh] w-[120px] bg-[#fff] cursor-pointer overflow-y-auto border border-[#eaecf0] p-3 ${
+                      className={`h-[40vh] w-[7vw] bg-[#fff] cursor-pointer overflow-y-auto border border-[#eaecf0] p-3 ${
                         showList === "year" ? "" : "hidden"
                       } `}
                     >
@@ -339,7 +339,7 @@ export default function VendorsReports () {
                         years.map((year) => (
                           <li
                             key={year}
-                            className={`data outline-none font-bold hover:bg-[#eaecf0] ${
+                            className={`outline-none font-bold hover:bg-[#eaecf0] ${
                               selectedYear === year
                                 ? " text-black font-bold"
                                 : ""
