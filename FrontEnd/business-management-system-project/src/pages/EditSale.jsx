@@ -191,7 +191,7 @@ function EditSale({ _id, client, vendor, products, quantity }) {
    }, [input]); 
 
    return (
-      <form className="flex max-[1439px]:text-[14px] flex-col relative w-[310px] min-[1440px]:w-[640px] box-border items-center border-[1px] border-[#EAECF0] rounded-[20px]" ref={successRef}>
+      <form className="flex max-lg:text-[14px] flex-col relative w-[310px] lg:w-[640px] box-border items-center border-[1px] border-[#EAECF0] rounded-[20px]" ref={successRef}>
          <div className="flex w-full justify-center items-center border-b-[1px] border-[#EAECF0] h-[50px]">
             <p className="text-[20px] font-semibold">Editar venta</p>
          </div>
@@ -204,11 +204,11 @@ function EditSale({ _id, client, vendor, products, quantity }) {
             </div>
             <div className="flex flex-col w-full gap-[8px] p-[25px] border-b-[1px] border-[#EAECF0]">
                <div className="flex flex-col gap-[8px]">
-                  <div className="flex flex-col gap-[8px] min-[1440px]:w-full">
-                     <label htmlFor="client">Correo del cliente:</label>
+                  <div className="flex flex-col gap-[8px] lg:w-full">
+                     <label className="label" htmlFor="client">Correo del cliente:</label>
                      <input
                         id="client"
-                        className={`data w-full rounded-[7px] ${error.client ? "border-[#DC3545]" : ""}`}
+                        className={`data123 w-full rounded-[7px] ${error.client ? "border-[#DC3545]" : ""}`}
                         type="text"
                         name="client"
                         value={input.client}
@@ -219,8 +219,8 @@ function EditSale({ _id, client, vendor, products, quantity }) {
                         <span className="error">{error.client}</span>
                      </div>
                   </div>
-                  <div className="flex flex-col gap-[8px] min-[1440px]:w-full">
-                     <label htmlFor="products">Productos:</label>
+                  <div className="flex flex-col gap-[8px] lg:w-full">
+                     <label className="label" htmlFor="products">Productos:</label>
                      <menu
                         id="products"
                         className={`w-full border-[#9BA4B4] border-[1px] h-[90px] overflow-y-scroll rounded-[7px] ${!input.products ? "text-[#9BA4B4]" : ""} ${error.products ? "border-[#DC3545]" : ""}`}
@@ -228,11 +228,11 @@ function EditSale({ _id, client, vendor, products, quantity }) {
                         title="productos"
                      >
                         {Products && Products.map((product, index) => (
-                           <li className={`text-black px-[15px] min-[1440px]:px-[30px] flex justify-between w-full border-[#9BA4B4] h-[60px] ${index !== Products.length - 1 && "border-b-[1px]"}`} key={product._id} value={product._id}>
-                              <div className="gap-[25px] w-full flex items-center min-[1440px]:justify-around">
+                           <li className={`text-black px-[15px] lg:px-[30px] flex justify-between w-full border-[#9BA4B4] h-[60px] ${index !== Products.length - 1 && "border-b-[1px]"}`} key={product._id} value={product._id}>
+                              <div className="gap-[25px] w-full flex items-center lg:justify-around">
                                  <p className="w-full">{product.name}</p>
-                                 <p className="min-[1440px]:w-full">${product.price}</p>
-                                 <p className="min-[1440px]:w-full flex gap-[5px]">{(product.stock + quantity[product._id]) - input.quantity[product._id] || product.stock}<span className="max-[1439px]:hidden">disponibles</span></p>
+                                 <p className="lg:w-full">${product.price}</p>
+                                 <p className="lg:w-full flex gap-[5px]">{(product.stock + quantity[product._id]) - input.quantity[product._id] || product.stock}<span className="max-lg:hidden">disponibles</span></p>
                                  <input className=""
                                     type="checkbox"
                                     checked={input.checked && (input.checked[product._id] || false)}
@@ -264,8 +264,8 @@ function EditSale({ _id, client, vendor, products, quantity }) {
                         </button>
                      </div>
                   </div>
-                  <div className={`min-[1440px]:w-full flex flex-col ${input.products && input.products.length === 0 && "hidden"}`}>
-                     <label htmlFor="selected">Productos seleccionados:</label>
+                  <div className={`lg:w-full flex flex-col ${input.products && input.products.length === 0 && "hidden"}`}>
+                     <label className="label" htmlFor="selected">Productos seleccionados:</label>
                      <menu
                         id="selected"
                         className={`w-full border-[#9BA4B4] border-[1px] rounded-[7px]`}
@@ -275,11 +275,11 @@ function EditSale({ _id, client, vendor, products, quantity }) {
                               if (input.products[i] === product._id) {
                                  return (
                                     <li className={`text-black px-[20px] flex justify-between w-full border-[#9BA4B4] h-[60px] ${index !== Products.length - 1 && "border-b-[1px]"}`} key={product._id} value={product._id}>
-                                       <div className="flex gap-[25px] items-center max-[1439px]:justify-between w-full">
-                                          <p className="min-[1440px]:w-full">{product.name}</p>
-                                          <p className="max-[1439px]:hidden min-[1440px]:w-full">${product.price}</p>
-                                          <p className="w-full flex gap-[5px] max-[1439px]:hidden">{(product.stock + quantity[product._id]) - input.quantity[product._id] || product.stock}<span>disponibles</span></p>
-                                          <div className="bg-[#F1F6F9] gap-[5px] flex h-fit rounded-full min-[1440px]:gap-[10px]">
+                                       <div className="flex gap-[25px] items-center max-lg:justify-between w-full">
+                                          <p className="lg:w-full">{product.name}</p>
+                                          <p className="max-lg:hidden lg:w-full">${product.price}</p>
+                                          <p className="w-full flex gap-[5px] max-lg:hidden">{(product.stock + quantity[product._id]) - input.quantity[product._id] || product.stock}<span>disponibles</span></p>
+                                          <div className="bg-[#F1F6F9] gap-[5px] flex h-fit rounded-full lg:gap-[10px]">
                                              <div className="bg-[#14274E] w-[30px] h-[30px] rounded-full flex justify-center items-center" onClick={() => decrementQuantity(product._id)}>
                                                 <img className="w-[15px]" type="image" src={less} alt="Reducir" />
                                              </div>

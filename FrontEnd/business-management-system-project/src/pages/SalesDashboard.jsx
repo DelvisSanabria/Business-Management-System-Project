@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef, useContext } from "react";
 import {Session} from "../Session/session";
 import axios from "axios";
 import { plus, lens, lens2, deleteIcon, editIcon, cancel, plusDesktop } from "./../components/exportsImports";
-import { SaleForm } from "./../components/exportsImports";
+import { SaleForm, EditSale } from "./../components/exportsImports";
 
 function SalesDashboard() {
    const { user } = useContext(Session);
@@ -84,7 +84,7 @@ function SalesDashboard() {
          }
       }
       return productsList.map(({name, quantity}, index) => (
-         <span key={index} className="flex w-full gap-[15px] min-[1440px]:justify-between">
+         <span key={index} className="flex w-full gap-[15px] lg:justify-between">
             <span>{name}</span>
             <span className="">x{quantity}</span>
          </span>
@@ -114,20 +114,20 @@ function SalesDashboard() {
       }
    }
    return (
-      <section className="pt-[50px] gap-[25px] px-[25px] flex flex-col w-full box-border relative top-[73px] h-max pb-10 min-[1440px]:px-[45px] min-[1440px]:justify-center">
-         <hgroup className="flex max-[1439px]:flex-col gap-[25px]">
-            <div className="flex flex-col min-[1440px]:w-[40%]">
+      <section className="pt-[50px] gap-[25px] px-[25px] flex flex-col w-full box-border relative h-max pb-10 lg:px-[45px] lg:justify-center">
+         <hgroup className="flex max-lg:flex-col gap-[25px]">
+            <div className="flex flex-col lg:w-[40%]">
                <div className="flex gap-[10px] items-end">
                   <h1 className="font-medium text-[18px]">Tabla de Ventas</h1>
                   <h4 className="flex items-center text-[12px] text-[#3056D3] bg-[#F9F5FF] rounded-full p-[10px] h-[22px]">{pagination.totalDocs && `${pagination.totalDocs} ventas`}</h4>
                </div>
                <p className="text-[14px] text-[#667085]">{`${user.role === "vendor" ? "Lista de todas tus ventas" : "Lista de todas las ventas realizadas"}`}</p>
             </div>
-            <div className="flex justify-between min-[1440px]:w-[60%]">
-               <div className="flex justify-center min-[1440px]:border-[#E7E7E7] min-[1440px]:border-[1px] bg-[#F1F6F9] h-[45px] rounded-[35px] min-[1440px]:bg-[#F8FAFC] min-[1440px]:rounded-[8px]">
-                  <div className="flex flex-col justify-center items-center min-[1440px]:w-[350px] ">
+            <div className="flex justify-between lg:w-[60%]">
+               <div className="flex justify-center lg:border-[#E7E7E7] lg:border-[1px] bg-[#F1F6F9] h-[45px] rounded-[35px] lg:bg-[#F8FAFC] lg:rounded-[8px]">
+                  <div className="flex flex-col justify-center items-center lg:w-[350px] ">
                      <input
-                        className="min-[1440px]:w-full text-[14px]"
+                        className="lg:w-full text-[14px]"
                         type="text"
                         placeholder="Buscar una venta"
                         id="search"
@@ -142,7 +142,7 @@ function SalesDashboard() {
                         <p className="error">{search.error}</p>
                      </div>
                   </div>
-                  <div className="flex z-10 justify-center items-center max-[1439px]:bg-[#14274E] max-[1439px]:rounded-[35px] w-[45px] h-[45px] cursor-pointer" onClick={validateSearch}>
+                  <div className="flex z-10 justify-center items-center max-lg:bg-[#14274E] max-lg:rounded-[35px] w-[45px] h-[45px] cursor-pointer" onClick={validateSearch}>
                      <input
                         type="image"
                         alt="buscar"
@@ -151,19 +151,19 @@ function SalesDashboard() {
                      />
                   </div>
                </div>
-               <input className="min-[1440px]:hidden w-[45px] " type="image" src={plus} onClick={() => addSale.current.showModal()} alt="Nuevo producto" />
-               <button className="max-[1439px]:hidden text-[14px] flex justify-center items-center w-[180px] gap-[10px] bg-[#3056D3] rounded-[8px] text-white h-[40px]" onClick={() => addSale.current.showModal()}>
+               <input className="lg:hidden w-[45px] " type="image" src={plus} onClick={() => addSale.current.showModal()} alt="Nuevo producto" />
+               <button className="max-lg:hidden text-[14px] flex justify-center items-center w-[180px] gap-[10px] bg-[#3056D3] rounded-[8px] text-white h-[40px]" onClick={() => addSale.current.showModal()}>
                   <img src={plusDesktop} alt="nuevo producto" />
                   <p className="leading-6">Agregar venta</p>
                </button>
             </div>
          </hgroup>
-         <dialog ref={addSale}>
+         <dialog className="dialog" ref={addSale}>
             <SaleForm />
             <input type="image" className="absolute right-[5px] top-[10px] cursor-pointer w-[35px]" src={cancel} alt="Cancelar" onClick={() => {addSale.current.close(); fetchSales(pagination.page)} } />
          </dialog>
-         <section id="productsDashboard" className="flex flex-col min-[1440px]:w-full items-center bg-[#F1F6F9] rounded-[20px] min-[1440px]:mt-[75px]">
-            <div className="flex justify-between px-[12px] gap-[25px] w-full max-[1439px]:hidden">
+         <section id="productsDashboard" className="flex flex-col lg:w-full items-center bg-[#F1F6F9] rounded-[20px] lg:mt-[75px]">
+            <div className="flex justify-between px-[12px] gap-[25px] w-full max-lg:hidden">
                {user.role !== "vendor" && <p className="text-[#667085] w-full">Vendedor</p>}
                <p className="text-[#667085] w-full">Cliente</p>
                <p className="text-[#667085] w-full">Hora y Fecha</p>
@@ -173,9 +173,9 @@ function SalesDashboard() {
                <p className="text-[#667085]">Acciones</p>
             </div>
             {sales && sales.map((sale, index) => (
-               <div className={`flex w-full justify-between border-y-[1px] min-[1440px]:gap-[25px] border-[#EAECF0] p-[12px] box-border min-[1440px]:h-[130px] ${index === 0 && "max-[1439px]:rounded-t-[20px]"} ${index === sales.length - 1 && "rounded-b-[20px]"}`} key={sale._id}>
-                  <div className="flex gap-[10px] min-[1440px]:w-full">
-                     <div className="flex flex-col justify-between h-fit min-[1440px]:hidden">
+               <div className={`flex w-full justify-between border-y-[1px] lg:gap-[25px] border-[#EAECF0] p-[12px] box-border lg:h-[130px] ${index === 0 && "max-lg:rounded-t-[20px]"} ${index === sales.length - 1 && "rounded-b-[20px]"}`} key={sale._id}>
+                  <div className="flex gap-[10px] lg:w-full">
+                     <div className="flex flex-col justify-between h-fit lg:hidden">
                         {user.role !== "vendor" && <p className="text-[#667085] text-right h-[24px]">Vendedor:</p>}
                         <p className="text-[#667085] text-right h-[24px]">Cliente:</p>
                         <p className="text-[#667085] text-right h-[24px]">Hora y Fecha:</p>
@@ -183,20 +183,20 @@ function SalesDashboard() {
                         <p className="text-[#667085] text-right h-[24px]">Total:</p>
                         <p className="text-[#667085] text-right h-[24px]">Productos:</p>
                      </div>
-                     <div className="flex min-[1440px]:items-center max-[1439px]:flex-col max-[1439px]:max-w-[165px] min-[1440px]:gap-[25px] justify-between text-[14px] min-[1440px]:w-full">
-                        {user.role !== "vendor" && <p className="text-left overflow-x-auto max-[1439px]:whitespace-nowrap w-full h-[24px]">{sale.vendor}</p>}
-                        <p className="text-left overflow-x-auto max-[1439px]:whitespace-nowrap w-full h-[24px]">{sale.client}</p>
-                        <p className="text-left overflow-x-auto max-[1439px]:whitespace-nowrap w-full h-[24px]">{renderTime(sale.createdAt)}</p>
-                        <p className="text-left overflow-x-auto max-[1439px]:whitespace-nowrap w-full h-[24px]">${sale.tax.toFixed(2)}</p>
-                        <p className="text-left overflow-x-auto max-[1439px]:whitespace-nowrap w-full h-[24px]">${sale.total.toFixed(2)}</p>
-                        <p className="text-left overflow-x-auto max-[1439px]:whitespace-nowrap min-[1440px]:gap-[5px] w-full flex flex-col">{renderProducts(sale.products, sale.quantity)}</p>
+                     <div className="flex lg:items-center max-lg:flex-col max-lg:max-w-[165px] lg:gap-[25px] justify-between text-[14px] lg:w-full">
+                        {user.role !== "vendor" && <p className="text-left overflow-x-auto max-lg:whitespace-nowrap w-full h-[24px]">{sale.vendor}</p>}
+                        <p className="text-left overflow-x-auto max-lg:whitespace-nowrap w-full h-[24px]">{sale.client}</p>
+                        <p className="text-left overflow-x-auto max-lg:whitespace-nowrap w-full h-[24px]">{renderTime(sale.createdAt)}</p>
+                        <p className="text-left overflow-x-auto max-lg:whitespace-nowrap w-full h-[24px]">${sale.tax.toFixed(2)}</p>
+                        <p className="text-left overflow-x-auto max-lg:whitespace-nowrap w-full h-[24px]">${sale.total.toFixed(2)}</p>
+                        <p className="text-left overflow-x-auto max-lg:whitespace-nowrap lg:gap-[5px] w-full flex flex-col">{renderProducts(sale.products, sale.quantity)}</p>
                      </div>
                   </div>
-                  <div className="flex max-[1439px]:flex-col max-[1439px]:w-[25px] justify-center gap-[25px]">
+                  <div className="flex max-lg:flex-col max-lg:w-[25px] justify-center gap-[25px]">
                      <input type="image" src={editIcon} alt="Editar" onClick={() => salesRefs[index].current && salesRefs[index].current.showModal()} />
                      <input type="image" src={deleteIcon} alt="Eliminar" onClick={() => deleteSale(sale._id)} />
                   </div>
-                  <dialog ref={salesRefs[index]}>
+                  <dialog className="dialog" ref={salesRefs[index]}>
                      <EditSale {...sale} />
                      <input type="image" className="absolute right-[5px] top-[10px] cursor-pointer w-[35px]" src={cancel} alt="Cancelar" onClick={() => {if (salesRefs[index].current) { salesRefs[index].current.close(); fetchSales(pagination.page)}} } />
                   </dialog>
