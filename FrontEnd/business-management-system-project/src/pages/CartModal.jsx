@@ -87,23 +87,23 @@ function CartModal({products}) {
    }, [order])
 
    return (
-      <form id="orderForm" className="flex flex-col bg-[#f1f6f9] items-start rounded-[15px] gap-[15px] pb-[15px] px-[15px]">
-         <div className="flex flex-col w-full max-h-[276px] overflow-y-auto">
+      <form id="orderForm" className="flex flex-col bg-[#f1f6f9] border-[1px] border-[#cdd1d3] items-start rounded-[8px] gap-[15px] pb-[15px] px-[15px]">
+         <div className="flex flex-col w-full max-h-[50vh] overflow-y-auto">
             {product.map((product) => (
-               <div className="flex justify-between max-h-[150px] py-[15px] border-[#EBF0FF] border-b-[1px]" key={product._id}>
+               <div className="flex justify-between w-full max-h-[150px] py-[15px] border-[#EBF0FF] border-b-[1px]" key={product._id}>
                   <div className="flex flex-col justify-center items-center">
-                     <img className="w-[70px] max-h-[100px] " src={server + product.imageURL} alt={product.name} />
+                     <img className="w-[70px] max-h-[100px]" src={server + product.imageURL} alt={product.name} />
                   </div>
-                  <div className="flex flex-col gap-[7px] items-end w-fit max-w-[110px] ">
+                  <div className="flex flex-col gap-[7px] items-end w-fit max-w-[110px] lg:w-[50%] ">
                      <p className="max-h-[2lh] overflow-y-auto">{product.name}</p>
                      <p className="text-right text-[#3056D3] ">${product.price.toFixed(2)}</p>
-                     <div className="bg-white gap-[5px] w-fit flex h-fit rounded-full min-[1440px]:gap-[10px]">
+                     <div className="bg-white gap-[5px] w-fit flex h-fit rounded-full lg:gap-[10px]">
                         <div className="bg-[#14274E] w-[30px] h-[30px] rounded-full flex justify-center items-center" onClick={() => decrementQuantity(product._id)}>
-                           <img className="w-[15px]" type="image" src={less} alt="Reducir" />
+                           <img className="w-[50%] h-[50%]" type="image" src={less} alt="Reducir" />
                         </div>
-                        <p className="w-[25px] flex items-center justify-center">{input.quantity[product._id] || 0}</p>
+                        <p className="w-[25px] lg:w-[15px] flex items-center justify-center">{input.quantity[product._id] || 0}</p>
                         <div className="bg-[#14274E] w-[30px] h-[30px] rounded-full flex justify-center items-center" onClick={() => incrementQuantity(product._id, product.stock)}>
-                           <img className="w-[15px]" type="image" src={more} alt="Aumentar" />
+                           <img className="w-[50%] h-[50%]" type="image" src={more} alt="Aumentar" />
                         </div>
                      </div>
                   </div>

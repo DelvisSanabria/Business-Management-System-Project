@@ -157,7 +157,7 @@ function ProductForm() {
       //eslint-disable-next-line
    }, [input]);
    return (
-      <form ref={successRef} className="flex flex-col relative w-[310px] min-[1440px]:w-[640px] box-border items-center border-[1px] border-[#EAECF0] rounded-[20px]">
+      <form ref={successRef} className="flex flex-col relative w-[310px] lg:w-[640px] box-border items-center border-[1px] border-[#EAECF0] rounded-[20px]">
          <div className="flex w-full justify-center items-center border-b-[1px] border-[#EAECF0] h-[50px]">
             <p className="text-[20px] font-semibold">Crear un nuevo producto</p>
          </div>
@@ -192,8 +192,8 @@ function ProductForm() {
                <div className="relative flex justify-center">
                   <span className="error">{error.image}</span>
                </div>
-               <div className="flex max-[1439px]:flex-col gap-[8px]">
-                  <div className="flex flex-col gap-[8px] min-[1440px]:w-full">
+               <div className="flex max-lg:flex-col gap-[8px]">
+                  <div className="flex flex-col gap-[8px] lg:w-full">
                      <label className="label" htmlFor="name">Nombre:</label>
                      <input
                         id="name"
@@ -208,11 +208,11 @@ function ProductForm() {
                         <span className="error">{error.name}</span>
                      </div>
                   </div>
-                  <div className="flex flex-col gap-[8px] min-[1440px]:w-full">
+                  <div className="flex flex-col gap-[8px] lg:w-full">
                      <label className="label" htmlFor="category">Categoría:</label>
                      <select
                         id="category"
-                        className={`data123 max-[1439px]:w-[50%] rounded-[7px] ${!input.category ? "text-[#9BA4B4]" : ""} ${error.category ? "border-[#DC3545]" : ""}`}
+                        className={`data123 max-lg:w-[50%] rounded-[7px] ${!input.category ? "text-[#9BA4B4]" : ""} ${error.category ? "border-[#DC3545]" : ""}`}
                         name="category"
                         title="categoría"
                         value={input.category}
@@ -230,7 +230,7 @@ function ProductForm() {
                   </div>
                </div>
                <div className="flex w-full gap-[10px] ">
-                  <div className="flex flex-col gap-[8px] min-[1440px]:w-full">
+                  <div className="flex flex-col gap-[8px] lg:w-full">
                      <label className="label" htmlFor="price">Precio:</label>
                      <input
                         id="price"
@@ -248,7 +248,7 @@ function ProductForm() {
                         <span className="error">{error.price}</span>
                      </div>
                   </div>
-                  <div className="flex flex-col gap-[8px] min-[1440px]:w-full">
+                  <div className="flex flex-col gap-[8px] lg:w-full">
                      <label className="label" htmlFor="stock">Inventario:</label>
                      <input
                         id="stock"

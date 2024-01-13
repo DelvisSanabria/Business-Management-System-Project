@@ -172,42 +172,45 @@ function SignUp() {
       //eslint-disable-next-line
    }, [input]);
    return (
-      <section className="pt-[50px] flex flex-col w-full box-border relative max-[1439px]:top-[73px] h-max pb-10 min-[1440px]:px-[45px] min-[1440px]:gap-[24px] min-[1440px]:bg-[#F1F6F9] min-[1440px]:justify-center max-[1439px]:bg-[#1A3365] max-[1439px]:items-center">
-         <img className="w-[262px] max-[1439px]:hidden" src={polar} alt="Empresas Polar" />
+      <section className="pt-[50px] flex flex-col w-full box-border relative max-lg:top-[73px] h-max pb-10 lg:px-[45px] lg:gap-[24px] lg:bg-[#F1F6F9] lg:justify-center max-lg:bg-[#1A3365] max-lg:items-center">
+         <img className="w-[262px] max-lg:hidden" src={polar} alt="Empresas Polar" />
          <div className="w-full px-[95px]">
-            <div className="py-[50px] flex justify-center items-center min-[1440px]:bg-[#D9D9D9] rounded-lg">
-               <img className="w-[500px] h-[1045px] rounded-[10px] max-[1439px]:hidden" src={polarSede} alt="" />
-               <form className="z-10 flex flex-col justify-center items-center gap-[21px] bg-[#F1F6F9] pt-[15px] pb-[25px] top-[75px] rounded-[20px] min-[1440px]:rounded-[10px] min-[1440px]:w-[500px] min-[1440px]:bg-[#FFFFFF] max-[1439px]:w-[312px]">
-                  <img className="w-[224px] min-[1440px]:hidden" src={polar} alt="Empresas Polar" />
-                  <p className="text-[24px] border-[#E7E7E7] border-b-[1px] text-center pb-[15px] w-full max-[1439px]:hidden">Registro</p>
+            <div className="py-[50px] flex justify-center items-center lg:bg-[#D9D9D9] rounded-lg">
+               <img className="max-w-[45%] h-[999px] rounded-[10px] max-lg:hidden" src={polarSede} alt="" />
+               <form className="z-10 flex flex-col justify-center items-center gap-[21px] bg-[#F1F6F9] pt-[15px] pb-[25px] top-[75px] rounded-[20px] lg:rounded-[10px] lg:w-[45%] lg:bg-[#FFFFFF] max-lg:w-[312px]">
+                  <img className="w-[224px] lg:hidden" src={polar} alt="Empresas Polar" />
+                  <p className="text-[24px] border-[#E7E7E7] border-b-[1px] text-center pb-[15px] w-full max-lg:hidden">Registro</p>
                   <div className="frame flex flex-col gap-[15px] px-[44px] w-full">
-                     <div className="flex justify-center">
-                        <figure className="relative flex justify-center items-center rounded-full bg-[#E7E7E7] w-[125px] h-[125px] shadow-sm">
-                           <img className={`max-w-[90%] max-h-[90%] ${!imageUrl && "hidden" }`} src={imageUrl} key={imageUrl} alt="imagen seleccionada" />
-                           <div className="absolute bottom-0 left-0 flex justify-center items-center w-[35px] h-[35px] rounded-full bg-[#FFFFFF] border-[1px] border-[#E7E7E7]"
-                           onClick={() => inputFile.current.click()}>
-                              <img className="w-[25px]"
-                              src={camera} alt="camara" />
-                           </div>
-                           <input
-                              title="Subir imagen"
-                              className="hidden"
-                              ref={inputFile}
-                              id="image"
-                              type="file"
-                              name="image"
-                              accept="image/jpeg, image/png"
-                              onChange={handleValidation}
-                              onClick={(event) => (event.target.value = null)}
-                           />
-                        </figure>
+                     <div className="flex justify-center items-center">
+                        <div className="rounded-full border-[20px] border-[#FFFFFF] w-[155px] h-[155px] absolute z-10"></div>
+                        <div className="flex justify-center">
+                           <figure className="relative flex justify-center items-center rounded-full bg-[#E7E7E7] w-[125px] h-[125px] shadow-sm">
+                              <img className={`max-w-[90%] max-h-[90%] ${!imageUrl && "hidden" }`} src={imageUrl} key={imageUrl} alt="imagen seleccionada" />
+                              <div className="absolute bottom-0 left-0 flex z-20 justify-center items-center w-[35px] h-[35px] rounded-full bg-[#FFFFFF] border-[1px] border-[#E7E7E7]"
+                              onClick={() => inputFile.current.click()}>
+                                 <img className="w-[25px]"
+                                 src={camera} alt="camara" />
+                              </div>
+                              <input
+                                 title="Subir imagen"
+                                 className="hidden"
+                                 ref={inputFile}
+                                 id="image"
+                                 type="file"
+                                 name="image"
+                                 accept="image/jpeg, image/png"
+                                 onChange={handleValidation}
+                                 onClick={(event) => (event.target.value = null)}
+                              />
+                           </figure>
+                        </div>
                      </div>
                      <div className="relative flex justify-center">
                         <span className="error">{error.image}</span>
                      </div>
-                     <div className="flex gap-[15px] min-[1440px]:gap-[11px] max-[1439px]:flex-col">
+                     <div className="flex gap-[15px] lg:gap-[11px] max-lg:flex-col">
                         <div className="flex flex-col gap-[15px] w-full">
-                           <label className="label text-[20px] text-[#394867]" htmlFor="name">Nombre:</label>
+                           <label className="label text-[18px] text-[#394867]" htmlFor="name">Nombre:</label>
                            <input
                               className={`data123 ${error.name ? "border-[#DC3545]" : ""}`}
                               id="name"
@@ -221,7 +224,7 @@ function SignUp() {
                            </div>
                         </div>
                         <div className="flex flex-col gap-[15px] w-full">
-                           <label className="label text-[20px] text-[#394867]" htmlFor="lastName">Apellido:</label>
+                           <label className="label text-[18px] text-[#394867]" htmlFor="lastName">Apellido:</label>
                            <input
                               className={`data123 ${error.lastName ? "border-[#DC3545]" : ""}`}
                               id="lastName"
@@ -235,7 +238,7 @@ function SignUp() {
                            </div>
                         </div>
                      </div>
-                     <label className="label text-[20px] text-[#394867]" htmlFor="phone">Número de teléfono:</label>
+                     <label className="label text-[18px] text-[#394867]" htmlFor="phone">Número de teléfono:</label>
                      <input
                         className={`data123 ${error.phone ? "border-[#DC3545]" : ""}`}
                         id="phone"
@@ -247,7 +250,7 @@ function SignUp() {
                      <div className="relative">
                         <span className="error">{error.phone}</span>
                      </div>
-                     <label className="label text-[20px] text-[#394867]" htmlFor="email">Correo electrónico:</label>
+                     <label className="label text-[18px] text-[#394867]" htmlFor="email">Correo electrónico:</label>
                      <input
                         className={`data123 ${error.email ? "border-[#DC3545]" : ""}`}
                         id="email"
@@ -259,7 +262,7 @@ function SignUp() {
                      <div className="relative">
                         <span className="error">{error.email}</span>
                      </div>
-                     <label className="label text-[20px] text-[#394867]" htmlFor="password">Contraseña:</label>
+                     <label className="label text-[18px] text-[#394867]" htmlFor="password">Contraseña:</label>
                      <input
                         className={`data123 ${error.password ? "border-[#DC3545]" : ""}`}
                         id="password"
@@ -272,7 +275,7 @@ function SignUp() {
                      <div className="relative">
                         <span className="error">{error.password}</span>
                      </div>
-                     <label className="label text-[20px] text-[#394867]" htmlFor="repPassword">Confirmar contraseña:</label>
+                     <label className="label text-[18px] text-[#394867]" htmlFor="repPassword">Confirmar contraseña:</label>
                      <input
                         className={`data123 ${error.repPassword ? "border-[#DC3545]" : ""}`}
                         id="repPassword"
@@ -284,7 +287,7 @@ function SignUp() {
                      <div className="relative">
                         <span className="error">{error.repPassword}</span>
                      </div>
-                     <label className="label text-[20px] text-[#394867]" htmlFor="address">Dirección:</label>
+                     <label className="label text-[18px] text-[#394867]" htmlFor="address">Dirección:</label>
                      <textarea 
                         className={`data123 focus:h-[100px] transition-[height] duration-500 ease-in ${error.address ? "border-[#DC3545]" : ""}`}
                         name="address" 
@@ -302,12 +305,12 @@ function SignUp() {
                         onClick={handleSubmit} 
                         type="button">Registrarse
                      </button>
-                     <p className="text-[#ADADAD] text-[16px] tracking-tight min-[1440px]:text-center">¿Ya eres miembro? <Link to="/login" className="text-[#3056D3] underline">Iniciar sesión</Link></p>
+                     <p className="text-[#ADADAD] text-[16px] tracking-tight lg:text-center">¿Ya eres miembro? <Link to="/login" className="text-[#3056D3] underline">Iniciar sesión</Link></p>
                   </div>
                </form>
             </div>
          </div>
-         <img className="z-0 absolute bottom-0 min-[1440px]:hidden" src={blueBg} alt="background" />
+         <img className="z-0 absolute bottom-0 lg:hidden" src={blueBg} alt="background" />
       </section>
    );
 };

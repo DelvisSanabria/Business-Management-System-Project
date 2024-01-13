@@ -1,5 +1,6 @@
 const productRouter = require("express").Router();
 const Product = require("../Models/Products");
+const mongoose = require("mongoose");
 const multer = require("multer");
 const fs = require("fs");
 const domain = process.env.DOMAIN || "http://localhost:3001";
@@ -57,6 +58,19 @@ productRouter.get("/productsList", async (req, res) => {
    try {
       const products = await Product.find({deleted: false}, {name: 1, imageURL: 1, price: 1, stock: 1});
       return res.status(200).json(products);
+   } catch (error) {
+      console.error(`${error.name}: ${error.message}`);
+      return res.status(405).json({name: error.name, message: error.message});
+   }
+});
+
+productRouter.get("/:id", async (req, res) => {
+   try {
+      const product = await Product.findById(req.params.id);
+      if (!product) {
+         return res.status(404).json({product: "Producto no encontrado"});
+      }
+      return res.status(200).json(product);
    } catch (error) {
       console.error(`${error.name}: ${error.message}`);
       return res.status(405).json({name: error.name, message: error.message});

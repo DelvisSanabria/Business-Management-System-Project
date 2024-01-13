@@ -69,12 +69,12 @@ function LogIn() {
    }
    return (
       <>
-      <section className="pt-[50px] flex flex-col w-full box-border relative max-[1439px]:top-[73px] h-max pb-10 min-[1440px]:px-[45px] min-[1440px]:gap-[24px] min-[1440px]:bg-[#F1F6F9] min-[1440px]:justify-center max-[1439px]:bg-[#1A3365] max-[1439px]:items-center">
-         <img className="w-[262px] max-[1439px]:hidden" src={polar} alt="Empresas Polar" />
+      <section className="pt-[50px] flex flex-col w-full box-border relative max-lg:top-[73px] h-max pb-10 lg:px-[45px] lg:gap-[24px] lg:bg-[#F1F6F9] lg:justify-center max-lg:bg-[#1A3365] max-lg:items-center">
+         <img className="w-[262px] max-lg:hidden" src={polar} alt="Empresas Polar" />
          <div className="w-full px-[95px]">
-            <div className="py-[50px] flex justify-center items-center min-[1440px]:bg-[#D9D9D9] rounded-lg">
-               <img className="w-[500px] h-[490px] rounded-[10px] max-[1439px]:hidden" src={polarSede} alt="" />
-               <form className="z-10 flex flex-col justify-center items-center gap-[21px] bg-[#F1F6F9] pt-[15px] pb-[25px] top-[75px] rounded-[20px] min-[1440px]:rounded-[10px] min-[1440px]:w-[500px] min-[1440px]:bg-[#FFFFFF] max-[1439px]:w-[312px]"
+            <div className="py-[50px] flex justify-center items-center lg:bg-[#D9D9D9] rounded-lg">
+               <img className="w-[500px] h-[490px] rounded-[10px] max-lg:hidden" src={polarSede} alt="" />
+               <form className="z-10 flex flex-col justify-center items-center gap-[21px] bg-[#F1F6F9] pt-[15px] pb-[25px] top-[75px] rounded-[20px] lg:rounded-[10px] lg:w-[500px] lg:bg-[#FFFFFF] max-lg:w-[312px]"
                onSubmit={handleSubmit}>
                   <img className="w-[224px]" src={polar} alt="Empresas Polar" />
                   <div className="frame flex flex-col gap-[15px] px-[44px] w-full">
@@ -107,7 +107,7 @@ function LogIn() {
                         onClick={handleValidation} 
                         type="submit">Iniciar Sesión
                      </button>
-                     <div className="flex flex-col min-[1440px]:items-center gap-[10px]">
+                     <div className="flex flex-col lg:items-center gap-[10px]">
                         <Link to="/forgot_password" className="text-[#ADADAD] underline text-[16px] tracking-tight">¿Olvidaste tu contraseña?</Link>
                         <p className="text-[#ADADAD] text-[16px] tracking-tight">¿Aún no eres miembro? <Link to="/signup" className="text-[#3056D3] underline">Regístrate</Link></p>
                      </div>
@@ -115,7 +115,7 @@ function LogIn() {
                </form>
             </div>
          </div>
-         <img className="z-0 absolute bottom-0 min-[1440px]:hidden" src={bg_login} alt="background" />
+         <img className="z-0 absolute bottom-0 lg:hidden" src={bg_login} alt="background" />
       </section>
       </>
    );
