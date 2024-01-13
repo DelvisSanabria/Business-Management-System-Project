@@ -131,7 +131,7 @@ function ProductsDashboard() {
                </button>
             </div>
          </hgroup>
-         <dialog ref={addProduct}>
+         <dialog className="dialog" ref={addProduct}>
             <ProductForm />
             <input type="image" className="absolute right-[5px] top-[10px] cursor-pointer w-[35px]" src={cancel} alt="Cancelar" onClick={() => {addProduct.current.close(); fetchProducts(pagination.page)} } />
          </dialog>
@@ -171,7 +171,7 @@ function ProductsDashboard() {
                      <input type="image" src={editIcon} alt="Editar" onClick={() => productsRefs[index].current && productsRefs[index].current.showModal()} />
                      <input type="image" src={deleteIcon} alt="Eliminar" onClick={() => deleteProduct(product._id)} />
                   </div>
-                  <dialog ref={productsRefs[index]}>
+                  <dialog className="dialog" ref={productsRefs[index]}>
                      <EditProduct {...product} />
                      <input type="image" className="absolute right-[5px] top-[10px] cursor-pointer w-[35px]" src={cancel} alt="Cancelar" onClick={() => {if (productsRefs[index].current) { productsRefs[index].current.close(); fetchProducts(pagination.page)}} } />
                   </dialog>

@@ -158,7 +158,7 @@ function SalesDashboard() {
                </button>
             </div>
          </hgroup>
-         <dialog ref={addSale}>
+         <dialog className="dialog" ref={addSale}>
             <SaleForm />
             <input type="image" className="absolute right-[5px] top-[10px] cursor-pointer w-[35px]" src={cancel} alt="Cancelar" onClick={() => {addSale.current.close(); fetchSales(pagination.page)} } />
          </dialog>
@@ -196,7 +196,7 @@ function SalesDashboard() {
                      <input type="image" src={editIcon} alt="Editar" onClick={() => salesRefs[index].current && salesRefs[index].current.showModal()} />
                      <input type="image" src={deleteIcon} alt="Eliminar" onClick={() => deleteSale(sale._id)} />
                   </div>
-                  <dialog ref={salesRefs[index]}>
+                  <dialog className="dialog" ref={salesRefs[index]}>
                      <EditSale {...sale} />
                      <input type="image" className="absolute right-[5px] top-[10px] cursor-pointer w-[35px]" src={cancel} alt="Cancelar" onClick={() => {if (salesRefs[index].current) { salesRefs[index].current.close(); fetchSales(pagination.page)}} } />
                   </dialog>

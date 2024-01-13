@@ -205,10 +205,10 @@ function EditSale({ _id, client, vendor, products, quantity }) {
             <div className="flex flex-col w-full gap-[8px] p-[25px] border-b-[1px] border-[#EAECF0]">
                <div className="flex flex-col gap-[8px]">
                   <div className="flex flex-col gap-[8px] min-[1440px]:w-full">
-                     <label htmlFor="client">Correo del cliente:</label>
+                     <label className="label" htmlFor="client">Correo del cliente:</label>
                      <input
                         id="client"
-                        className={`data w-full rounded-[7px] ${error.client ? "border-[#DC3545]" : ""}`}
+                        className={`data123 w-full rounded-[7px] ${error.client ? "border-[#DC3545]" : ""}`}
                         type="text"
                         name="client"
                         value={input.client}
@@ -220,7 +220,7 @@ function EditSale({ _id, client, vendor, products, quantity }) {
                      </div>
                   </div>
                   <div className="flex flex-col gap-[8px] min-[1440px]:w-full">
-                     <label htmlFor="products">Productos:</label>
+                     <label className="label" htmlFor="products">Productos:</label>
                      <menu
                         id="products"
                         className={`w-full border-[#9BA4B4] border-[1px] h-[90px] overflow-y-scroll rounded-[7px] ${!input.products ? "text-[#9BA4B4]" : ""} ${error.products ? "border-[#DC3545]" : ""}`}
@@ -265,7 +265,7 @@ function EditSale({ _id, client, vendor, products, quantity }) {
                      </div>
                   </div>
                   <div className={`min-[1440px]:w-full flex flex-col ${input.products && input.products.length === 0 && "hidden"}`}>
-                     <label htmlFor="selected">Productos seleccionados:</label>
+                     <label className="label" htmlFor="selected">Productos seleccionados:</label>
                      <menu
                         id="selected"
                         className={`w-full border-[#9BA4B4] border-[1px] rounded-[7px]`}

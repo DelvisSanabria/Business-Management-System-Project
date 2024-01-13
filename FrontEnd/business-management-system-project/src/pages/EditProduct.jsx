@@ -203,10 +203,10 @@ function EditProduct({ _id, name, category, price, stock, description, imageURL 
                </div>
                <div className="flex max-[1439px]:flex-col gap-[8px]">
                   <div className="flex flex-col gap-[8px] min-[1440px]:w-full">
-                     <label htmlFor={`${_id}1`}>Nombre:</label>
+                     <label className="label" htmlFor={`${_id}1`}>Nombre:</label>
                      <input
                         id={`${_id}1`}
-                        className={`data w-full rounded-[7px] ${error.name ? "border-[#DC3545]" : ""}`}
+                        className={`data123 w-full rounded-[7px] ${error.name ? "border-[#DC3545]" : ""}`}
                         type="text"
                         name="name"
                         value={input.name}
@@ -218,10 +218,10 @@ function EditProduct({ _id, name, category, price, stock, description, imageURL 
                      </div>
                   </div>
                   <div className="flex flex-col gap-[8px] min-[1440px]:w-full">
-                     <label htmlFor={`${_id}2`}>Categoría:</label>
+                     <label className="label" htmlFor={`${_id}2`}>Categoría:</label>
                      <select
                         id={`${_id}2`}
-                        className={`data max-[1439px]:w-[50%] rounded-[7px] ${error.category ? "border-[#DC3545]" : ""}`}
+                        className={`data123 max-[1439px]:w-[50%] rounded-[7px] ${error.category ? "border-[#DC3545]" : ""}`}
                         name="category"
                         title="categoría"
                         value={input.category}
@@ -240,10 +240,10 @@ function EditProduct({ _id, name, category, price, stock, description, imageURL 
                </div>
                <div className="flex w-full gap-[10px] ">
                   <div className="flex flex-col gap-[8px] min-[1440px]:w-full">
-                     <label htmlFor={`${_id}3`}>Precio:</label>
+                     <label className="label" htmlFor={`${_id}3`}>Precio:</label>
                      <input
                         id={`${_id}3`}
-                        className={`data w-full rounded-[7px] ${error.price ? "border-[#DC3545]" : ""}`}
+                        className={`data123 w-full rounded-[7px] ${error.price ? "border-[#DC3545]" : ""}`}
                         type="text"
                         min="0"
                         step="0.01"
@@ -258,10 +258,10 @@ function EditProduct({ _id, name, category, price, stock, description, imageURL 
                      </div>
                   </div>
                   <div className="flex flex-col gap-[8px] min-[1440px]:w-full">
-                     <label htmlFor={`${_id}4`}>Inventario:</label>
+                     <label className="label" htmlFor={`${_id}4`}>Inventario:</label>
                      <input
                         id={`${_id}4`}
-                        className={`data w-full rounded-[7px] ${error.stock ? "border-[#DC3545]" : ""}`}
+                        className={`data123 w-full rounded-[7px] ${error.stock ? "border-[#DC3545]" : ""}`}
                         type="text"
                         min="0"
                         name="stock"
@@ -275,10 +275,10 @@ function EditProduct({ _id, name, category, price, stock, description, imageURL 
                      </div>
                   </div>
                </div>
-               <label htmlFor={`${_id}5`}>Descripción:</label>
+               <label className="label" htmlFor={`${_id}5`}>Descripción:</label>
                <textarea
                   id={`${_id}5`}
-                  className={`data w-full rounded-[7px] focus:h-[100px] transition-[height] duration-500 ease-in ${error.description ? "border-[#DC3545]" : ""}`}
+                  className={`data123 w-full rounded-[7px] focus:h-[100px] transition-[height] duration-500 ease-in ${error.description ? "border-[#DC3545]" : ""}`}
                   name="description"
                   value={input.description}
                   onChange={handleChange}

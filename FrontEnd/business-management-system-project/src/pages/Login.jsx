@@ -78,9 +78,9 @@ function LogIn() {
                onSubmit={handleSubmit}>
                   <img className="w-[224px]" src={polar} alt="Empresas Polar" />
                   <div className="frame flex flex-col gap-[15px] px-[44px] w-full">
-                     <label className="text-[20px] text-[#394867]" htmlFor="email">Correo:</label>
+                     <label className="label text-[20px] text-[#394867]" htmlFor="email">Correo:</label>
                      <input
-                        className={`data ${error.email ? "border-[#DC3545]" : ""}`}
+                        className={`data123 ${error.email ? "border-[#DC3545]" : ""}`}
                         id="email"
                         type="text"
                         name="email"
@@ -90,9 +90,9 @@ function LogIn() {
                      <div className="relative">
                         <span className="error">{error.email}</span>
                      </div>
-                     <label className="text-[20px] text-[#394867]" htmlFor="password">Contraseña:</label>
+                     <label className="label text-[20px] text-[#394867]" htmlFor="password">Contraseña:</label>
                      <input
-                        className={`data ${error.password ? "border-[#DC3545]" : ""}`}
+                        className={`data123 ${error.password ? "border-[#DC3545]" : ""}`}
                         id="password"
                         type="password"
                         name="password"

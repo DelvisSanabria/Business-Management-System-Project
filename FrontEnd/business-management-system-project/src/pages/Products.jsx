@@ -109,7 +109,7 @@ function Products() {
                />
                {input.products.length > 0 && <p className="rounded-full w-[18px] h-[18px] bg-[#9BA4B4] min-[1440px]:bg-[#3056D3] text-white text-[14px] flex justify-center items-center absolute top-0 min-[1440px]:-top-[5px] right-0 min-[1440px]:-right-[5px] ">{input.products.length}</p>}
             </figure>
-            <dialog className="w-[70%] min-[1440px]:w-[30%] fixed min-[1440px]:absolute min-[1440px]:mr-[45px] z-20 min-[1440px]:z-10 top-[145px] min-[1440px]:top-[45px] " ref={cart}>
+            <dialog className="dialog w-[70%] min-[1440px]:w-[30%] fixed min-[1440px]:absolute min-[1440px]:mr-[45px] z-20 min-[1440px]:z-10 top-[145px] min-[1440px]:top-[45px] " ref={cart}>
                <CartModal {...input} />
                <input type="image" className="absolute bg-[#f1f6f9] -right-[15px] -top-[15px] rounded-full cursor-pointer w-[35px]" src={cancel} alt="Cancelar" onClick={() => {cart.current.close()} } />
             </dialog>

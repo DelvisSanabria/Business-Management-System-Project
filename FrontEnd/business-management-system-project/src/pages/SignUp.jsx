@@ -207,9 +207,9 @@ function SignUp() {
                      </div>
                      <div className="flex gap-[15px] min-[1440px]:gap-[11px] max-[1439px]:flex-col">
                         <div className="flex flex-col gap-[15px] w-full">
-                           <label className="text-[20px] text-[#394867]" htmlFor="name">Nombre:</label>
+                           <label className="label text-[20px] text-[#394867]" htmlFor="name">Nombre:</label>
                            <input
-                              className={`data ${error.name ? "border-[#DC3545]" : ""}`}
+                              className={`data123 ${error.name ? "border-[#DC3545]" : ""}`}
                               id="name"
                               type="text"
                               name="name"
@@ -221,9 +221,9 @@ function SignUp() {
                            </div>
                         </div>
                         <div className="flex flex-col gap-[15px] w-full">
-                           <label className="text-[20px] text-[#394867]" htmlFor="lastName">Apellido:</label>
+                           <label className="label text-[20px] text-[#394867]" htmlFor="lastName">Apellido:</label>
                            <input
-                              className={`data ${error.lastName ? "border-[#DC3545]" : ""}`}
+                              className={`data123 ${error.lastName ? "border-[#DC3545]" : ""}`}
                               id="lastName"
                               type="text"
                               name="lastName"
@@ -235,9 +235,9 @@ function SignUp() {
                            </div>
                         </div>
                      </div>
-                     <label className="text-[20px] text-[#394867]" htmlFor="phone">Número de teléfono:</label>
+                     <label className="label text-[20px] text-[#394867]" htmlFor="phone">Número de teléfono:</label>
                      <input
-                        className={`data ${error.phone ? "border-[#DC3545]" : ""}`}
+                        className={`data123 ${error.phone ? "border-[#DC3545]" : ""}`}
                         id="phone"
                         type="tel"
                         name="phone"
@@ -247,9 +247,9 @@ function SignUp() {
                      <div className="relative">
                         <span className="error">{error.phone}</span>
                      </div>
-                     <label className="text-[20px] text-[#394867]" htmlFor="email">Correo electrónico:</label>
+                     <label className="label text-[20px] text-[#394867]" htmlFor="email">Correo electrónico:</label>
                      <input
-                        className={`data ${error.email ? "border-[#DC3545]" : ""}`}
+                        className={`data123 ${error.email ? "border-[#DC3545]" : ""}`}
                         id="email"
                         type="email"
                         name="email"
@@ -259,9 +259,9 @@ function SignUp() {
                      <div className="relative">
                         <span className="error">{error.email}</span>
                      </div>
-                     <label className="text-[20px] text-[#394867]" htmlFor="password">Contraseña:</label>
+                     <label className="label text-[20px] text-[#394867]" htmlFor="password">Contraseña:</label>
                      <input
-                        className={`data ${error.password ? "border-[#DC3545]" : ""}`}
+                        className={`data123 ${error.password ? "border-[#DC3545]" : ""}`}
                         id="password"
                         type="password"
                         name="password"
@@ -272,9 +272,9 @@ function SignUp() {
                      <div className="relative">
                         <span className="error">{error.password}</span>
                      </div>
-                     <label className="text-[20px] text-[#394867]" htmlFor="repPassword">Confirmar contraseña:</label>
+                     <label className="label text-[20px] text-[#394867]" htmlFor="repPassword">Confirmar contraseña:</label>
                      <input
-                        className={`data ${error.repPassword ? "border-[#DC3545]" : ""}`}
+                        className={`data123 ${error.repPassword ? "border-[#DC3545]" : ""}`}
                         id="repPassword"
                         type="password"
                         name="repPassword"
@@ -284,9 +284,9 @@ function SignUp() {
                      <div className="relative">
                         <span className="error">{error.repPassword}</span>
                      </div>
-                     <label className="text-[20px] text-[#394867]" htmlFor="address">Dirección:</label>
+                     <label className="label text-[20px] text-[#394867]" htmlFor="address">Dirección:</label>
                      <textarea 
-                        className={`data focus:h-[100px] transition-[height] duration-500 ease-in ${error.address ? "border-[#DC3545]" : ""}`}
+                        className={`data123 focus:h-[100px] transition-[height] duration-500 ease-in ${error.address ? "border-[#DC3545]" : ""}`}
                         name="address" 
                         id="address"
                         value={input.address}
