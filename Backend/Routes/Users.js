@@ -1,4 +1,4 @@
-const mongoose = require("mongoose"); 
+const mongoose = require("mongoose");
 const User = require("../Models/Users");
 const routerUsers = require("express").Router();
 const ObjectId = mongoose.Types.ObjectId;
@@ -9,14 +9,16 @@ const domain = process.env.DOMAIN || "http://localhost:3001";
 
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
-    cb(null, "./images/users");
+    const dir = "./images/users";
+    fs.mkdirSync(dir, { recursive: true });
+    cb(null, dir);
   },
   filename: function (req, file, cb) {
-    cb(null, Date.now() + "-" + file.originalname);
+    cb(null, `${Date.now()}_${file.originalname.replace(/\s/g, "_")}`);
   },
 });
 
-const upload = multer({ 
+const upload = multer({
   storage: storage,
 });
 
@@ -49,7 +51,7 @@ routerUsers.get("/allUsers/:role?", async (req, res) => {
     const { orderBy } = req.query;
     const { role } = req.params;
 
-    let query = {deleted: false};
+    let query = { deleted: false };
 
     if (role === 'vendors') {
       query = { ...query, role: 'vendor' };
@@ -85,7 +87,7 @@ routerUsers.get("/search", async (req, res) => {
           { name: userData.toLocaleLowerCase() },
           { lastName: userData.toLocaleLowerCase() },
           { email: userData.toLocaleLowerCase() },
-          { phone: userData}
+          { phone: userData }
         ]
       });
     }
@@ -106,38 +108,67 @@ routerUsers.get("/:email", async (req, res) => {
   }
 });
 
-routerUsers.post("/", upload.single("avatar"), async (req, res) => {
+const checkEmail = (req, res, next) => {
+  const { email } = req.body;
+  User.findOne({ email: email })
+    .then(user => {
+      if (user) {
+        return res.status(409).json({ email: "Correo ya registrado" });
+      }
+      else {
+        next();
+      }
+    })
+    .catch(err => {
+      console.error(err);
+      res.status(500).json({ error: "Error al verificar el correo electrónico" });
+    });
+};
+
+routerUsers.post("/", checkEmail, async (req, res) => {
   try {
-    const { email } = req.body;
-    let user = await User.findOne({ email: email });
-    if (user) {
-      return res.status(409).json({ email: "Correo ya registrado" });
-    }
     const salt = await bcrypt.genSalt();
     const hash = await bcrypt.hash(req.body.password, salt);
-    let NewUser = new User({...req.body, password: hash});
-    if (req.file) {
-      NewUser.avatar = `${domain}/images/users/${req.file.filename}`;
-    }
-    await NewUser.save();
-    res.status(201).json(NewUser);
+    let newUser = new User({ ...req.body, password: hash });
+    await newUser.save();
+    return res.status(201).json(newUser);
   } catch (error) {
-    console.log(error);
-    res.status(500).json({ message: error.message });
+    console.error(`${error.name}: ${error.message}`);
+    return res.status(500).json({ name: error.name, message: error.message });
   }
 });
 
-routerUsers.post("/uploadImage", upload.single("avatar"), async (req, res) => {
+routerUsers.post("/uploadImage", upload.single("image"), async (req, res) => {
   try {
     let user = await User.findById(req.body.id);
     if (!user) {
       return res.status(404).json({ user: "Usuario no encontrado" });
     }
     if (req.file) {
-      user.avatar = `${domain}/images/users/${req.file.filename}`;
+      user.avatar = req.file.path;
       await user.save();
     }
     return res.status(200).json(user);
+  } catch (error) {
+    console.error(`${error.name}: ${error.message}`);
+    return res.status(500).json({ name: error.name, message: error.message });
+  }
+});
+
+routerUsers.post("/login", async (req, res) => {
+  const { email, password } = req.body;
+  try {
+    let user = await User.findOne({ email: email });
+    if (user) {
+      const match = await bcrypt.compare(password, user.password);
+      if (match) {
+        return res.status(200).json(user);
+      } else {
+        return res.status(406).json({ password: "La contraseña es incorrecta" });
+      }
+    } else {
+      return res.status(404).json({ email: "Correo no registrado" });
+    }
   } catch (error) {
     console.error(`${error.name}: ${error.message}`);
     return res.status(500).json({ name: error.name, message: error.message });
@@ -157,7 +188,7 @@ routerUsers.patch("/:email", upload.single("avatar"), async (req, res) => {
     }
 
     const imagePath = req.file ? req.file.path : undefined;
-    
+
 
     let update = { $set: {} };
 
@@ -214,14 +245,14 @@ routerUsers.patch("/:email", upload.single("avatar"), async (req, res) => {
 routerUsers.patch("/:email/deleted", upload.single("avatar"), async (req, res) => {
   try {
     const usEmail = req.params.email;
-  
+
     try {
       const updated = await User.findOneAndUpdate({ email: usEmail }, { deleted: true }, { new: true });
-      
+
       if (!updated) {
         return res.status(404).json({ message: 'User not was updated' });
       }
-      
+
       res.json(updated);
     } catch (error) {
       console.log(error);
