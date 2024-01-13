@@ -53,6 +53,7 @@ import camera from "../images/icons/camera.png";
 import blueBg from "../images/various/bg.png";
 import bg_login from "../images/various/bg_login.png";
 import polarSede from "../images/various/Sede_Polar.jpeg";
+import ContactUsImg from "../images/various/ContactUs.png";
 
 import banner1 from "../images/various/banner1.png"
 import banner2 from "../images/various/banner2.png"
@@ -156,6 +157,7 @@ export {
   polarSede,
   EmpresasPolar,
   Hamburger,
+  ContactUsImg,
   MenuBox,
   HomeSvg,
   LoginSvg,
