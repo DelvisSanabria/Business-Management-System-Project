@@ -15,8 +15,7 @@ function LogIn() {
    const navigate = useNavigate();
    useEffect(() => {
       if (user) {
-         console.log(user);
-         /* navigate("/"); */
+         navigate("/");
       } //eslint-disable-next-line
    }, [user])
    const handleSubmit = async (event) => {
