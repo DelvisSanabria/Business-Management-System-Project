@@ -55,7 +55,7 @@ function SignUp() {
 
    const handleSubmit = async () => {
       try {
-         const response = await axios.post(`${server}/users`, user, {
+         const response = await axios.post(`${server}/users/signup`, user, {
             headers: {
                "Content-Type": "application/json"
             } 
