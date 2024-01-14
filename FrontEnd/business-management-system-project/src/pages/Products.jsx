@@ -191,6 +191,6 @@ function Products() {
          </div>
       </section>
    );
-};
+}
 
 export default Products;

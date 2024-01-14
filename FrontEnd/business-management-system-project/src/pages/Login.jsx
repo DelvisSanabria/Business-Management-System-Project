@@ -14,10 +14,10 @@ function LogIn() {
    const { user, setUser } = useContext(Session);
    const navigate = useNavigate();
    useEffect(() => {
-      if (user) {
+      /* if (user) {
          navigate("/");
-      } //eslint-disable-next-line
-   }, [user])
+      } //eslint-disable-next-line */
+   },)
    const handleSubmit = async (event) => {
       event.preventDefault();
       try {
@@ -119,6 +119,6 @@ function LogIn() {
       </section>
       </>
    );
-};
+}
 
 export default LogIn;

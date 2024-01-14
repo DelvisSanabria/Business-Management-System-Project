@@ -77,7 +77,7 @@ const ClientsCard = ({ isOpen,type, onClose,clientEmail}) => {
         }
         formdata.append(prop, value);
       }
-      const response = await axios.post(`${server}/users`, formdata, {
+      const response = await axios.post(`${server}/users/newUser`, formdata, {
         headers: {
           "Content-Type": "multipart/form-data",
         },

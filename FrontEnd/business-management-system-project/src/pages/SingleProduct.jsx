@@ -1,10 +1,8 @@
 import { useParams } from 'react-router-dom';
 import { useState,useEffect } from 'react';
 import axios from "axios"
-import HarinaAvena from "./../images/products/harina de avena.png"
 
 export default function SingleProduct (){
-  const paraAcceder = "http://localhost:5173/products/singleProduct/659306324c51849b20ef3987"
   const [quanty, setQuanty] = useState(0);
   const [productDates, setProductDates] = useState({})
   const { id } = useParams();
@@ -40,25 +38,15 @@ export default function SingleProduct (){
       setQuanty(quanty - 1)
     }
   }
-  const producto = {
-    id: 1,
-    titulo: 'Camiseta',
-    imagen: 'https://ejemplo.com/camiseta.jpg',
-    descripcion: '¡Una camiseta de alta calidad!'
-  };
 
   return (
     <>
       <div className="ml-3 mr-3 md:hidden">
-        <div className="grid grid-rows-[80px_1fr]">
-          <div className="grid grid-cols-2 gap-2">
-            <button>carrito</button>
-            <button>busqueda producto</button>
-          </div>
+        <div className="flex mt-5">
           <div className="grid grid-rows-[60px_80px_1fr] bg-[#d9d9d9] w-[92vw] h-fit rounded-xl py-2 px-3 mb-3">
             <div>
               <h2 className="text-xl text-[#212b36] font-bold m-2">
-                Harina de Avena - Quaker
+                {productDates.name}
               </h2>
               <div className="bg-[#eef2f5] w-[100%] h-[1px] my-4 mx-0"></div>
             </div>
@@ -103,7 +91,7 @@ export default function SingleProduct (){
                     <span>I.V.A (16%)</span>
                   </div>
                   <div className="font-bold">
-                    <span>$3.50</span>
+                    <span>${productDates.price}</span>
                   </div>
                 </div>
               </div>
@@ -113,7 +101,7 @@ export default function SingleProduct (){
               <div className="grid grid-cols-[1fr_180px] items-center justify-items-center justify-around h-[370px]">
                 <div>
                   <div className="bg-[#b3b9c5] w-[250px] my-3 py-2 h-[360px] rounded-[20px] p-2">
-                    <img className="w-[230px]" src={HarinaAvena} alt="harina" />
+                    <img className="w-[230px]" src={productDates.imageURL} alt={productDates.name} />
                   </div>
                 </div>
                 <div className="grid grid-cols-[5px_1fr] gap-3">
@@ -122,22 +110,22 @@ export default function SingleProduct (){
                     <div className="bg-[#b3b9c5] w-[110px] h-[117px] rounded-[20px] p-2">
                       <img
                         className="w-[150px] h-[100%]"
-                        src={HarinaAvena}
-                        alt="harina"
+                        src={productDates.imageURL}
+                        alt={productDates.name}
                       />
                     </div>
                     <div className="bg-[#b3b9c5] w-[110px] h-[117px] rounded-[20px] p-2">
                       <img
                         className="w-[150px] h-[100%]"
-                        src={HarinaAvena}
-                        alt="harina"
+                        src={productDates.imageURL}
+                        alt={productDates.name}
                       />
                     </div>
                     <div className="bg-[#b3b9c5] w-[110px] h-[117px] rounded-[20px] p-2">
                       <img
                         className="w-[150px] h-[100%]"
-                        src={HarinaAvena}
-                        alt="harina"
+                        src={productDates.imageURL}
+                        alt={productDates.name}
                       />
                     </div>
                   </div>
@@ -168,7 +156,7 @@ export default function SingleProduct (){
                 </div>
               </div>
               <div>
-                <p className="m-2">{producto.descripcion}</p>
+                <p className="m-2">{productDates.description}</p>
               </div>
             </div>
           </div>
@@ -180,7 +168,7 @@ export default function SingleProduct (){
             <div className="grid grid-rows-[1fr_140px] items-center justify-items-center justify-around h-[370px] my-5">
               <div>
                 <div className="bg-[#b3b9c5] flex justify-center w-[400px] my-3 py-2 h-[400px] rounded-[20px] p-2">
-                  <img className="w-[230px]" src={HarinaAvena} alt="harina" />
+                  <img className="w-[230px]" src={productDates.imageURL} alt={productDates.name} />
                 </div>
               </div>
               <div>
@@ -188,22 +176,22 @@ export default function SingleProduct (){
                   <div className="bg-[#b3b9c5] w-[110px] h-[117px] rounded-[20px] p-2">
                     <img
                       className="w-[150px] h-[100%]"
-                      src={HarinaAvena}
-                      alt="harina"
+                      src={productDates.imageURL}
+                      alt={productDates.name}
                     />
                   </div>
                   <div className="bg-[#b3b9c5] w-[110px] h-[117px] rounded-[20px] p-2">
                     <img
                       className="w-[150px] h-[100%]"
-                      src={HarinaAvena}
-                      alt="harina"
+                      src={productDates.imageURL}
+                      alt={productDates.name}
                     />
                   </div>
                   <div className="bg-[#b3b9c5] w-[110px] h-[117px] rounded-[20px] p-2">
                     <img
                       className="w-[150px] h-[100%]"
-                      src={HarinaAvena}
-                      alt="harina"
+                      src={productDates.imageURL}
+                      alt={productDates.name}
                     />
                   </div>
                 </div>
@@ -213,14 +201,14 @@ export default function SingleProduct (){
           <div className="grid grid-rows-[60px_50px_80px_100px] my-5">
             <div>
               <h2 className="text-xl text-[#212b36] font-bold m-2">
-                Harina de Avena - Quaker
+                {productDates.name}
               </h2>
               <div className="bg-[#eef2f5] w-[96%] h-[1px] my-4 mx-0"></div>
             </div>
             <div>
               <div className='grid grid-cols-2 gap-52'>
                 <div><span className='text-[#3d464f]'>Categoria</span></div>
-                <div className='ml-10'><span className='font-bold'>Categoria</span></div>
+                <div className='ml-10'><span className='font-bold'>{productDates.category}</span></div>
               </div>
               <div className="bg-[#eef2f5] w-[96%] h-[1px] my-4 mx-0"></div>
             </div>
@@ -292,7 +280,7 @@ export default function SingleProduct (){
                 </div>
               </div>
               <div>
-                <p className="my-2 text-[#3d464f]">{producto.descripcion}</p>
+                <p className="my-2 text-[#3d464f]">{productDates.description}</p>
               </div>
             </div>
           </div>

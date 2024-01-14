@@ -14,7 +14,6 @@ function App() {
     localStorage.setItem("user", JSON.stringify(user));
     localStorage.setItem("cart", JSON.stringify(cartProducts));
   }, [user, cartProducts]);
-  console.log(user);
   return (
     <BrowserRouter>
       <Session.Provider value={{ user, setUser }}>

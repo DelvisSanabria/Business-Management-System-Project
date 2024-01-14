@@ -13,6 +13,7 @@ export default function Menu () {
   const [sessionItem, setSessionItem] = useState("Iniciar Sesion")
   const [sessionName, setSessionName] = useState("Login")
   const location = useLocation();
+  const [userRole, setUserRole] = useState("");
 
   const navigate = useNavigate();
   const {user, setUser} = useContext(Session)
@@ -161,15 +162,10 @@ export default function Menu () {
 
   const [MenuItems, setMenuItems] = useState(generalMenu)
   useEffect(()=>{
-    let userRole = "";
     if(user && user.length > 0){
       setIsLogged(true)
-      try {
-        const parsedUser = JSON.parse(user);
-        userRole = parsedUser.role;
-      } catch (error) {
-        console.error("an error occurred while parsing the user", error);
-      }
+      setUserRole(user.role);
+      console.log(user);
     }
 
     if (userRole === "admin") {

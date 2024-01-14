@@ -79,7 +79,7 @@ export default function DayReport() {
         .then((response) => {
           const data = response.data;
           setMonthReport(data);
-          setProductId(monthReport.bestSellingProduct.name)
+          setProductId(data.bestSellingProduct.name)
         })
         .catch((error) => {
           console.log(error);

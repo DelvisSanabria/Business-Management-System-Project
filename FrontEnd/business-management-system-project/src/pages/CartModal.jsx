@@ -4,6 +4,7 @@ import {Session, shoppingCart} from "../Session/session";
 import axios from "axios";
 import { more, less } from "../components/exportsImports";
 
+// eslint-disable-next-line react/prop-types
 function CartModal({products}) {
    const {user} = useContext(Session);
    const {cartProducts, setCartProducts} = useContext(shoppingCart);

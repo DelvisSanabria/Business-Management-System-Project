@@ -3,8 +3,6 @@ import { useEffect, useState,useRef } from "react";
 import axios from "axios";
 import {camera,userIco} from "../exportsImports"
 
-
-
 const UsersCard = ({ isOpen,type, onClose,userEmail}) => {
   const [previousDates, setPreviosDates] = useState({})
   const [selectedRole, setSelectedRole] = useState("");
@@ -64,6 +62,7 @@ const UsersCard = ({ isOpen,type, onClose,userEmail}) => {
 
 
    const handleSubmit = async () => {
+    console.log(user)
     try {
       for (const prop in user) {
         if (user[prop] === "") {
@@ -79,7 +78,7 @@ const UsersCard = ({ isOpen,type, onClose,userEmail}) => {
         }
         formdata.append(prop, value);
       }
-      const response = await axios.post(`${server}/users`, formdata, {
+      const response = await axios.post(`${server}/users/newUser`, formdata, {
         headers: {
           "Content-Type": "multipart/form-data",
         },

@@ -130,11 +130,30 @@ routerUsers.post("/", checkEmail, async (req, res) => {
     const salt = await bcrypt.genSalt();
     const hash = await bcrypt.hash(req.body.password, salt);
     let newUser = new User({ ...req.body, password: hash });
+    if (req.file) {
+      User.avatar = `${domain}/images/users/${req.file.filename}`;
+    }
     await newUser.save();
     return res.status(201).json(newUser);
   } catch (error) {
     console.error(`${error.name}: ${error.message}`);
     return res.status(500).json({ name: error.name, message: error.message });
+  }
+});
+
+routerUsers.post("/newUser", upload.single("avatar"), async (req, res) => {
+  try {
+    const salt = await bcrypt.genSalt();
+    const hash = await bcrypt.hash(req.body.password, salt);
+    let user = new User({...req.body, password: hash});
+    if (req.file) {
+      user.avatar = `${domain}/images/users/${req.file.filename}`;
+    }
+    await user.save();
+    res.status(201).json(user);
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ message: error.message });
   }
 });
 
