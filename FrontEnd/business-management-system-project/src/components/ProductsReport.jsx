@@ -107,7 +107,7 @@ export default function ProductsReport () {
             <div>
               <h4>Ventas por Producto</h4>
             </div>
-            <div className="grid grid-cols-[60px_60px] gap-5 select-none justify-center">
+            <div className="grid grid-cols-[60px_60px_60px] gap-5 select-none justify-center">
               <div className="z-[96]">
                 <ul className="p-3 border border-[#eaecf0] active:border-blue-500 hover:border-blue-500  rounded-[15px] h-[50px]">
                   <li
@@ -183,6 +183,13 @@ export default function ProductsReport () {
                       ))}
                   </div>
                 </ul>
+              </div>
+              <div className="z-[94]">
+                <ExportProductsReport
+                  ReportData={productsReport}
+                  month={selectedMonth}
+                  year={selectedYear}
+                />
               </div>
             </div>
           </div>
