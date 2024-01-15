@@ -7,7 +7,12 @@ import { Session, shoppingCart } from './Session/session';
 
 function App() {
   const [user, setUser] = useState(JSON.parse(localStorage.getItem("user")) || null);
-  const [cartProducts, setCartProducts] = useState(JSON.parse(localStorage.getItem("cart")) || null);
+  const [cartProducts, setCartProducts] = useState(JSON.parse(localStorage.getItem("cart")) || {
+    client: user.email,
+    vendor: "--",
+    products: [],
+    checked: {}
+  });
   useEffect(() => {
     localStorage.setItem("user", JSON.stringify(user));
     localStorage.setItem("cart", JSON.stringify(cartProducts));

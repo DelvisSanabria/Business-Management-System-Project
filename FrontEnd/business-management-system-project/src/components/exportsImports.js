@@ -94,6 +94,7 @@ import voluntariado3 from "../images/various/voluntariado3.png"
 import plus from "../images/SVG/Add.svg";
 import lens from "../images/icons/search.png";
 import deleteIcon from "../images/SVG/deleteIcon.svg";
+import deleteIcon_red from "../images/SVG/deleteIcon(red).svg";
 import editIcon from "../images/SVG/editIcon.svg";
 import cancel from "../images/icons/error.png";
 import checkmark from "../images/SVG/checkmark.svg";
@@ -177,6 +178,7 @@ export {
   plus,
   lens,
   deleteIcon,
+  deleteIcon_red,
   editIcon,
   cancel,
   checkmark,

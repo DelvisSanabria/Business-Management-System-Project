@@ -7,7 +7,7 @@ import { lens, lens2, cart_black, cart_white, cart_green, cancel, CartModal } fr
 function Products() {
    const server = "http://localhost:3001/";
    const [products, setProducts] = useState([]);
-   const { cartProducts } = useContext(shoppingCart);
+   const { cartProducts, setCartProducts } = useContext(shoppingCart);
    const limit = 6;
    const [productsRefs, setProductsRefs] = useState([]);
    const cart = useRef();
@@ -20,17 +20,13 @@ function Products() {
       pages: [],
       currentPage: 1
    });
-   const [input, setInput] = useState(JSON.parse(localStorage.getItem("input")) || {
-      products: [],
-      checked: {},
-   });
 
    useEffect(() => {
       setProductsRefs((refs) => Array(products.length).fill().map((_, index) => refs[index] || React.createRef()));
    }, [products]);
 
    useEffect(() => {
-      const mediaQuery = window.matchMedia('(min-width: 1440px)');
+      const mediaQuery = window.matchMedia("(min-width: 1024px)");
       function handleResize() {
          if (mediaQuery.matches) {
             setSrc({ lens: lens2, cart: cart_black });
@@ -54,20 +50,17 @@ function Products() {
    const handleProducts = (event) => {
       const { id, checked } = event.target;
       if (checked) {
-         setInput((input) => ({
-            ...input,
-            products: [...input.products, id],
-            checked: { ...input.checked, [id]: checked },
-         }
-         ));
+         setCartProducts((prev) => ({
+            ...prev,
+            products: [...prev.products, id],
+            checked: { ...prev.checked, [id]: checked },
+         }));
       } else {
-         setInput((input) => {
-            return {
-               ...input,
-               products: input.products.filter((Id) => Id !== id),
-               checked: { ...input.checked, [id]: checked },
-            }
-         })
+         setCartProducts((prev) => ({
+            ...prev,
+            products: prev.products.filter((Id) => Id !== id),
+            checked: { ...prev.checked, [id]: checked },
+         }))
       }
    }
 
@@ -76,33 +69,14 @@ function Products() {
       try {
          const response = await axios.get(`${server}products?${searchParam}page=${pageOn}&limit=${limit}`);
          if (response.status === 200) {
-            const { docs, totalPages, page } = response.data;
+            const { docs, totalPages, totalDocs, hasPrevPage, hasNextPage, prevPage, nextPage, page } = response.data;
             setProducts([...docs]);
-            let pagesCount = [];
-            for (let i = 1; i <= totalPages; i++) {
-               pagesCount.push(i);
-            }
-            setPagination({ pages: pagesCount, currentPage: page });
+            setPagination({totalPages, totalDocs, hasPrevPage, hasNextPage, prevPage, nextPage, page});
          }
       } catch ({ name, message }) {
          console.error(`${name}: ${message}`);
       }
    }
-
-   useEffect(() => {
-      if (cartProducts) {
-         let productsChecked = {};
-         cartProducts.products.forEach((id) => {
-            productsChecked[id] = true;
-         })
-         setInput(prevInput => ({
-            ...prevInput,
-            products: cartProducts.products,
-            checked: productsChecked
-         }));
-      }
-   }, [cartProducts]);
-
 
    const validateSearch = () => {
       const regexValue = /^[\w ]+$/;
@@ -153,10 +127,10 @@ function Products() {
                   src={src.cart}
                   type="image"
                />
-               {input.products.length > 0 && <p className="rounded-full w-[18px] h-[18px] bg-[#9BA4B4] lg:bg-[#3056D3] text-white text-[14px] flex justify-center items-center absolute top-0 lg:-top-[5px] right-0 lg:-right-[5px] ">{input.products.length}</p>}
+               {cartProducts.products.length > 0 && <p className="rounded-full w-[18px] h-[18px] bg-[#9BA4B4] lg:bg-[#3056D3] text-white text-[14px] flex justify-center items-center absolute top-0 lg:-top-[5px] right-0 lg:-right-[5px] ">{cartProducts.products.length}</p>}
             </figure>
             <dialog className="dialog w-[70%] lg:w-[30%] fixed lg:absolute lg:mr-[45px] z-20 top-[145px] lg:top-[45px] " ref={cart}>
-               <CartModal products={input.products} />
+               <CartModal />
             </dialog>
          </div>
          <h4 className="text-[20px] font-bold text-[#14274E]">Productos Populares</h4>
@@ -164,13 +138,13 @@ function Products() {
             <div className="grid grid-cols-2 lg:grid-cols-4 gap-[10px] lg:gap-[50px] lg:w-full ">
                {products && products.map((product, index) => (
                   <div className="flex lg:justify-center relative" key={product._id}>
-                     <div className={`absolute z-10 flex justify-center items-center top-[10px] left-[30px] rounded-full w-[35px] h-[35px] lg:w-[40px] lg:h-[40px] ${input.checked && input.checked[product._id] ? "bg-[#edfff8] border-[1px] border-[#429c5e]" : "bg-white"}`} onClick={() => productsRefs[index].current.click()}>
-                        <img className="w-[20px] h-[20px] lg:w-[25px] lg:h-[25px]" type="image" src={input.checked && input.checked[product._id] ? cart_green : cart_black} alt="Carrito" />
+                     <div className={`absolute z-10 flex justify-center items-center top-[10px] left-[15px] lg:left-[25px] rounded-full w-[40px] h-[40px] lg:w-[40px] lg:h-[40px] ${cartProducts.checked && cartProducts.checked[product._id] ? "bg-[#edfff8] border-[1px] border-[#429c5e]" : "bg-white"}`} onClick={() => productsRefs[index].current.click()}>
+                        <img className="w-[25px] h-[25px] lg:w-[25px] lg:h-[25px]" type="image" src={cartProducts.checked && cartProducts.checked[product._id] ? cart_green : cart_black} alt="Carrito" />
                         <input className="hidden"
                            type="checkbox"
                            ref={productsRefs[index]}
                            title="Añadir al carrito"
-                           checked={input.checked && (input.checked[product._id] || false)}
+                           checked={cartProducts.checked && (cartProducts.checked[product._id] || false)}
                            onChange={handleProducts}
                            id={product._id}
                            value={product.price}
@@ -192,17 +166,39 @@ function Products() {
                ))}
             </div>
          </div>
-         <div className="flex justify-center">
-            <div className="flex h-[52px] justify-center items-center lg:gap-[7px] shadow-md border-[#EDEFF1] border-[1px] w-[310px] rounded-[25px] ">
-               {pagination.pages && pagination.pages.map((page, index) => (
-                  <input
-                     className={`border-[1px] rounded-[25px] w-[35px] h-[35px] cursor-pointer ${page === pagination.currentPage ? "bg-[#3056D3] text-white border-[#3056D3] " : "text-[#637381] border-[#EDEFF1]"}`}
-                     type="button"
-                     value={page}
-                     key={index}
-                     onClick={() => { fetchProducts(page); }}
-                  />
-               ))}
+         <div className="flex justify-between box-border">
+            <div className="flex items-center gap-[2px] text-[#667085]">
+               <p>Página </p>
+               <input
+                  className="outline-none w-[20px] text-center"
+                  placeholder={pagination.page}
+                  title="Página"
+                  type="text"
+                  onKeyDown={(event) => {
+                     if (event.key === "Enter") {
+                        const { value } = event.target
+                        if (value <= pagination.totalPages && value > 0) {
+                           fetchProducts(value);
+                        }
+                     }
+                  }}
+                  onBlur={(event) => event.target.value = ""}
+               />
+               <p> de {pagination.totalPages}</p>
+            </div>
+            <div className="flex gap-[10px] text-[14px] ">
+               <button 
+                  className={`border-[1px] border-[#9BA4B4] rounded-[10px] w-[90px] h-[36px] ${pagination.hasPrevPage ? "" : "opacity-50 cursor-default"}`}
+                  onClick={() => {fetchProducts(pagination.prevPage)}}
+               >
+                  Anterior
+               </button>
+               <button 
+                  className="border-[1px] border-[#9BA4B4] bg-[#3056D3] rounded-[10px] text-white w-[90px] h-[36px]"
+                  onClick={() => {fetchProducts(pagination.nextPage)}}
+               >
+                  Siguiente
+               </button>
             </div>
          </div>
       </section>

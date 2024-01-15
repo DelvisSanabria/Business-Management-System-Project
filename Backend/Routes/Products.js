@@ -108,9 +108,8 @@ productRouter.post("/uploadImage", upload.single("image"), async (req, res) => {
 });
 
 productRouter.post("/cart", async (req, res) => {
-   let { products } = req.body;
    try {
-      const product = await Product.find({_id: {$in: products}});
+      const product = await Product.find({_id: {$in: req.body}});
       if (product) {
          return res.status(200).json(product);
       } else {
