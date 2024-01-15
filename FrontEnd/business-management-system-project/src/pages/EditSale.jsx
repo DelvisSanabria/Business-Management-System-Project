@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import axios from "axios";
+import "../tailwind.css"
 import { checkmark, more, less } from "./../components/exportsImports";
 
 function EditSale({ _id, client, vendor, products, quantity }) {

@@ -1,6 +1,7 @@
 import { useState, useContext, useEffect } from "react";
 import { useNavigate, Link } from 'react-router-dom';
 import { Session } from "../Session/session";
+import "../tailwind.css"
 import axios from "axios";
 import { polar, bg_login, polarSede } from "./../components/exportsImports";
 

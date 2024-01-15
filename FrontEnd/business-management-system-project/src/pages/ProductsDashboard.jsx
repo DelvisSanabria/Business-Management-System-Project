@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import axios from "axios";
+import "../tailwind.css"
 import { plus, lens, lens2, deleteIcon, editIcon, cancel, plusDesktop } from "../components/exportsImports";
 import { ProductForm, EditProduct } from "../components/exportsImports";
 

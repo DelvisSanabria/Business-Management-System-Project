@@ -1,15 +1,17 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useContext } from "react";
 import { Link } from "react-router-dom";
+import { shoppingCart } from "../Session/session";
 import axios from "axios";
-import {lens, lens2, cart_black, cart_white, cart_green, cancel, CartModal} from "../components/exportsImports";
+import { lens, lens2, cart_black, cart_white, cart_green, cancel, CartModal } from "../components/exportsImports";
 
 function Products() {
    const server = "http://localhost:3001/";
    const [products, setProducts] = useState([]);
+   const { cartProducts } = useContext(shoppingCart);
    const limit = 6;
    const [productsRefs, setProductsRefs] = useState([]);
    const cart = useRef();
-   const [src, setSrc] = useState({lens: lens, cart: cart_white});
+   const [src, setSrc] = useState({ lens: lens, cart: cart_white });
    const [search, setSearch] = useState({
       value: "",
       error: ""
@@ -30,11 +32,11 @@ function Products() {
    useEffect(() => {
       const mediaQuery = window.matchMedia('(min-width: 1440px)');
       function handleResize() {
-      if (mediaQuery.matches) {
-         setSrc({lens: lens2, cart: cart_black});
-      } else {
-         setSrc({lens: lens, cart: cart_white});
-      }
+         if (mediaQuery.matches) {
+            setSrc({ lens: lens2, cart: cart_black });
+         } else {
+            setSrc({ lens: lens, cart: cart_white });
+         }
       }
       handleResize();
       mediaQuery.addEventListener("change", handleResize);
@@ -55,15 +57,15 @@ function Products() {
          setInput((input) => ({
             ...input,
             products: [...input.products, id],
-            checked: {...input.checked, [id]: checked},
+            checked: { ...input.checked, [id]: checked },
          }
-      ));
+         ));
       } else {
          setInput((input) => {
             return {
                ...input,
                products: input.products.filter((Id) => Id !== id),
-               checked: {...input.checked, [id]: checked},
+               checked: { ...input.checked, [id]: checked },
             }
          })
       }
@@ -80,21 +82,36 @@ function Products() {
             for (let i = 1; i <= totalPages; i++) {
                pagesCount.push(i);
             }
-            setPagination({pages: pagesCount, currentPage: page});
+            setPagination({ pages: pagesCount, currentPage: page });
          }
-      } catch ({name, message}) {
+      } catch ({ name, message }) {
          console.error(`${name}: ${message}`);
       }
    }
-   
+
+   useEffect(() => {
+      if (cartProducts) {
+         let productsChecked = {};
+         cartProducts.products.forEach((id) => {
+            productsChecked[id] = true;
+         })
+         setInput(prevInput => ({
+            ...prevInput,
+            products: cartProducts.products,
+            checked: productsChecked
+         }));
+      }
+   }, [cartProducts]);
+
+
    const validateSearch = () => {
       const regexValue = /^[\w ]+$/;
       if (!search.value) {
-         setSearch((prev) => ({...prev, error: ""}));
+         setSearch((prev) => ({ ...prev, error: "" }));
       } else if (!regexValue.test(search.value)) {
-         setSearch((prev) => ({...prev, error: "Búsqueda inválida"}));
+         setSearch((prev) => ({ ...prev, error: "Búsqueda inválida" }));
       } else {
-         setSearch((prev) => ({...prev, error: ""}));
+         setSearch((prev) => ({ ...prev, error: "" }));
          fetchProducts();
       }
    }
@@ -109,7 +126,7 @@ function Products() {
                      type="text"
                      placeholder="¿Qué necesitas?"
                      id="search"
-                     onChange={(event) => setSearch((prev) => ({...prev, value: event.target.value}))}
+                     onChange={(event) => setSearch((prev) => ({ ...prev, value: event.target.value }))}
                      onKeyDown={(event) => {
                         if (event.key === "Enter") {
                            validateSearch();
@@ -120,9 +137,9 @@ function Products() {
                      <span className="error">{search.error}</span>
                   </div>
                </div>
-               <figure 
-               className="flex z-10 justify-center items-center max-lg:bg-[#14274E] max-lg:rounded-[35px] w-[45px] h-[45px] cursor-pointer" 
-               onClick={validateSearch}>
+               <figure
+                  className="flex z-10 justify-center items-center max-lg:bg-[#14274E] max-lg:rounded-[35px] w-[45px] h-[45px] cursor-pointer"
+                  onClick={validateSearch}>
                   <input
                      type="image"
                      alt="buscar"
@@ -131,16 +148,15 @@ function Products() {
                   />
                </figure>
             </div>
-            <figure className={`flex fixed max-lg:right-[25px] lg:relative lg:border-[1px] lg:border-[#E7E7E7] max-lg:z-30 justify-center items-center bg-[#14274E] lg:bg-white lg:rounded-[8px] rounded-[35px] w-[45px] h-[45px] cursor-pointer ${input.products.length === 0 && "opacity-80"}`} onClick={() => cart.current.open ? cart.current.close() : cart.current.show()}>
+            <figure className={`flex fixed max-lg:right-[25px] lg:relative lg:border-[1px] lg:border-[#E7E7E7] max-lg:z-30 justify-center items-center bg-[#14274E] lg:bg-white lg:rounded-[8px] rounded-[35px] w-[45px] h-[45px] cursor-pointer`} onClick={() => cart.current.open ? cart.current.close() : cart.current.show()}>
                <input
-                  disabled={input.products.length === 0}
                   src={src.cart}
                   type="image"
                />
                {input.products.length > 0 && <p className="rounded-full w-[18px] h-[18px] bg-[#9BA4B4] lg:bg-[#3056D3] text-white text-[14px] flex justify-center items-center absolute top-0 lg:-top-[5px] right-0 lg:-right-[5px] ">{input.products.length}</p>}
             </figure>
-            <dialog className="dialog w-[70%] lg:w-[30%] fixed lg:absolute lg:mr-[45px] z-20 lg:z-10 top-[145px] lg:top-[45px] " ref={cart}>
-               <CartModal {...input} />
+            <dialog className="dialog w-[70%] lg:w-[30%] fixed lg:absolute lg:mr-[45px] z-20 top-[145px] lg:top-[45px] " ref={cart}>
+               <CartModal products={input.products} />
             </dialog>
          </div>
          <h4 className="text-[20px] font-bold text-[#14274E]">Productos Populares</h4>
@@ -184,13 +200,13 @@ function Products() {
                      type="button"
                      value={page}
                      key={index}
-                     onClick={() => {fetchProducts(page);}}
+                     onClick={() => { fetchProducts(page); }}
                   />
                ))}
             </div>
          </div>
       </section>
    );
-}
+};
 
 export default Products;

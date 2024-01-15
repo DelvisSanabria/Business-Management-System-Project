@@ -109,20 +109,19 @@ routerUsers.get("/:email", async (req, res) => {
 });
 
 const checkEmail = (req, res, next) => {
-  const { email } = req.body;
-  User.findOne({ email: email })
-    .then(user => {
-      if (user) {
-        return res.status(409).json({ email: "Correo ya registrado" });
-      }
-      else {
-        next();
-      }
-    })
-    .catch(err => {
-      console.error(err);
-      res.status(500).json({ error: "Error al verificar el correo electrónico" });
-    });
+  try {
+    const { email } = req.body;
+    const user = User.findOne({ email: email })
+    if (user) {
+      return res.status(409).json({ email: "Correo ya registrado" });
+    }
+    else {
+      next();
+    }
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Error al verificar el correo electrónico" });
+  }
 };
 
 routerUsers.post("/signup", checkEmail, async (req, res) => {
@@ -145,7 +144,6 @@ routerUsers.post("/newUser", upload.single("avatar"), async (req, res) => {
   try {
     const salt = await bcrypt.genSalt();
     const hash = await bcrypt.hash(req.body.password, salt);
-    console.log(req.body.password);
     let user = new User({...req.body, password: hash});
     if (req.file) {
       user.avatar = `${domain}/images/users/${req.file.filename}`;
@@ -181,8 +179,6 @@ routerUsers.post("/login", async (req, res) => {
     let user = await User.findOne({ email: email });
     if (user) {
       const match = await bcrypt.compare(password, user.password);
-      console.log(password);
-      console.log(user.password);
       if (match) {
         return res.status(200).json(user);
       } else {

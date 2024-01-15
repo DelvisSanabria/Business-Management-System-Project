@@ -1,10 +1,8 @@
 import { useState, useEffect } from 'react'
 import './index.css'
-import "./tailwind.css"
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import * as Page from './pages/Pages';
 import { Session, shoppingCart } from './Session/session';
-
 
 
 function App() {
@@ -14,7 +12,6 @@ function App() {
     localStorage.setItem("user", JSON.stringify(user));
     localStorage.setItem("cart", JSON.stringify(cartProducts));
   }, [user, cartProducts]);
-  console.log(user);
   return (
     <BrowserRouter>
       <Session.Provider value={{ user, setUser }}>

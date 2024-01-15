@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import axios from "axios";
+import "../tailwind.css"
 import { useNavigate, Link } from "react-router-dom";
 import { polar, camera, blueBg, polarSede } from "./../components/exportsImports";
 

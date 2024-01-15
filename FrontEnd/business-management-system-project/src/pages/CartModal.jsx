@@ -4,7 +4,6 @@ import {Session, shoppingCart} from "../Session/session";
 import axios from "axios";
 import { more, less } from "../components/exportsImports";
 
-// eslint-disable-next-line react/prop-types
 function CartModal({products}) {
    const {user} = useContext(Session);
    const {cartProducts, setCartProducts} = useContext(shoppingCart);
@@ -40,7 +39,7 @@ function CartModal({products}) {
                   let productsQuantity = {};
                   for(let doc of response.data) {
                      productsPrice = {...productsPrice, [doc._id]: doc.price};
-                     productsQuantity = {...productsQuantity, [doc._id]: input.quantity[doc._id] || 1};
+                     productsQuantity = {...productsQuantity, [doc._id]: cartProducts.quantity[doc._id] || 1};
                   }
                   setInput({price: productsPrice, quantity: productsQuantity});
                }
