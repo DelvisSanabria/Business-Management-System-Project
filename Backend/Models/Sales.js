@@ -43,3 +43,4 @@ SaleSchema.plugin(aggregatePaginate);
 const Sale = mongoose.model("Sale", SaleSchema);
 
 module.exports = Sale;
+//cambio x

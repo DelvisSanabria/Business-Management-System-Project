@@ -2,7 +2,7 @@
 /* eslint-disable react/prop-types */
 import { useState, useEffect, useContext, useRef } from "react";
 import { useNavigate } from "react-router-dom";
-import { Session, shoppingCart } from "../Session/session";
+import { shoppingCart } from "../Session/session";
 import axios from "axios";
 import { more, less } from "../components/exportsImports";
 
