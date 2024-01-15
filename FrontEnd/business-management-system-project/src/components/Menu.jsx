@@ -209,16 +209,6 @@ export default function Menu () {
   const handleActive = (tab) => {
     setIsActiveTab(tab.name);
   };
-
-  /* useEffect(() => {
-    const savedActiveTab = sessionStorage.getItem('activeTab');
-  
-    if (savedActiveTab && user.lenght > 0) {
-      setIsActiveTab(savedActiveTab);
-    } else {
-      setIsActiveTab('Home');
-    }
-  }, []); */
   
   useEffect(() => {
     const pathname = location.pathname;
@@ -238,6 +228,9 @@ export default function Menu () {
       const subMenuItem = SubMenuItems.find(item => item.path === pathname);
       if (subMenuItem) {
         setIsActiveTab(subMenuItem.name);
+      }
+      if(pathname.startsWith("/products/")){
+        setIsActiveTab('Inventory');
       }
       sessionStorage.setItem('activeTab', activeTab);
     }
