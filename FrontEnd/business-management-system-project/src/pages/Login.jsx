@@ -14,9 +14,9 @@ function LogIn() {
    const { user, setUser } = useContext(Session);
    const navigate = useNavigate();
    useEffect(() => {
-      /* if (user) {
+      if (user && user !== "") {
          navigate("/");
-      } //eslint-disable-next-line */
+      } //eslint-disable-next-line
    },)
    const handleSubmit = async (event) => {
       event.preventDefault();

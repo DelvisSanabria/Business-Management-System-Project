@@ -125,7 +125,7 @@ const checkEmail = (req, res, next) => {
     });
 };
 
-routerUsers.post("/", checkEmail, async (req, res) => {
+routerUsers.post("/signup", checkEmail, async (req, res) => {
   try {
     const salt = await bcrypt.genSalt();
     const hash = await bcrypt.hash(req.body.password, salt);
@@ -145,6 +145,7 @@ routerUsers.post("/newUser", upload.single("avatar"), async (req, res) => {
   try {
     const salt = await bcrypt.genSalt();
     const hash = await bcrypt.hash(req.body.password, salt);
+    console.log(req.body.password);
     let user = new User({...req.body, password: hash});
     if (req.file) {
       user.avatar = `${domain}/images/users/${req.file.filename}`;
@@ -180,6 +181,8 @@ routerUsers.post("/login", async (req, res) => {
     let user = await User.findOne({ email: email });
     if (user) {
       const match = await bcrypt.compare(password, user.password);
+      console.log(password);
+      console.log(user.password);
       if (match) {
         return res.status(200).json(user);
       } else {

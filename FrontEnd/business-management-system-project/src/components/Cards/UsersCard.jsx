@@ -73,7 +73,7 @@ const UsersCard = ({ isOpen,type, onClose,userEmail}) => {
       const formdata = new FormData();
       for (const prop in user) {
         let value = user[prop];
-        if (typeof value === "string") {
+        if (typeof value === "string" && prop !== "password") {
           value = value.trim().toLowerCase();
         }
         formdata.append(prop, value);
