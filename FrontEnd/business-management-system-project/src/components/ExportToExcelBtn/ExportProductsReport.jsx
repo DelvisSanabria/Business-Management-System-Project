@@ -5,7 +5,7 @@ import * as XLSX from "xlsx";
 const ExportProductsReport = ({ ReportData,month,year,page }) => {
   const [loading, setLoading] = useState(false);
 
-  const titulo = [{ A: "Reporte Mensual de Ventas por Cliente" }, {}];
+  const titulo = [{ A: "Reporte Mensual de Ventas por Producto" }, {}];
 
   const longitudes = [35, 25,25];
 
@@ -13,14 +13,14 @@ const ExportProductsReport = ({ ReportData,month,year,page }) => {
     setLoading(true);
 
     let tabla = [
-      { A: "Cliente", B: "Ventas Totales",C: "Cantidad de Ventas" },
+      { A: "Producto", B: "Ventas Totales",C: "Cantidad de Ventas" },
     ];
 
-    ReportData.docs.forEach((customer) => {
+    ReportData.docs.forEach((product) => {
       tabla.push({
-        A: customer._id, 
-        B: customer.totalSold,
-        C: customer.totalSales,
+        A: product._id, 
+        B: product.totalSold,
+        C: product.totalSales,
       });
     });
 
@@ -53,7 +53,7 @@ const ExportProductsReport = ({ ReportData,month,year,page }) => {
 
     XLSX.utils.book_append_sheet(libro, hoja, "Reports");
 
-    XLSX.writeFile(libro, `${month}-${year}-Customers-MonthReport-Page=${page}.xlsx`);
+    XLSX.writeFile(libro, `${month}-${year}-Products-MonthReport-Page=${page}.xlsx`);
   };
 
   return (

@@ -4,7 +4,8 @@
 import { useEffect,useState,useContext } from "react"
 import { Link, useLocation, useNavigate } from "react-router-dom"
 import {Session} from "./../Session/session"
-import { EmpresasPolar, Hamburger, MenuBox, HomeSvg, LoginSvg, ProductSvg, ReportsSvg, SalesSvg, SettingsSvg, UserSvg, LogoutSvg, Cart, ContactUsSvg, AccountSvg } from "./exportsImports";
+import axios from "axios";
+import { EmpresasPolar, Hamburger, MenuBox, HomeSvg, LoginSvg, ProductSvg, ReportsSvg, SalesSvg, SettingsSvg, UserSvg, LogoutSvg, ContactUsSvg, AccountSvg } from "./exportsImports";
 
 export default function Menu () {
   const [isOpen, setOpen] = useState(false)
@@ -13,6 +14,7 @@ export default function Menu () {
   const [sessionItem, setSessionItem] = useState("Iniciar Sesion")
   const [sessionName, setSessionName] = useState("Login")
   const location = useLocation();
+  const [logedImg, setLogedImg] = useState("");
   const [userRole, setUserRole] = useState("");
 
   const navigate = useNavigate();
@@ -30,9 +32,9 @@ export default function Menu () {
     Vendors: <UserSvg currentColor={activeTab === "Vendors" ? activeColor : (defaultColor)}/>,
     Inventory: <ProductSvg currentColor={activeTab === "Inventory" ? activeColor : (defaultColor)}/>,
     Sales: <SalesSvg currentColor={activeTab === "Sales" ? activeColor : (defaultColor)}/>,
+    Cart: <SalesSvg currentColor={activeTab === "Cart" ? activeColor : (defaultColor)}/>,
     Reports: <ReportsSvg currentColor={activeTab === "Reports" ? activeColor : (defaultColor)}/>,
     Settings: <SettingsSvg currentColor={activeTab === "Settings" ? activeColor : (defaultColor)}/>,
-    MakeSale: <Cart currentColor={activeTab === "MakeSale" ? activeColor : (defaultColor)}/>,
     SessionColor: <LoginSvg currentColor={activeTab === "SessionColor" ? activeColor : (defaultColor)}/>,
     Contact: <ContactUsSvg currentColor={activeTab === "Contact" ? activeColor : (defaultColor)}/>,
     Logout: <LogoutSvg currentColor={activeTab === "Logout" ? activeColor : (defaultColor)}/>,
@@ -72,11 +74,6 @@ export default function Menu () {
       path: "/sales",
     },
     {
-      name: "MakeSale",
-      title: "Realizar una Venta",
-      path: "/makeSale",
-    },
-    {
       name: "Reports",
       title: "Reportes",
       path: "/reports",
@@ -104,11 +101,6 @@ export default function Menu () {
       title: "Ventas",
       path: "/sales",
     },
-    {
-      name: "MakeSale",
-      title: "Realizar una Venta",
-      path: "/makeSale",
-    },
   ];
 
   const clientsPages = [
@@ -123,7 +115,7 @@ export default function Menu () {
       path: "/products",
     },
     {
-      name: "Sales",
+      name: "Cart",
       title: "Carrito",
       path: "/cart",
     },
@@ -158,14 +150,36 @@ export default function Menu () {
       path: "/settings",
     },
     { name: sessionName, title: sessionItem, path: "/login" },
-  ];
-
+  ]
   const [MenuItems, setMenuItems] = useState(generalMenu)
+
+  const getUser = async (userEmail) => {
+    try {
+      const response = await axios.get(
+        `http://localhost:3001/users/${userEmail}`,
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      if (response.status === 200) {
+        const data = response.data;
+        setLogedImg(data.avatar);
+      } else {
+        alert("Error");
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   useEffect(()=>{
-    if(user && user.length > 0){
+    if(user){
       setIsLogged(true)
       setUserRole(user.role);
-      console.log(user);
+      setLogedImg(user.avatar);
     }
 
     if (userRole === "admin") {
@@ -184,37 +198,50 @@ export default function Menu () {
       setSessionName("Login");
     }
 
-  }, [isLogged])
+  }, [user,isLogged])
+
+  useEffect(() => {
+    if (user) {
+      getUser(user.email);
+    }
+  }, [user]);
 
   const handleActive = (tab) => {
     setIsActiveTab(tab.name);
   };
 
-  useEffect(() => {
+  /* useEffect(() => {
     const savedActiveTab = sessionStorage.getItem('activeTab');
   
-    if (savedActiveTab) {
+    if (savedActiveTab && user.lenght > 0) {
       setIsActiveTab(savedActiveTab);
     } else {
       setIsActiveTab('Home');
-      sessionStorage.setItem('activeTab', 'Home');
     }
-  }, []); 
-
+  }, []); */
+  
   useEffect(() => {
     const pathname = location.pathname;
-
+  
     if (pathname === '/') {
       setIsActiveTab('Home');
+      sessionStorage.setItem('activeTab', 'Home');
     } else {
-      const menuItem = MenuItems.find(item => item.path === pathname);
-      if (menuItem) {
-        setIsActiveTab(menuItem.name);
-      } else {
-        setIsActiveTab('Home');
+      setTimeout(() => {
+        const menuItem = MenuItems.find(item => item.path === pathname);
+        if (menuItem) {
+          setIsActiveTab(menuItem.name);
+        } else {
+          setIsActiveTab('Home');
+        }
+      }, 1000);
+      const subMenuItem = SubMenuItems.find(item => item.path === pathname);
+      if (subMenuItem) {
+        setIsActiveTab(subMenuItem.name);
       }
+      sessionStorage.setItem('activeTab', activeTab);
     }
-  }, [location.pathname]);
+  }, [location.pathname, activeTab]);
 
   return (
     <>
@@ -323,14 +350,16 @@ export default function Menu () {
                 <div className="w-[259px] h-[80px]">
                   <div className="grid grid-cols-[29px_1fr] gap-2 my-3 mx-7 items-center justify-center w-[220px]">
                     <Link to="/settings">
-                      <AccountSvg></AccountSvg>
+                      {user && user.avatar ? (
+                        <img className="w-[29px] h-[29px] rounded-full" src={logedImg} alt={user.name}/>
+                      ): (<AccountSvg></AccountSvg>)}
                     </Link>
                     <div>
                       <div className="font-medium text-[#637381] text-[13px] tracking-[0] leading-[24px] whitespace-nowrap">
-                        DelvisDev
+                        {user && user.name?(user.name):('Nombre de Usuario')}
                       </div>
                       <div className=" font-normal text-[#637381] text-[11px] tracking-[0] leading-[20px] whitespace-nowrap">
-                        Delvissivira9@gmail.com
+                      {user && user.email ?(user.email):('Correo de Usuario')}
                       </div>
                     </div>
                   </div>

@@ -23,13 +23,12 @@ function App() {
               <Route index element={<Page.Home />} />
               <Route path="products" element={<Page.Products />} />
               <Route path="products/:id" element={<Page.SingleProduct />} />
-              <Route path="products/cart" element={<Page.Cart />} />
+              <Route path="/cart" element={<Page.Cart />} />
               <Route path="productsDashboard" element={<Page.ProductsDashboard />} />
               <Route path="users" element={<Page.Users />} />
               <Route path="customers" element={<Page.Customers />} />
               <Route path="vendors" element={<Page.Vendors />} />
               <Route path="sales" element={<Page.SalesDashboard />} />
-              <Route path="makeSale" element={<Page.MakeSale />} />
               <Route path="settings" element={<Page.Settings />} />
               <Route path="login" element={<Page.LogIn />} />
               <Route path="signup" element={<Page.SignUp />} />

@@ -7,10 +7,8 @@ import {Session} from "../Session/session";
 
 const Settings = () => {
   const [previousDates, setPreviosDates] = useState({});
-  const [selectedRole, setSelectedRole] = useState("");
   const { user, setUser } = useContext(Session);
   const [userEmail, setUserEmail] = useState("");
-
   const [statusMsg, setStatusMsg] = useState("");
 
   const server = "http://localhost:3001";
@@ -191,6 +189,12 @@ const Settings = () => {
   }, [input]);
 
   useEffect(() => {
+    if (user){
+      setUserEmail(user.email)
+    }
+  }, [user]);
+
+  useEffect(() => {
     getUser(userEmail);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [userEmail]);
@@ -280,7 +284,7 @@ const Settings = () => {
                     id="role"
                     type="text"
                     name="role"
-                    value={selectedRole}
+                    value={user.role}
                   />
                   <input
                     className={`data outline-none px-3 py-1 border w-[160px] border-[#394867] rounded-[5px] ${

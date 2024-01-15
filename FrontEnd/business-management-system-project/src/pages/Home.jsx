@@ -215,7 +215,7 @@ export default function Home (){
                 key={item}
                 src={item}
                 alt="mosaic"
-                className={`${grayscale} ${brightness} transition duration-500 ease-in-out  hover:grayscale-0`}
+                className={`${grayscale} ${brightness} transition duration-500 ease-in-out w-[100%]  hover:grayscale-0`}
               />
             );
           })}

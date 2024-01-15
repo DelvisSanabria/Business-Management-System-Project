@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 import { useState, useEffect, useContext, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import {Session, shoppingCart} from "../Session/session";
@@ -128,6 +129,6 @@ function CartModal({products}) {
          </button>
       </form>
    );
-};
+}
 
 export default CartModal;
