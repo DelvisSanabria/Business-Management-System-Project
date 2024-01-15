@@ -7,11 +7,9 @@ import axios from "axios";
 import { more, less } from "../components/exportsImports";
 
 function CartModal() {
-   const { user } = useContext(Session);
    const { cartProducts, setCartProducts } = useContext(shoppingCart);
    const navigate = useNavigate();
    const [product, setProduct] = useState([]);
-   const [order, setOrder] = useState(null);
    const button = useRef();
    const server = "http://localhost:3001/";
 
@@ -61,7 +59,7 @@ function CartModal() {
    }, [cartProducts.quantity, cartProducts.price]);
 
    const checkOut = () => {
-      /* navigate("/checkout"); */
+      /* navigate("/cart"); */
    };
 
    const handleSubmit = async () => {

@@ -7,6 +7,7 @@ import { lens, lens2, cart_black, cart_white, CartModal } from "../components/ex
 export default function SingleProduct (){
   const [isOpen, setIsOpen] = useState(false);
   const [productDates, setProductDates] = useState({})
+  const { cartProducts, setCartProducts } = useContext(shoppingCart);
   const [inCartText, setInCartText] = useState("Añadir al Carrito");
   const { id } = useParams();
   const getProduct = async (id) => {
@@ -33,13 +34,8 @@ export default function SingleProduct (){
    // eslint-disable-next-line react-hooks/exhaustive-deps
    }, [id]);
 
-   const { cartProducts } = useContext(shoppingCart);
    const cart = useRef();
    const [src, setSrc] = useState({ lens: lens, cart: cart_white });
-   const [input, setInput] = useState(JSON.parse(localStorage.getItem("input")) || {
-      products: [],
-      checked: {},
-   });
 
    useEffect(() => {
       const mediaQuery = window.matchMedia('(min-width: 1440px)');
@@ -59,32 +55,18 @@ export default function SingleProduct (){
 
    const handleAddToCart = () => {
     const productId = productDates._id;
-    const isInCart = input.products.includes(productId);
+    const isInCart = cartProducts.products.includes(productId);
   
-    setInput((input) => ({
-      ...input,
+    setCartProducts((prev) => ({
+      ...prev,
       products: isInCart
-        ? input.products.filter((id) => id !== productId)
-        : [...input.products, productId],
+        ? cartProducts.products.filter((id) => id !== productId)
+        : [...cartProducts.products, productId],
     }));
     setInCartText(isInCart ? "Añadir al Carrito" : "Sacar del carrito");
     sessionStorage.setItem("CartText", inCartText);
     
   };
-
-   useEffect(() => {
-      if (cartProducts) {
-         let productsChecked = {};
-         cartProducts.products.forEach((id) => {
-            productsChecked[id] = true;
-         })
-         setInput(prevInput => ({
-            ...prevInput,
-            products: cartProducts.products,
-            checked: productsChecked
-         }));
-      }
-   }, [cartProducts]);
 
    useEffect(() => {
     sessionStorage.setItem("CartText", inCartText);
@@ -106,9 +88,9 @@ export default function SingleProduct (){
             }
           >
             <input src={src.cart} type="image" />
-            {input.products.length > 0 && (
+            {cartProducts.products.length > 0 && (
               <p className="rounded-full w-[18px] h-[18px] bg-[#9BA4B4] lg:bg-[#3056D3] text-white text-[14px] flex justify-center items-center absolute top-0 lg:-top-[5px] right-0 lg:-right-[5px] ">
-                {input.products.length}
+                {cartProducts.products.length}
               </p>
             )}
           </figure>
@@ -116,7 +98,7 @@ export default function SingleProduct (){
             className={`${isOpen ? "block" : "hidden"} absolute top-10 right-5 w-[70%] z-[99] mt-10 lg:w-[30%] lg:absolute lg:mr-[45px] lg:top-[45px]`}
             ref={cart}
           >
-            <CartModal products={input.products} />
+            <CartModal/>
           </div>
         </div>
         <div className="flex mt-10">
@@ -219,9 +201,9 @@ export default function SingleProduct (){
             }
           >
             <input src={cart_black} type="image" />
-            {input.products.length > 0 && (
+            {cartProducts.products.length > 0 && (
               <p className="rounded-full w-[18px] h-[18px] bg-[#9BA4B4] lg:bg-[#3056D3] text-white text-[14px] flex justify-center items-center absolute top-0 lg:-top-[5px] right-0 lg:-right-[5px] ">
-                {input.products.length}
+                {cartProducts.products.length}
               </p>
             )}
           </figure>
@@ -229,7 +211,7 @@ export default function SingleProduct (){
             className="dialog w-[70%] lg:w-[30%] fixed lg:absolute lg:mr-[45px] z-20 top-[145px] lg:top-20 lg:right-24 "
             ref={cart}
           >
-            <CartModal products={input.products} />
+            <CartModal />
           </dialog>
         </div>
         <div className="grid grid-cols-2 bg-[#d9d9d9] w-[70vw] h-[90vh] my-4 rounded-xl shadow-lg">
