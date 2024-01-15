@@ -152,3 +152,4 @@ saleRouter.delete("/", async (req, res) => {
 });
 
 module.exports = saleRouter;
+//cambio x

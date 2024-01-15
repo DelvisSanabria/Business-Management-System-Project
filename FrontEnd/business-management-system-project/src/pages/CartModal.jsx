@@ -2,16 +2,14 @@
 /* eslint-disable react/prop-types */
 import { useState, useEffect, useContext, useRef } from "react";
 import { useNavigate } from "react-router-dom";
-import { Session, shoppingCart } from "../Session/session";
+import { shoppingCart } from "../Session/session";
 import axios from "axios";
 import { more, less } from "../components/exportsImports";
 
 function CartModal() {
-   const { user } = useContext(Session);
    const { cartProducts, setCartProducts } = useContext(shoppingCart);
    const navigate = useNavigate();
    const [product, setProduct] = useState([]);
-   const [order, setOrder] = useState(null);
    const button = useRef();
    const server = "http://localhost:3001/";
 
