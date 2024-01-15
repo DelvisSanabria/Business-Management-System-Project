@@ -131,6 +131,9 @@ export default function MenuBox(){
         }
       }, 800);
     }
+    if(pathname.startsWith("/products/")){
+      setIsActiveTab('Inventory');
+    }
   }, [location.pathname]);
   return (
     <>

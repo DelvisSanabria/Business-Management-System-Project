@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef, useContext } from "react";
 import { Link } from "react-router-dom";
 import { shoppingCart } from "../Session/session";
 import axios from "axios";
-import { lens, lens2, cart_black, cart_white, cart_green, cancel, CartModal } from "../components/exportsImports";
+import { lens, lens2, cart_black, cart_white, cart_green, CartModal } from "../components/exportsImports";
 
 function Products() {
    const server = "http://localhost:3001/";
@@ -203,6 +203,6 @@ function Products() {
          </div>
       </section>
    );
-};
+}
 
 export default Products;

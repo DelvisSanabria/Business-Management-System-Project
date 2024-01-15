@@ -1,10 +1,13 @@
 import { useParams } from 'react-router-dom';
-import { useState,useEffect } from 'react';
+import { useState,useEffect,useRef,useContext } from 'react';
+import { shoppingCart } from "../Session/session";
 import axios from "axios"
+import { lens, lens2, cart_black, cart_white, CartModal } from "../components/exportsImports";
 
 export default function SingleProduct (){
-  const [quanty, setQuanty] = useState(0);
+  const [isOpen, setIsOpen] = useState(false);
   const [productDates, setProductDates] = useState({})
+  const [inCartText, setInCartText] = useState("Añadir al Carrito");
   const { id } = useParams();
   const getProduct = async (id) => {
     try {
@@ -30,19 +33,93 @@ export default function SingleProduct (){
    // eslint-disable-next-line react-hooks/exhaustive-deps
    }, [id]);
 
-  const incrementQt = ()=>{
-    setQuanty(quanty + 1)
-  }
-  const decrementQt = ()=>{
-    if(quanty > 0){
-      setQuanty(quanty - 1)
-    }
-  }
+   const { cartProducts } = useContext(shoppingCart);
+   const cart = useRef();
+   const [src, setSrc] = useState({ lens: lens, cart: cart_white });
+   const [input, setInput] = useState(JSON.parse(localStorage.getItem("input")) || {
+      products: [],
+      checked: {},
+   });
+
+   useEffect(() => {
+      const mediaQuery = window.matchMedia('(min-width: 1440px)');
+      function handleResize() {
+         if (mediaQuery.matches) {
+            setSrc({ lens: lens2, cart: cart_black });
+         } else {
+            setSrc({ lens: lens, cart: cart_white });
+         }
+      }
+      handleResize();
+      mediaQuery.addEventListener("change", handleResize);
+      return () => {
+         mediaQuery.removeEventListener("change", handleResize);
+      };
+   }, []);
+
+   const handleAddToCart = () => {
+    const productId = productDates._id;
+    const isInCart = input.products.includes(productId);
+  
+    setInput((input) => ({
+      ...input,
+      products: isInCart
+        ? input.products.filter((id) => id !== productId)
+        : [...input.products, productId],
+    }));
+    setInCartText(isInCart ? "Añadir al Carrito" : "Sacar del carrito");
+    sessionStorage.setItem("CartText", inCartText);
+    
+  };
+
+   useEffect(() => {
+      if (cartProducts) {
+         let productsChecked = {};
+         cartProducts.products.forEach((id) => {
+            productsChecked[id] = true;
+         })
+         setInput(prevInput => ({
+            ...prevInput,
+            products: cartProducts.products,
+            checked: productsChecked
+         }));
+      }
+   }, [cartProducts]);
+
+   useEffect(() => {
+    sessionStorage.setItem("CartText", inCartText);
+  }, [inCartText]);
+
+   useEffect(() => {
+    const savedText = sessionStorage.getItem("CartText");
+    setInCartText(savedText || "Añadir al Carrito");
+  }, []);
 
   return (
     <>
-      <div className="ml-3 mr-3 md:hidden">
-        <div className="flex mt-5">
+      <div className="ml-3 mr-3 grid grid-rows-[40px_1fr] md:hidden">
+        <div className="mt-3 relative">
+          <figure
+            className={`flex fixed max-lg:right-[25px] lg:relative lg:border-[1px] lg:border-[#E7E7E7] max-lg:z-30 justify-center items-center bg-[#14274E] lg:bg-white lg:rounded-[8px] rounded-[35px] w-[45px] h-[45px] cursor-pointer`}
+            onClick={() =>
+              setIsOpen(!isOpen)
+            }
+          >
+            <input src={src.cart} type="image" />
+            {input.products.length > 0 && (
+              <p className="rounded-full w-[18px] h-[18px] bg-[#9BA4B4] lg:bg-[#3056D3] text-white text-[14px] flex justify-center items-center absolute top-0 lg:-top-[5px] right-0 lg:-right-[5px] ">
+                {input.products.length}
+              </p>
+            )}
+          </figure>
+          <div
+            className={`${isOpen ? "block" : "hidden"} absolute top-10 right-5 w-[70%] z-[99] mt-10 lg:w-[30%] lg:absolute lg:mr-[45px] lg:top-[45px]`}
+            ref={cart}
+          >
+            <CartModal products={input.products} />
+          </div>
+        </div>
+        <div className="flex mt-10">
           <div className="grid grid-rows-[60px_80px_1fr] bg-[#d9d9d9] w-[92vw] h-fit rounded-xl py-2 px-3 mb-3">
             <div>
               <h2 className="text-xl text-[#212b36] font-bold m-2">
@@ -51,41 +128,7 @@ export default function SingleProduct (){
               <div className="bg-[#eef2f5] w-[100%] h-[1px] my-4 mx-0"></div>
             </div>
             <div className="h-[70px]">
-              <div className="grid grid-cols-2 h-[70px]">
-                <div className="mr-16">
-                  <div className="mb-1 text-[#3d464f]">
-                    <label htmlFor="quanty">Cantidad</label>
-                  </div>
-                  <div className="grid grid-cols-[17px_60px_17px] items-center justify-items-center w-[100px] h-[25px] bg-white rounded-full">
-                    <div
-                      onClick={decrementQt}
-                      className="cursor-pointer h-[20px] w-[20px] ml-2 rounded-full bg-[#14274e] hover:bg-[#173267] text-white"
-                    >
-                      <div className="px-1.5 my-[-3px]">
-                        <span>-</span>
-                      </div>
-                    </div>
-                    <div className="w-12 ml-5 flex text-center justify-center">
-                      <input
-                        className="w-6"
-                        type="number"
-                        min="0"
-                        max="999"
-                        value={quanty}
-                        readOnly
-                        id="quanty"
-                      />
-                    </div>
-                    <div
-                      onClick={incrementQt}
-                      className="cursor-pointer h-[20px] w-[20px] ml-2 rounded-full bg-[#14274e] hover:bg-[#173267] text-white"
-                    >
-                      <div className="px-1 my-[-3px]">
-                        <span>+</span>
-                      </div>
-                    </div>
-                  </div>
-                </div>
+              <div className="flex justify-end h-[70px] mr-5">
                 <div className="grid grid-rows-[30px_50px] justify-items-end ml-16 pl-10">
                   <div className="text-[#3d464f]">
                     <span>I.V.A (16%)</span>
@@ -101,7 +144,11 @@ export default function SingleProduct (){
               <div className="grid grid-cols-[1fr_180px] items-center justify-items-center justify-around h-[370px]">
                 <div>
                   <div className="bg-[#b3b9c5] w-[250px] my-3 py-2 h-[360px] rounded-[20px] p-2">
-                    <img className="w-[230px]" src={productDates.imageURL} alt={productDates.name} />
+                    <img
+                      className="w-[230px]"
+                      src={productDates.imageURL}
+                      alt={productDates.name}
+                    />
                   </div>
                 </div>
                 <div className="grid grid-cols-[5px_1fr] gap-3">
@@ -140,6 +187,7 @@ export default function SingleProduct (){
                     className="btn bg-[#3056D3] text-[#FFFFFF] w-full rounded-[6px] h-[50px]"
                     id="submit"
                     type="button"
+                    onClick={handleAddToCart}
                   >
                     Añadir al Carrito
                   </button>
@@ -163,12 +211,37 @@ export default function SingleProduct (){
         </div>
       </div>
       <div className="hidden md:block md:mx-5 md:py-4">
+        <div className='flex justify-end w-[68vw]'>
+          <figure
+            className={`flex fixed max-lg:right-[25px] lg:relative lg:border-[1px] lg:border-[#E7E7E7] max-lg:z-30 justify-center items-center bg-[#14274E] lg:bg-white lg:rounded-[8px] lg:hover:border-blue-500 rounded-[35px] w-[45px] h-[45px] cursor-pointer`}
+            onClick={() =>
+              cart.current.open ? cart.current.close() : cart.current.show()
+            }
+          >
+            <input src={cart_black} type="image" />
+            {input.products.length > 0 && (
+              <p className="rounded-full w-[18px] h-[18px] bg-[#9BA4B4] lg:bg-[#3056D3] text-white text-[14px] flex justify-center items-center absolute top-0 lg:-top-[5px] right-0 lg:-right-[5px] ">
+                {input.products.length}
+              </p>
+            )}
+          </figure>
+          <dialog
+            className="dialog w-[70%] lg:w-[30%] fixed lg:absolute lg:mr-[45px] z-20 top-[145px] lg:top-20 lg:right-24 "
+            ref={cart}
+          >
+            <CartModal products={input.products} />
+          </dialog>
+        </div>
         <div className="grid grid-cols-2 bg-[#d9d9d9] w-[70vw] h-[90vh] my-4 rounded-xl shadow-lg">
           <div>
             <div className="grid grid-rows-[1fr_140px] items-center justify-items-center justify-around h-[370px] my-5">
               <div>
                 <div className="bg-[#b3b9c5] flex justify-center w-[400px] my-3 py-2 h-[400px] rounded-[20px] p-2">
-                  <img className="w-[230px]" src={productDates.imageURL} alt={productDates.name} />
+                  <img
+                    className="w-[230px]"
+                    src={productDates.imageURL}
+                    alt={productDates.name}
+                  />
                 </div>
               </div>
               <div>
@@ -206,48 +279,18 @@ export default function SingleProduct (){
               <div className="bg-[#eef2f5] w-[96%] h-[1px] my-4 mx-0"></div>
             </div>
             <div>
-              <div className='grid grid-cols-2 gap-52'>
-                <div><span className='text-[#3d464f]'>Categoria</span></div>
-                <div className='ml-10'><span className='font-bold'>{productDates.category}</span></div>
+              <div className="grid grid-cols-2 gap-52">
+                <div>
+                  <span className="text-[#3d464f]">Categoria</span>
+                </div>
+                <div className="ml-10">
+                  <span className="font-bold">{productDates.category}</span>
+                </div>
               </div>
               <div className="bg-[#eef2f5] w-[96%] h-[1px] my-4 mx-0"></div>
             </div>
             <div className="h-[70px]">
-              <div className="grid grid-cols-2 h-[70px] my-5">
-                <div className="grid grid-rows-[25px_20px] mr-36 justify-items-center">
-                  <div className="mb-1 text-[#3d464f] font-bold">
-                    <label htmlFor="quanty">Cantidad</label>
-                  </div>
-                  <div className="grid grid-cols-[17px_60px_17px] items-center justify-items-center w-[100px] h-[25px] bg-white rounded-full">
-                    <div
-                      onClick={decrementQt}
-                      className="cursor-pointer h-[20px] w-[20px] ml-2 rounded-full bg-[#14274e] hover:bg-[#173267] text-white"
-                    >
-                      <div className="px-1.5 my-[-3px]">
-                        <span>-</span>
-                      </div>
-                    </div>
-                    <div className="w-12 ml-5 flex text-center justify-center">
-                      <input
-                        className="w-6"
-                        type="number"
-                        min="0"
-                        max="999"
-                        value={quanty}
-                        readOnly
-                        id="quanty"
-                      />
-                    </div>
-                    <div
-                      onClick={incrementQt}
-                      className="cursor-pointer h-[20px] w-[20px] ml-2 rounded-full bg-[#14274e] hover:bg-[#173267] text-white"
-                    >
-                      <div className="px-1 my-[-3px]">
-                        <span>+</span>
-                      </div>
-                    </div>
-                  </div>
-                </div>
+              <div className="flex justify-end mr-5 h-[70px] my-5">
                 <div className="grid grid-rows-[30px_50px] justify-items-end mr-5">
                   <div className="font-bold text-xl">
                     <span>$3.50</span>
@@ -258,15 +301,16 @@ export default function SingleProduct (){
                 </div>
               </div>
             </div>
-            <div className='my-3'>
+            <div className="my-3">
               <div>
                 <div className="px-3">
                   <button
                     className="btn bg-[#3056D3] text-[#FFFFFF] w-full rounded-[6px] h-[50px]"
                     id="submit"
                     type="button"
+                    onClick={handleAddToCart}
                   >
-                    Añadir al Carrito
+                    {inCartText}
                   </button>
                 </div>
               </div>
@@ -280,7 +324,9 @@ export default function SingleProduct (){
                 </div>
               </div>
               <div>
-                <p className="my-2 text-[#3d464f]">{productDates.description}</p>
+                <p className="my-2 text-[#3d464f]">
+                  {productDates.description}
+                </p>
               </div>
             </div>
           </div>
