@@ -66,7 +66,7 @@ export default function Menu () {
     {
       name: "Inventory",
       title: "Inventario",
-      path: "/products",
+      path: "/productsDashboard",
     },
     {
       name: "Sales",
@@ -94,7 +94,7 @@ export default function Menu () {
     {
       name: "Inventory",
       title: "Inventario",
-      path: "/products",
+      path: "/productsDashboard",
     },
     {
       name: "Sales",

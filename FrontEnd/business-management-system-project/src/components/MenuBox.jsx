@@ -44,7 +44,7 @@ export default function MenuBox(){
     { name: "Users", title: "Usuarios", path: "/users" },
     { name: "Customers", title: "Clientes", path: "/customers" },
     { name: "Vendors", title: "Vendedores", path: "/vendors" },
-    { name: "Inventory", title: "Inventario", path: "/products" },
+    { name: "Inventory", title: "Inventario", path: "/productsDashboard" },
     { name: "Sales", title: "Ventas", path: "/sales" },
     { name: "Reports", title: "Reportes", path: "/reports" },
     { name: "Settings", title: "Editar Usuario", path: "/settings" },
@@ -54,7 +54,7 @@ export default function MenuBox(){
   const vendorsPages = [
     { name: "Home", title: "Inicio", path: "/" },
     { name: "Customers", title: "Clientes", path: "/customers" },
-    { name: "Inventory", title: "Inventario", path: "/products" },
+    { name: "Inventory", title: "Inventario", path: "/productsDashboard" },
     { name: "Sales", title: "Ventas", path: "/sales" },
     { name: "Settings", title: "Editar Usuario", path: "/settings" },
     { name: sessionName, title: sessionItem, path: "/login" },
