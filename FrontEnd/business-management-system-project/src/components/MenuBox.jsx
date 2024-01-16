@@ -3,7 +3,7 @@
 import { useEffect,useContext } from "react"
 import { useState } from "react"
 import {Session} from "./../Session/session"
-import { Link,useNavigate } from "react-router-dom"
+import { Link } from "react-router-dom"
 import {  HomeSvg, LoginSvg, ProductSvg, ReportsSvg, SalesSvg, SettingsSvg, UserSvg, LogoutSvg, ContactUsSvg } from "./exportsImports";
 
 export default function MenuBox(){
@@ -13,11 +13,9 @@ export default function MenuBox(){
   const [sessionName, setSessionName] = useState("Login")
   const { user, setUser } = useContext(Session);
   const [userRole, setUserRole] = useState("");
-  const navigate = useNavigate();
 
   const logout = () => {
     setUser(null);
-    navigate("/");
   }
 
   const activeColor = "#3056d3"
@@ -82,6 +80,8 @@ export default function MenuBox(){
     if(user){
       setIsLogged(true)
       setUserRole(user.role);
+    }else {
+      setMenuItems(generalMenu);
     }
 
     if (userRole === "admin") {
@@ -141,7 +141,7 @@ export default function MenuBox(){
         {MenuItems.map((page, index) => (
     <Link
       key={page.name}
-      to={page.path}
+      to={page.name === "logout" ? "/" : page.path}
       onClick={() => {
         if (page.title === "Cerrar Sesion") {
           logout();
