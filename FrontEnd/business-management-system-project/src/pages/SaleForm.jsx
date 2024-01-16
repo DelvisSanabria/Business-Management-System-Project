@@ -28,11 +28,9 @@ function SaleForm() {
    const successRef = useRef();
 
    const productsList = async (page = 1) => {
-      const response = await axios.get(`${server}products?page=${page}&limit=${limit}`);
+      const response = await axios.get(`${server}products/productsList`);
       if (response.status === 200) {
-         const { docs, hasPrevPage, hasNextPage, prevPage, nextPage} = response.data;
-         setProducts(docs);
-         setPagination({hasPrevPage, hasNextPage, prevPage, nextPage});
+         setProducts(response.data);
       }
    }
    useEffect(() => {
@@ -253,22 +251,6 @@ function SaleForm() {
                      </menu>
                      <div className="relative">
                         <span className="error">{error.products}</span>
-                     </div>
-                     <div className="flex gap-[10px] text-[14px] justify-end">
-                        <button
-                           type="button"
-                           className={`border-[1px] border-[#9BA4B4] rounded-[10px] w-[90px] h-[36px] ${pagination.hasPrevPage ? "" : "opacity-50 cursor-default"}`}
-                           onClick={() => {productsList(pagination.prevPage)}}
-                        >
-                           Anterior
-                        </button>
-                        <button
-                           type="button"
-                           className="border-[1px] border-[#9BA4B4] bg-[#3056D3] rounded-[10px] text-white w-[90px] h-[36px]"
-                           onClick={() => {productsList(pagination.nextPage)}}
-                        >
-                           Siguiente
-                        </button>
                      </div>
                   </div>
                   <div className={`lg:w-full flex flex-col ${input.products && input.products.length === 0 && "hidden"}`}>

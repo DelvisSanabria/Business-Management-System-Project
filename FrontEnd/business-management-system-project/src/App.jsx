@@ -8,11 +8,20 @@ import { Session, shoppingCart } from './Session/session';
 function App() {
   const [user, setUser] = useState(JSON.parse(localStorage.getItem("user")) || null);
   const [cartProducts, setCartProducts] = useState(JSON.parse(localStorage.getItem("cart")) || {
-    client: user.email,
+    client: "--",
     vendor: "--",
     products: [],
     checked: {}
   });
+  useEffect(() => {
+    if (user) {
+      setCartProducts((prev) => ({
+          ...prev,
+          client: user.role === "client" ? user.email : "--"
+        })
+      );
+    }
+  }, [user]);
   useEffect(() => {
     localStorage.setItem("user", JSON.stringify(user));
     localStorage.setItem("cart", JSON.stringify(cartProducts));

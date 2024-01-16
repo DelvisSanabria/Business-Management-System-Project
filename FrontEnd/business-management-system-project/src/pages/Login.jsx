@@ -62,7 +62,7 @@ function LogIn() {
       }
 		if (!password) {
          event.preventDefault();
-         setError((prev) => ({...prev, password: "Introduce la contraseña",}));
+         setError((prev) => ({...prev, password: "Introduce tu contraseña",}));
 		} else {
          event.returnValue = true;
          setError((prev) => ({...prev, password: "",}));
@@ -74,8 +74,8 @@ function LogIn() {
          <img className="w-[262px] max-lg:hidden" src={polar} alt="Empresas Polar" />
          <div className="w-full px-[95px]">
             <div className="py-[50px] flex justify-center items-center lg:bg-[#D9D9D9] rounded-lg">
-               <img className="w-[500px] h-[490px] rounded-[10px] max-lg:hidden" src={polarSede} alt="" />
-               <form className="z-10 flex flex-col justify-center items-center gap-[21px] bg-[#F1F6F9] pt-[15px] pb-[25px] top-[75px] rounded-[20px] lg:rounded-[10px] lg:w-[500px] lg:bg-[#FFFFFF] max-lg:w-[312px]"
+               <img className="w-[45%] h-[479px] rounded-[10px] max-lg:hidden" src={polarSede} alt="" />
+               <form className="z-10 flex flex-col justify-center items-center gap-[21px] bg-[#F1F6F9] pt-[15px] pb-[25px] top-[75px] rounded-[20px] lg:rounded-[10px] lg:w-[45%] lg:bg-[#FFFFFF] max-lg:w-[312px]"
                onSubmit={handleSubmit}>
                   <img className="w-[224px]" src={polar} alt="Empresas Polar" />
                   <div className="frame flex flex-col gap-[15px] px-[44px] w-full">

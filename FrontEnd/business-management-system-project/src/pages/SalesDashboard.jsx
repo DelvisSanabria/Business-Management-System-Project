@@ -27,7 +27,7 @@ function SalesDashboard() {
       }
    }, [search.value]);
    useEffect(() => {
-      const mediaQuery = window.matchMedia('(min-width: 1440px)');
+      const mediaQuery = window.matchMedia('(min-width: 1024px)');
       function handleResize() {
       if (mediaQuery.matches) {
          setLensSrc(lens2);
@@ -87,7 +87,7 @@ function SalesDashboard() {
       return productsList.map(({name, quantity}, index) => (
          <span key={index} className="flex w-full gap-[15px] lg:justify-between">
             <span>{name}</span>
-            <span className="">x{quantity}</span>
+            <span className="font-medium">x{quantity}</span>
          </span>
       ));
    }
@@ -115,12 +115,12 @@ function SalesDashboard() {
       }
    }
    return (
-      <section className="pt-[50px] gap-[25px] px-[25px] flex flex-col w-full box-border relative h-max pb-10 lg:px-[45px] lg:justify-center">
+      <section className="pt-[50px] gap-[25px] lg:pr-[25px] max-lg:px-[25px] flex flex-col w-full box-border relative h-max pb-10 lg:justify-center">
          <hgroup className="flex max-lg:flex-col gap-[25px]">
-            <div className="flex flex-col lg:w-[40%]">
+            <div className="flex flex-col lg:w-[30%]">
                <div className="flex gap-[10px] items-end">
                   <h1 className="font-medium text-[18px]">Tabla de Ventas</h1>
-                  <h4 className="flex items-center text-[12px] text-[#3056D3] bg-[#F9F5FF] rounded-full p-[10px] h-[22px]">{pagination.totalDocs > 0 ? `${pagination.totalDocs} ventas` : "No hay ventas"}</h4>
+                  <h4 className="flex items-center font-medium text-[12px] text-[#3056D3] bg-[#F9F5FF] rounded-full p-[10px] h-[22px]">{pagination.totalDocs > 0 ? (pagination.totalDocs === 1 ? `${pagination.totalDocs} venta` : `${pagination.totalDocs} ventas`) : "No hay ventas"}</h4>
                </div>
                <p className="text-[14px] text-[#667085]">{`${user.role === "vendor" ? "Lista de todas tus ventas" : "Lista de todas las ventas realizadas"}`}</p>
             </div>
@@ -164,7 +164,7 @@ function SalesDashboard() {
             <input type="image" className="absolute right-[5px] top-[10px] cursor-pointer w-[35px]" src={cancel} alt="Cancelar" onClick={() => {addSale.current.close(); fetchSales(pagination.page)} } />
          </dialog>
          <section id="productsDashboard" className="flex flex-col lg:w-full items-center bg-[#F1F6F9] rounded-[20px] lg:mt-[75px]">
-            <div className="flex justify-between px-[12px] gap-[25px] w-full max-lg:hidden">
+            <div className="flex font-medium justify-between px-[12px] gap-[25px] w-full max-lg:hidden">
                {user.role !== "vendor" && <p className="text-[#667085] w-full">Vendedor</p>}
                <p className="text-[#667085] w-full">Cliente</p>
                <p className="text-[#667085] w-full">Hora y Fecha</p>
@@ -186,11 +186,11 @@ function SalesDashboard() {
                      </div>
                      <div className="flex lg:items-center max-lg:flex-col max-lg:max-w-[165px] lg:gap-[25px] justify-between text-[14px] lg:w-full">
                         {user.role !== "vendor" && <p className="text-left overflow-x-auto max-lg:whitespace-nowrap w-full h-[24px]">{sale.vendor}</p>}
-                        <p className="text-left overflow-x-auto max-lg:whitespace-nowrap w-full h-[24px]">{sale.client}</p>
-                        <p className="text-left overflow-x-auto max-lg:whitespace-nowrap w-full h-[24px]">{sale.createdAt && renderTime(sale.createdAt)}</p>
-                        <p className="text-left overflow-x-auto max-lg:whitespace-nowrap w-full h-[24px]">${sale.tax && sale.tax.toFixed(2)}</p>
-                        <p className="text-left overflow-x-auto max-lg:whitespace-nowrap w-full h-[24px]">${sale.total && sale.total.toFixed(2)}</p>
-                        <p className="text-left overflow-x-auto max-lg:whitespace-nowrap lg:gap-[5px] w-full flex flex-col">{sale.products && sale.quantity && renderProducts(sale.products, sale.quantity)}</p>
+                        <p className="text-left max-lg:overflow-x-auto max-lg:whitespace-nowrap w-full h-[24px]">{sale.client}</p>
+                        <p className="text-left max-lg:overflow-x-auto max-lg:whitespace-nowrap w-full h-[24px]">{sale.createdAt && renderTime(sale.createdAt)}</p>
+                        <p className="text-left max-lg:overflow-x-auto max-lg:whitespace-nowrap w-full h-[24px]">${sale.tax && sale.tax.toFixed(2)}</p>
+                        <p className="text-left max-lg:overflow-x-auto max-lg:whitespace-nowrap w-full h-[24px]">${sale.total && sale.total.toFixed(2)}</p>
+                        <p className="text-left max-lg:overflow-x-auto lg:overflow-y-auto max-lg:whitespace-nowrap lg:gap-[5px] w-full flex flex-col lg:max-h-full">{sale.products && sale.quantity && renderProducts(sale.products, sale.quantity)}</p>
                      </div>
                   </div>
                   <div className="flex max-lg:flex-col max-lg:w-[25px] justify-center gap-[25px]">
