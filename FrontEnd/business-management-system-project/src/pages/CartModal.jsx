@@ -10,7 +10,6 @@ function CartModal() {
    const { cartProducts, setCartProducts } = useContext(shoppingCart);
    const navigate = useNavigate();
    const [product, setProduct] = useState([]);
-   const button = useRef();
    const server = "http://localhost:3001/";
 
    useEffect(() => {
@@ -59,31 +58,8 @@ function CartModal() {
    }, [cartProducts.quantity, cartProducts.price]);
 
    const checkOut = () => {
-      /* navigate("/cart"); */
+      navigate("/cart");
    };
-
-   const handleSubmit = async () => {
-      try {
-         let sale = {};
-         for(let key in cartProducts) {
-            if(key !== "checked" && key !== "price") {
-               sale[key] = cartProducts[key];
-            }
-         }
-         const response = await axios.post(`${server}sales`, sale, {
-            headers: {
-               "Content-Type": "application/json"
-            }
-         });
-         if (response.status === 201) {
-            //aquí pon lo que quieras que pase 
-            alert("Compra exitosa")
-            setCartProducts((prev) => ({...prev, products: [], quantity: {}, checked: {}, price: {}}))
-         }
-      } catch ({name, message, response}) {
-         console.error(`Ha ocurrido un error: ${name}. Con el mensaje: ${message}.`);
-      }
-   }
 
    return (
       <form id="orderForm" className="flex flex-col bg-[#f1f6f9] border-[1px] border-[#cdd1d3] items-start rounded-[8px] gap-[15px] pb-[15px] px-[15px]">
@@ -114,18 +90,19 @@ function CartModal() {
          </div>
          <div className="flex flex-col gap-[15px] pb-[15px] w-full border-[#EBF0FF] border-b-[1px]">
             <div className="flex justify-between items-end h-[20px]">
-               <p className="text-[#9098B1] text-[0.8em]">Subtotal:</p><p className="text-[#223263] ">{cartProducts.subtotal ? "$" + cartProducts.subtotal.toFixed(2) : ""}</p>
+               <p className="text-[#9098B1] text-[0.8em]">Subtotal:</p><p className="text-[#223263] ">${cartProducts.subtotal ? cartProducts.subtotal.toFixed(2) : "0.00"}</p>
             </div>
             <div className="flex justify-between items-end h-[20px]">
-               <p className="text-[#9098B1] text-[0.8em]">IVA 16%:</p><p className="text-[#223263] ">{cartProducts.tax ? "$" + cartProducts.tax.toFixed(2) : ""}</p>
+               <p className="text-[#9098B1] text-[0.8em]">IVA 16%:</p><p className="text-[#223263] ">${cartProducts.tax ? cartProducts.tax.toFixed(2) : "0.00"}</p>
             </div>
-            <div className="flex justify-between items-end h-[20px]">
-               <p className="text-[#9098B1] text-[0.8em]">Total:</p><p className="text-[#223263] ">{cartProducts.total ? "$" + cartProducts.total.toFixed(2) : ""}</p>
+            <div className="flex justify-between font-bold items-end h-[20px]">
+               <p className="text-[#223263]">Total:</p><p className="text-[#223263] ">${cartProducts.total ? cartProducts.total.toFixed(2) : "0.00"}</p>
             </div>
          </div>
-         <button ref={button} className={`h-[40px] text-[#FFFFFF] btn text-[20px] bg-[#3056D3] w-full rounded-[6px] ${button.current && button.current.disabled && "opacity-50"}`}
+         <button className="h-[40px] text-[#FFFFFF] btn text-[20px] bg-[#3056D3] w-full rounded-[6px] disabled:opacity-50"
             type="button"
-            onClick={handleSubmit}>Ir a la compra
+            disabled={cartProducts.products && cartProducts.products.length > 0 ? false : true}
+            onClick={checkOut}>Ir al carrito
          </button>
       </form>
    );

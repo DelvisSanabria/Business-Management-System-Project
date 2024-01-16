@@ -10,7 +10,7 @@
       @apply flex items-center justify-center gap-[12px] text-[#637381] h-[48px] border-b-[1px] border-l-[1px] border-[#9BA4B4]
    }
    .dialog {
-      @apply top-[300px] relative rounded-[20px]
+      @apply max-lg:top-[300px] relative rounded-[20px]
    }
    .label {
       @apply relative text-[16px] text-[#394867]
@@ -19,7 +19,7 @@
       @apply border-[1px] border-[#9BA4B4] h-[35px] w-[225px] lg:w-full rounded-[10px] outline-none indent-1
    }
    .error {
-      @apply indent-1 -bottom-[9px] text-[0.8em] [color:_rgb(255,0,0)]
+      @apply absolute indent-1 -bottom-[9px] text-[0.8em] [color:_rgb(255,0,0)]
    }
    #search {
       @apply text-[#14274E] bg-[#F1F6F9] lg:bg-[#F8FAFC] indent-[10px] relative left-1 outline-none

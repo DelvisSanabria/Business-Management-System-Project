@@ -88,12 +88,12 @@ function ProductsDashboard() {
       }
    }
    return (
-      <section className="pt-[50px] gap-[25px] px-[25px] flex flex-col w-full box-border relative h-max pb-10 lg:px-[45px] lg:justify-center">
+      <section className="pt-[50px] gap-[25px] lg:pr-[25px] max-lg:px-[25px] flex flex-col w-full box-border relative h-max pb-10 lg:justify-center">
          <hgroup className="flex max-lg:flex-col gap-[25px]">
-            <div className="flex flex-col lg:w-[40%]">
+            <div className="flex flex-col lg:w-[30%]">
                <div className="flex gap-[10px] items-end">
                   <h1 className="font-medium text-[18px]">Tabla de Productos</h1>
-                  <h4 className="flex items-center text-[12px] text-[#3056D3] bg-[#F9F5FF] rounded-full p-[10px] h-[22px]">{pagination.totalDocs && `${pagination.totalDocs} productos`}</h4>
+                  <h4 className="flex items-center font-medium text-[12px] text-[#3056D3] bg-[#F9F5FF] rounded-full p-[10px] h-[22px]">{pagination.totalDocs > 0 ? (pagination.totalDocs === 1 ? `${pagination.totalDocs} producto` : `${pagination.totalDocs} productos`) : "No hay productos"}</h4>
                </div>
                <p className="text-[14px] text-[#667085]">Lista de todos los productos en el inventario</p>
             </div>
@@ -137,8 +137,8 @@ function ProductsDashboard() {
             <input type="image" className="absolute right-[5px] top-[10px] cursor-pointer w-[35px]" src={cancel} alt="Cancelar" onClick={() => {addProduct.current.close(); fetchProducts(pagination.page)} } />
          </dialog>
          <section id="productsDashboard" className="flex flex-col lg:w-full items-center bg-[#F1F6F9] rounded-[20px] lg:mt-[75px]">
-            <div className="flex justify-around w-full max-lg:hidden">
-               <p className="text-[#667085] w-[88px] text-center ">Imagen</p>
+            <div className="flex font-medium justify-around w-full max-lg:hidden">
+               <p className="text-[#667085] w-[110px] text-center ">Imagen</p>
                <p className="text-[#667085] w-[205px]">Nombre</p>
                <p className="text-[#667085] w-[205px]">Descripción</p>
                <p className="text-[#667085] w-[205px]">Categoría</p>
@@ -157,7 +157,7 @@ function ProductsDashboard() {
                      <div className="flex flex-col justify-between lg:hidden">
                         <p className="text-[#667085] text-right">Nombre:</p>
                         <p className="text-[#667085] text-right">Categoría:</p>
-                        <p className="text-[#667085] text-right">Precio:</p>
+                        <p className="text-[#667085] text-right">Precio Unitario:</p>
                         <p className="text-[#667085] text-right">Inventario:</p>
                      </div>
                      <div className="flex lg:items-center max-lg:flex-col max-lg:max-w-[165px] lg:gap-[25px] justify-between text-[14px] lg:w-full">

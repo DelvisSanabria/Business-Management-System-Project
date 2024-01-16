@@ -129,7 +129,7 @@ function Products() {
                />
                {cartProducts.products.length > 0 && <p className="rounded-full w-[18px] h-[18px] bg-[#9BA4B4] lg:bg-[#3056D3] text-white text-[14px] flex justify-center items-center absolute top-0 lg:-top-[5px] right-0 lg:-right-[5px] ">{cartProducts.products.length}</p>}
             </figure>
-            <dialog className="dialog w-[70%] lg:w-[30%] fixed lg:absolute lg:mr-[45px] z-20 top-[145px] lg:top-[45px] " ref={cart}>
+            <dialog className="dialog w-[70%] lg:w-[30%] fixed lg:absolute lg:mr-[50px] z-20 top-[145px] lg:top-[45px] " ref={cart}>
                <CartModal />
             </dialog>
          </div>
