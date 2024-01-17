@@ -39,31 +39,17 @@ function SignUp() {
    const button = useRef();
    const navigate = useNavigate();
    const [imageUrl, setImageUrl] = useState(null);
-   useEffect(() => {
-      if (input.image) {
-         const url = URL.createObjectURL(input.image);
-         setImageUrl(url);
-      }
-   }, [input.image]);
-   useEffect(() => {
-      return () => {
-         if (imageUrl) {
-            URL.revokeObjectURL(imageUrl);
-            setImageUrl(null);
-         }
-      };
-   }, [imageUrl]);
 
    const handleSubmit = async () => {
       try {
          const response = await axios.post(`${server}/users/signup`, user, {
             headers: {
                "Content-Type": "application/json"
-            } 
+            }
          });
          if (response.status === 201) {
             const imageFile = new FormData();
-            imageFile.append("image", inputFile.current.files[0]);
+            imageFile.append("image", input.image);
             imageFile.append("id", response.data._id);
             const newResponse = await axios.post(`${server}/users/uploadImage`, imageFile, {
                headers: {
@@ -76,37 +62,37 @@ function SignUp() {
                const keys = ["image", "name", "lastName", "phone", "email", "password", "repPassword", "address"];
                for (const key of keys) {
                   if (input[key]) {
-                     setInput((prev) => ({...prev, [key]: ""}));
+                     setInput((prev) => ({ ...prev, [key]: "" }));
                   }
                   if (error[key]) {
-                     setError((prev) => ({...prev, [key]: ""}));
+                     setError((prev) => ({ ...prev, [key]: "" }));
                   }
                   if (user[key]) {
-                     setUser((prev) => ({...prev, [key]: ""}));
+                     setUser((prev) => ({ ...prev, [key]: "" }));
                   }
                }
-            } 
+            }
          }
-      } catch ({name, message, response}) {
+      } catch ({ name, message, response }) {
          if (response.data) {
-            setError((prev) => ({...prev, email: response.data.email}));
+            setError((prev) => ({ ...prev, email: response.data.email }));
          }
          console.error(`${name}: ${message}`);
       }
    }
    const handleChange = (event) => {
       const { name, value } = event.target;
-      setInput({...input, [name]: value });
+      setInput({ ...input, [name]: value });
    }
 
    const handleValidation = () => {
       const { password, repPassword } = input;
-      const regexList = { 
-         name: /^[a-zñ áéíóúñÁÉÍÓÚÑ]+$/i, 
-         lastName: /^[a-zñ áéíóúñÁÉÍÓÚÑ]+$/i, 
-         email: /^[a-z0-9.-]+@[a-z0-9-]+(\.[a-z]{2,4}){1,3}$/i, 
-         phone: /^(\+[\d]{2})?\d{3,4}\d{3}\d{2}\d{2}$/, 
-         password: /^(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])(?=.*[!@#$%^&.*/])[^<>{}:;'"?,\s]{8,16}$/, 
+      const regexList = {
+         name: /^[a-zñ áéíóúñÁÉÍÓÚÑ]+$/i,
+         lastName: /^[a-zñ áéíóúñÁÉÍÓÚÑ]+$/i,
+         email: /^[a-z0-9.-]+@[a-z0-9-]+(\.[a-z]{2,4}){1,3}$/i,
+         phone: /^(\+[\d]{2})?\d{3,4}\d{3}\d{2}\d{2}$/,
+         password: /^(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])(?=.*[!@#$%^&.*/])[^<>{}:;'"?,\s]{8,16}$/,
          address: /^[a-z0-9-,. áéíóúñÁÉÍÓÚÑ]+$/i
       };
 
@@ -125,30 +111,29 @@ function SignUp() {
       for (let field in input) {
          if (input[field]) {
             if (regexList[field] && field !== "image" && !regexList[field].test(input[field])) {
-               errors = {...errors, [field]: message[field]};
-               user = {...user, [field]: ""};
+               errors = { ...errors, [field]: message[field] };
+               user = { ...user, [field]: "" };
                isValid = false;
             } else {
-               errors = {...errors, [field]: ""};
-               user = {...user, [field]: input[field]};
+               errors = { ...errors, [field]: "" };
+               user = { ...user, [field]: input[field] };
             }
          } else if (field === "image") {
-            if (inputFile.current.files.length > 0) {
-               const file = inputFile.current.files[0];
-               switch (file.type) {
-                  case "image/jpeg":
-                  case "image/png":
-                     setInput((prev) => ({...prev, image: file}));
-                     errors = {...errors, image: "" };
-                     break;
-                  default:
-                     errors = {...errors, [field]: message[field]};
-                     isValid = false;
+            if (inputFile.current.files.length === 1) {
+               const file = inputFile.current.files;
+               if (file[0].type.startsWith("image/")) {
+                  setImageUrl(file[0]);
+                  setInput((prev) => ({ ...prev, image: file[0] }));
+                  errors = { ...errors, image: "" };
+               } else {
+                  errors = { ...errors, [field]: message[field] };
+                  isValid = false;
                }
             } else {
                isValid = false;
             }
          } else {
+            errors = { ...errors, [field]: "" };
             isValid = false;
          }
       }
@@ -156,22 +141,31 @@ function SignUp() {
          if (!repPassword) {
             isValid = false;
          } else if (password !== repPassword) {
-            errors = {...errors, repPassword: "La contraseña no coincide"};
-            user = {...user, password: ""};
+            errors = { ...errors, repPassword: "La contraseña no coincide" };
+            user = { ...user, password: "" };
             isValid = false;
          } else {
-            errors = {...errors, repPassword: ""};
-            user = {...user, password};
+            errors = { ...errors, repPassword: "" };
+            user = { ...user, password };
          }
       }
       button.current.disabled = !isValid;
-      setError((prev) => ({...prev, ...errors}));
-      setUser((prev) => ({...prev, ...user}));
+      setError((prev) => ({ ...prev, ...errors }));
+      setUser((prev) => ({ ...prev, ...user }));
    }
    useEffect(() => {
       handleValidation();
+      console.log(input.image);
       //eslint-disable-next-line
    }, [input]);
+   useEffect(() => {
+      return () => {
+         if (imageUrl) {
+            URL.revokeObjectURL(imageUrl);
+         }
+      }
+   }, []);
+
    return (
       <section className="pt-[50px] flex flex-col w-full box-border relative h-max pb-10 lg:px-[45px] lg:gap-[24px] lg:bg-[#F1F6F9] lg:justify-center max-lg:bg-[#1A3365] max-lg:items-center">
          <img className="w-[262px] max-lg:hidden" src={polar} alt="Empresas Polar" />
@@ -186,11 +180,11 @@ function SignUp() {
                         <div className="rounded-full border-[20px] border-[#F1F6F9] lg:border-[#FFFFFF] w-[155px] h-[155px] absolute z-10"></div>
                         <div className="flex justify-center">
                            <figure className="relative flex justify-center items-center rounded-full bg-[#E7E7E7] w-[125px] h-[125px] shadow-sm">
-                              <img className={`max-w-[90%] max-h-[90%] ${!imageUrl && "hidden" }`} src={imageUrl} key={imageUrl} alt="imagen seleccionada" />
-                              <div className="absolute bottom-0 left-0 flex z-20 justify-center items-center w-[35px] h-[35px] rounded-full bg-[#FFFFFF] border-[1px] border-[#E7E7E7]"
-                              onClick={() => inputFile.current.click()}>
+                              {imageUrl && <img className="max-w-[90%] max-h-[90%]" src={URL.createObjectURL(imageUrl)} key={imageUrl} alt="imagen seleccionada" />}
+                              <div className="absolute bottom-0 left-0 flex z-20 justify-center items-center hover:cursor-pointer w-[35px] h-[35px] rounded-full bg-[#FFFFFF] border-[1px] border-[#E7E7E7]"
+                                 onClick={() => inputFile.current.click()}>
                                  <img className="w-[25px]"
-                                 src={camera} alt="camara" />
+                                    src={camera} alt="camara" />
                               </div>
                               <input
                                  title="Subir imagen"
@@ -201,17 +195,17 @@ function SignUp() {
                                  name="image"
                                  accept="image/jpeg, image/png"
                                  onChange={handleValidation}
-                                 onClick={(event) => (event.target.value = null)}
+                                 onClick={(e) => e.target.value = null}
                               />
                            </figure>
                         </div>
                      </div>
-                     <div className="relative flex justify-center">
+                     <div className="relative z-10 flex justify-center">
                         <span className="error">{error.image}</span>
                      </div>
                      <div className="flex gap-[15px] lg:gap-[11px] max-lg:flex-col">
                         <div className="flex flex-col gap-[15px] w-full">
-                           <label className="label text-[18px] text-[#394867]" htmlFor="name">Nombre:</label>
+                           <label className="label text-[#394867]" htmlFor="name">Nombre:</label>
                            <input
                               className={`data123 ${error.name ? "border-[#DC3545]" : ""}`}
                               id="name"
@@ -225,7 +219,7 @@ function SignUp() {
                            </div>
                         </div>
                         <div className="flex flex-col gap-[15px] w-full">
-                           <label className="label text-[18px] text-[#394867]" htmlFor="lastName">Apellido:</label>
+                           <label className="label text-[#394867]" htmlFor="lastName">Apellido:</label>
                            <input
                               className={`data123 ${error.lastName ? "border-[#DC3545]" : ""}`}
                               id="lastName"
@@ -239,7 +233,7 @@ function SignUp() {
                            </div>
                         </div>
                      </div>
-                     <label className="label text-[18px] text-[#394867]" htmlFor="phone">Número de teléfono:</label>
+                     <label className="label text-[#394867]" htmlFor="phone">Número de teléfono:</label>
                      <input
                         className={`data123 ${error.phone ? "border-[#DC3545]" : ""}`}
                         id="phone"
@@ -251,7 +245,7 @@ function SignUp() {
                      <div className="relative">
                         <span className="error">{error.phone}</span>
                      </div>
-                     <label className="label text-[18px] text-[#394867]" htmlFor="email">Correo electrónico:</label>
+                     <label className="label text-[#394867]" htmlFor="email">Correo electrónico:</label>
                      <input
                         className={`data123 ${error.email ? "border-[#DC3545]" : ""}`}
                         id="email"
@@ -263,7 +257,7 @@ function SignUp() {
                      <div className="relative">
                         <span className="error">{error.email}</span>
                      </div>
-                     <label className="label text-[18px] text-[#394867]" htmlFor="password">Contraseña:</label>
+                     <label className="label text-[#394867]" htmlFor="password">Contraseña:</label>
                      <input
                         className={`data123 ${error.password ? "border-[#DC3545]" : ""}`}
                         id="password"
@@ -276,7 +270,7 @@ function SignUp() {
                      <div className="relative">
                         <span className="error">{error.password}</span>
                      </div>
-                     <label className="label text-[18px] text-[#394867]" htmlFor="repPassword">Confirmar contraseña:</label>
+                     <label className="label text-[#394867]" htmlFor="repPassword">Confirmar contraseña:</label>
                      <input
                         className={`data123 ${error.repPassword ? "border-[#DC3545]" : ""}`}
                         id="repPassword"
@@ -288,10 +282,10 @@ function SignUp() {
                      <div className="relative">
                         <span className="error">{error.repPassword}</span>
                      </div>
-                     <label className="label text-[18px] text-[#394867]" htmlFor="address">Dirección:</label>
-                     <textarea 
+                     <label className="label text-[#394867]" htmlFor="address">Dirección:</label>
+                     <textarea
                         className={`data123 focus:h-[100px] transition-[height] duration-500 ease-in ${error.address ? "border-[#DC3545]" : ""}`}
-                        name="address" 
+                        name="address"
                         id="address"
                         value={input.address}
                         onChange={handleChange}
@@ -300,10 +294,10 @@ function SignUp() {
                      <div className="relative">
                         <span className="error">{error.address}</span>
                      </div>
-                     <button className={button.current && button.current.disabled === true ? "btn bg-[#3056D3] text-[#FFFFFF] w-full rounded-[6px] h-[50px] opacity-50" : "btn bg-[#3056D3] text-[#FFFFFF] w-full rounded-[6px] h-[50px]"}
+                     <button className="text-[#FFFFFF] h-[50px] btn text-[20px] bg-[#3056D3] w-full rounded-[6px] disabled:opacity-50"
                         ref={button}
                         id="submit"
-                        onClick={handleSubmit} 
+                        onClick={handleSubmit}
                         type="button">Registrarse
                      </button>
                      <p className="text-[#ADADAD] text-[16px] tracking-tight lg:text-center">¿Ya eres miembro? <Link to="/login" className="text-[#3056D3] underline">Iniciar sesión</Link></p>

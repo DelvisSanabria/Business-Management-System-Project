@@ -232,6 +232,8 @@ routerUsers.patch("/:email", upload.single("avatar"), async (req, res) => {
         const salt = await bcrypt.genSalt();
         const hash = await bcrypt.hash(newData.password, salt);
         update.$set.password = hash;
+      } else {
+        return res.status(406).json({ password: "La nueva contraseña debe ser diferente de la última" });
       }
     }
     if (newData.lastName) {

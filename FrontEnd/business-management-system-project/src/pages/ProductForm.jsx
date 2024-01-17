@@ -173,7 +173,7 @@ function ProductForm() {
                <div className="flex justify-center">
                   <figure className="relative flex justify-center items-center rounded-full bg-[#E7E7E7] w-[100px] h-[100px] shadow-sm">
                      <img className={`w-[60px] ${!imageUrl && "hidden" }`} src={imageUrl} key={imageUrl} alt="imagen seleccionada" />
-                     <div className="absolute bottom-0 left-0 flex justify-center items-center w-[35px] h-[35px] rounded-full bg-[#FFFFFF] border-[1px] border-[#E7E7E7]"
+                     <div className="absolute bottom-0 left-0 flex justify-center items-center hover:cursor-pointer w-[35px] h-[35px] rounded-full bg-[#FFFFFF] border-[1px] border-[#E7E7E7]"
                      onClick={() => inputFile.current.click()}>
                         <img className="w-[25px]"
                         src={camera} alt="camara" />

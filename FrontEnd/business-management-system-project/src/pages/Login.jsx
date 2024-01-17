@@ -53,21 +53,29 @@ function LogIn() {
    
    const handleValidation = (event) => {
       const { email, password } = input;
+      const regexEmail = /^[a-z0-9.-]+@[a-z0-9-]+(\.[a-z]{2,4}){1,3}$/i;
 		if (!email) {
          event.preventDefault();
-         setError((prev) => ({...prev, email: "Introduce tu correo",}));
+         setError((prev) => ({...prev, email: "Ingresa tu correo",}));
+      } else if (!regexEmail.test(input.email)) {
+         setError((prev) => ({...prev, email: "Ingresa un correo válido"}));
       } else {
-         event.returnValue = true;
          setError((prev) => ({...prev, email: "",}));
+         event.returnValue = true;
       }
 		if (!password) {
          event.preventDefault();
-         setError((prev) => ({...prev, password: "Introduce tu contraseña",}));
+         setError((prev) => ({...prev, password: "Ingresa tu contraseña",}));
 		} else {
-         event.returnValue = true;
          setError((prev) => ({...prev, password: "",}));
+         event.returnValue = true;
       }
    }
+   useEffect(() => {
+      if (!input.email && !input.password) {
+         setError({email: "", password: ""});
+      }
+   }, [input])
    return (
       <>
       <section className="pt-[50px] h-screen flex flex-col w-full box-border relative pb-10 lg:px-[45px] lg:gap-[24px] lg:bg-[#F1F6F9] lg:justify-center max-lg:bg-[#1A3365] max-lg:items-center">
@@ -79,7 +87,7 @@ function LogIn() {
                onSubmit={handleSubmit}>
                   <img className="w-[224px]" src={polar} alt="Empresas Polar" />
                   <div className="frame flex flex-col gap-[15px] px-[44px] w-full">
-                     <label className="label text-[20px] text-[#394867]" htmlFor="email">Correo:</label>
+                     <label className="label text-[#394867]" htmlFor="email">Correo:</label>
                      <input
                         className={`data123 ${error.email ? "border-[#DC3545]" : ""}`}
                         id="email"
@@ -91,7 +99,7 @@ function LogIn() {
                      <div className="relative">
                         <span className="error">{error.email}</span>
                      </div>
-                     <label className="label text-[20px] text-[#394867]" htmlFor="password">Contraseña:</label>
+                     <label className="label text-[#394867]" htmlFor="password">Contraseña:</label>
                      <input
                         className={`data123 ${error.password ? "border-[#DC3545]" : ""}`}
                         id="password"
@@ -103,7 +111,7 @@ function LogIn() {
                      <div className="relative">
                         <span className="error">{error.password}</span>
                      </div>
-                     <button className="btn bg-[#3056D3] text-[#FFFFFF] w-full rounded-[6px] h-[50px]" 
+                     <button className="btn bg-[#3056D3] text-[20px] text-[#FFFFFF] w-full rounded-[6px] h-[50px]" 
                         id="submit" 
                         onClick={handleValidation} 
                         type="submit">Iniciar Sesión

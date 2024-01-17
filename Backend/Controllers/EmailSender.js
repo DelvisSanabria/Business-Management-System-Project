@@ -49,7 +49,7 @@ emailRouter.post("/keyValidation", async (req, res) => {
   if (userKey === key) {
     return res.status(200).send("Clave correcta")
   } else {
-    return res.status(400).send("Clave incorrecta")
+    return res.status(400).json({userKey: "Clave de recuperación incorrecta"})
   }
 })
 

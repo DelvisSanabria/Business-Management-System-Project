@@ -28,6 +28,15 @@ function RecPassword() {
 
    const submitEmail = async () => {
       try {
+         const regexEmail = /^[a-z0-9.-]+@[a-z0-9-]+(\.[a-z]{2,4}){1,3}$/i;
+         if (input.email === "") {
+            setError((prev) => ({...prev, email: "Ingresa tu correo"}));
+            return;
+         } else if (!regexEmail.test(input.email)) {
+            setError((prev) => ({...prev, email: "Ingresa un correo válido"}));
+            return;
+         }
+         setError((prev) => ({...prev, email: ""}));
          const response = await axios.post(`${server}/mailsender`, input, {
             headers: {
                "Content-Type": "application/json"
@@ -55,7 +64,7 @@ function RecPassword() {
          }
       } catch ({name, message, response}) {
          if (response.data) {
-            setError((prev) => ({...prev, email: response.data.email}));
+            setError((prev) => ({...prev, userKey: response.data.userKey}));
          }
          console.error(`${name}: ${message}`);
       }
@@ -73,7 +82,7 @@ function RecPassword() {
          }
       } catch ({name, message, response}) {
          if (response.data) {
-            setError((prev) => ({...prev, email: response.data.email}));
+            setError((prev) => ({...prev, password: response.data.password}));
          }
          console.error(`${name}: ${message}`);
       }
@@ -132,7 +141,7 @@ function RecPassword() {
                      <>
                         <div className={`frame flex flex-col gap-[15px] px-[44px] w-full ${emailSent && "hidden"}`}>
                            <p className="text-[#6a7081] text-[0.9em]">Ingresa tu correo electrónico para recibir una clave de recuperación de contraseña</p>
-                           <label className="label text-[18px] text-[#394867]" htmlFor="email">Correo electrónico:</label>
+                           <label className="label text-[#394867]" htmlFor="email">Correo electrónico:</label>
                            <input
                               className={`data123 ${error.email ? "border-[#DC3545]" : ""}`}
                               id="email"
@@ -151,7 +160,7 @@ function RecPassword() {
                         </div>
                         <div className={`frame flex flex-col gap-[15px] px-[44px] w-full ${!emailSent && "hidden"}`}>
                            <p className="text-[#6a7081] text-[0.9em]">Ingresa la clave de recuperación que obtuviste</p>
-                           <label className="label text-[18px] text-[#394867]" htmlFor="password">Clave secreta:</label>
+                           <label className="label text-[#394867]" htmlFor="password">Clave secreta:</label>
                            <input
                               className={`data123 ${error.userKey ? "border-[#DC3545]" : ""}`}
                               id="userKey"
@@ -173,7 +182,7 @@ function RecPassword() {
                   )}
                   {keySuccess && (
                      <div className="frame flex flex-col gap-[15px] px-[44px] w-full">
-                        <label className="label text-[18px] text-[#394867]" htmlFor="password">Nueva contraseña:</label>
+                        <label className="label text-[#394867]" htmlFor="password">Nueva contraseña:</label>
                         <input
                            className={`data123 ${error.password ? "border-[#DC3545]" : ""}`}
                            id="password"
@@ -184,9 +193,9 @@ function RecPassword() {
                            title={"La contraseña debe contener entre 8 y 16 caracteres y al menos uno de los siguientes:\n- Mayúscula\n- Minúcula\n- Dígito\n- Un caracter especial de entre: !@#$%^&*/"}
                         />
                         <div className="relative">
-                           <span className="error">{error.password}</span>
+                           <span className="error max-lg:-top-[15px]">{error.password}</span>
                         </div>
-                        <label className="label text-[18px] text-[#394867]" htmlFor="repPassword">Confirmar contraseña:</label>
+                        <label className="label text-[#394867]" htmlFor="repPassword">Confirmar contraseña:</label>
                         <input
                            className={`data123 ${error.repPassword ? "border-[#DC3545]" : ""}`}
                            id="repPassword"
