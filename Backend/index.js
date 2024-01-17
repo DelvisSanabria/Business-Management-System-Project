@@ -9,6 +9,10 @@ const reportRouter = require("./Controllers/Reports");
 const mailRouter = require("./Controllers/EmailSender"); 
 const corsOptions = {
   origin: "*",
+  optionsSuccessStatus: 200,
+  methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
+  credentials: true,
+  allowedHeaders: ["Content-Type", "Authorization"]
 };
 
 
@@ -25,9 +29,9 @@ app.set('port',process.env.PORT || 3001);
 
 
 //middlewares
+app.use(cors(corsOptions));
 app.use(express.json());
 app.use("/images", express.static("images"));
-app.use(cors(corsOptions));
 app.use("/users", userRouter);
 app.use("/products", productRouter);
 app.use("/sales", saleRouter);

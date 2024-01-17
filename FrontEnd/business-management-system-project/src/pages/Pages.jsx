@@ -2,6 +2,7 @@
 import Layout from './../components/Layout'
 import Home from './Home.jsx'
 import LogIn from './LogIn'
+import RecPassword from './RecPassword.jsx'
 import Products from './Products.jsx'
 
 import Users from './Users.jsx'
@@ -18,13 +19,14 @@ import NoPage from './NoPage.jsx'
 import SignUp from './SignUp'
 import Profile from './Profile.jsx'
 import MakeSale from './MakeSale.jsx'
-import SingleProduct from './SingleProduct';
+import SingleProduct from './SingleProduct'
 import SalesDashboard from './SalesDashboard.jsx'
 import ProductsDashboard from './ProductsDashboard.jsx'
 export {
   Layout,
   Home,
   LogIn,
+  RecPassword,
   Products,
   SingleProduct,
   Users,

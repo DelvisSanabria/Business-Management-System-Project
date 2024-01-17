@@ -70,11 +70,11 @@ function LogIn() {
    }
    return (
       <>
-      <section className="pt-[50px] flex flex-col w-full box-border relative max-lg:top-[73px] h-max pb-10 lg:px-[45px] lg:gap-[24px] lg:bg-[#F1F6F9] lg:justify-center max-lg:bg-[#1A3365] max-lg:items-center">
+      <section className="pt-[50px] h-screen flex flex-col w-full box-border relative pb-10 lg:px-[45px] lg:gap-[24px] lg:bg-[#F1F6F9] lg:justify-center max-lg:bg-[#1A3365] max-lg:items-center">
          <img className="w-[262px] max-lg:hidden" src={polar} alt="Empresas Polar" />
          <div className="w-full px-[95px]">
-            <div className="py-[50px] flex justify-center items-center lg:bg-[#D9D9D9] rounded-lg">
-               <img className="w-[45%] h-[479px] rounded-[10px] max-lg:hidden" src={polarSede} alt="" />
+            <div className="py-[50px] h-fit flex justify-center lg:bg-[#D9D9D9] rounded-lg">
+               <img className="w-[45%] max-h-full rounded-[10px] max-lg:hidden" src={polarSede} alt="" />
                <form className="z-10 flex flex-col justify-center items-center gap-[21px] bg-[#F1F6F9] pt-[15px] pb-[25px] top-[75px] rounded-[20px] lg:rounded-[10px] lg:w-[45%] lg:bg-[#FFFFFF] max-lg:w-[312px]"
                onSubmit={handleSubmit}>
                   <img className="w-[224px]" src={polar} alt="Empresas Polar" />
@@ -116,7 +116,7 @@ function LogIn() {
                </form>
             </div>
          </div>
-         <img className="z-0 absolute bottom-0 lg:hidden" src={bg_login} alt="background" />
+         <img className="z-0 absolute bottom-0 h-[70%] w-full lg:hidden" src={bg_login} alt="background" />
       </section>
       </>
    );

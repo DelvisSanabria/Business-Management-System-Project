@@ -112,7 +112,7 @@ routerUsers.post("/newUser", upload.single("avatar"), async (req, res) => {
   try {
     const salt = await bcrypt.genSalt();
     const hash = await bcrypt.hash(req.body.password, salt);
-    let user = new User({...req.body, password: hash});
+    let user = new User({ ...req.body, password: hash });
     if (req.file) {
       user.avatar = `${domain}/images/users/${req.file.filename}`;
     }
@@ -125,19 +125,20 @@ routerUsers.post("/newUser", upload.single("avatar"), async (req, res) => {
 });
 
 const checkEmail = (req, res, next) => {
-  try {
-    const { email } = req.body;
-    const user = User.findOne({ email: email })
-    if (user) {
-      return res.status(409).json({ email: "Correo ya registrado" });
-    }
-    else {
-      next();
-    }
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: "Error al verificar el correo electrónico" });
-  }
+  const { email } = req.body;
+  User.findOne({ email: email })
+    .then(user => {
+      if (user) {
+        return res.status(409).json({ email: "Correo ya registrado" });
+      }
+      else {
+        next();
+      }
+    })
+    .catch(err => {
+      console.error(err);
+      res.status(500).json({ error: "Error al verificar el correo electrónico" });
+    });
 };
 
 routerUsers.post("/signup", checkEmail, async (req, res) => {
@@ -146,7 +147,7 @@ routerUsers.post("/signup", checkEmail, async (req, res) => {
     const hash = await bcrypt.hash(req.body.password, salt);
     let newUser = new User({ ...req.body, password: hash });
     if (req.file) {
-      User.avatar = `${domain}/images/users/${req.file.filename}`;
+      newUser.avatar = `${domain}/images/users/${req.file.filename}`;
     }
     await newUser.save();
     return res.status(201).json(newUser);
@@ -198,15 +199,12 @@ routerUsers.patch("/:email", upload.single("avatar"), async (req, res) => {
     const usEmail = req.params.email;
     const newData = req.body;
     const user = await User.findOne({ email: usEmail });
-
     if (!user) {
       return res
         .status(404)
         .json({ message: "No se encontró un usuario con ese correo" });
     }
-
     const imagePath = req.file ? req.file.path : undefined;
-
 
     let update = { $set: {} };
 
@@ -251,8 +249,6 @@ routerUsers.patch("/:email", upload.single("avatar"), async (req, res) => {
     const updated = await User.findOneAndUpdate({ email: usEmail }, update, {
       new: true,
     });
-
-    console.log(updated);
     res.status(201).json(updated);
   } catch (error) {
     console.log(error);

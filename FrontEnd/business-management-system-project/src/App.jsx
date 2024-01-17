@@ -43,6 +43,7 @@ function App() {
               <Route path="sales" element={<Page.SalesDashboard />} />
               <Route path="settings" element={<Page.Settings />} />
               <Route path="login" element={<Page.LogIn />} />
+              <Route path="forgot_password" element={<Page.RecPassword />} />
               <Route path="signup" element={<Page.SignUp />} />
               <Route path="profile" element={<Page.Profile />} />
               <Route path="contactUs" element={<Page.Contact />} />
