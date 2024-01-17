@@ -2,7 +2,7 @@
 /* eslint-disable react/prop-types */
 
 import { useEffect,useState,useContext } from "react"
-import { Link, useLocation, useNavigate } from "react-router-dom"
+import { Link, useLocation } from "react-router-dom"
 import {Session} from "./../Session/session"
 import axios from "axios";
 import { EmpresasPolar, Hamburger, MenuBox, HomeSvg, LoginSvg, ProductSvg, ReportsSvg, SalesSvg, SettingsSvg, UserSvg, LogoutSvg, ContactUsSvg, AccountSvg } from "./exportsImports";
@@ -17,11 +17,9 @@ export default function Menu () {
   const [logedImg, setLogedImg] = useState("");
   const [userRole, setUserRole] = useState("");
 
-  const navigate = useNavigate();
   const {user, setUser} = useContext(Session)
   const logout = () => {
     setUser(null);
-    navigate("/");
   }
   const activeColor = "#3056d3"
   const defaultColor = "#637381"
@@ -180,6 +178,8 @@ export default function Menu () {
       setIsLogged(true)
       setUserRole(user.role);
       setLogedImg(user.avatar);
+    }else {
+      setMenuItems(generalMenu);
     }
 
     if (userRole === "admin") {
@@ -277,7 +277,7 @@ export default function Menu () {
             <div>
               {MenuItems.map((page) => (
                 <Link
-                  to={page.path}
+                  to={page.name === "logout" ? "/" : page.path}
                   onClick={() => {
                     handleActive(page);
                   }}
