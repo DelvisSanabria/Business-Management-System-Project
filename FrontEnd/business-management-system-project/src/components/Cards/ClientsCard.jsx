@@ -317,7 +317,7 @@ const ClientsCard = ({ isOpen,type, onClose,clientEmail}) => {
                   </figure>
                 </div>
                 <div className="relative">
-                  <span className="error">{error.avatar}</span>
+                  <span className="">{error.avatar}</span>
                 </div>
                 <div className="grid grid-cols-2 gap-2">
                   <div>
@@ -335,7 +335,7 @@ const ClientsCard = ({ isOpen,type, onClose,clientEmail}) => {
                       value="client"
                     />
                     <input
-                      className={`data outline-none px-3 py-1 border w-[160px] border-[#394867] rounded-[5px] ${
+                      className={` outline-none px-3 py-1 border w-[160px] border-[#394867] rounded-[5px] ${
                         error.name ? "border-[#DC3545]" : ""
                       }`}
                       id="name"
@@ -345,7 +345,7 @@ const ClientsCard = ({ isOpen,type, onClose,clientEmail}) => {
                       onChange={handleChange}
                     />
                     <div className="relative">
-                      <span className="error text-[14px] text-red-500">
+                      <span className=" text-[14px] text-red-500">
                         {error.name}
                       </span>
                     </div>
@@ -358,7 +358,7 @@ const ClientsCard = ({ isOpen,type, onClose,clientEmail}) => {
                       Apellido:
                     </label>
                     <input
-                      className={`data outline-none px-3 py-1 border w-[160px] border-[#394867] rounded-[5px] ${
+                      className={` outline-none px-3 py-1 border w-[160px] border-[#394867] rounded-[5px] ${
                         error.lastName ? "border-[#DC3545]" : ""
                       }`}
                       id="lastName"
@@ -368,7 +368,7 @@ const ClientsCard = ({ isOpen,type, onClose,clientEmail}) => {
                       onChange={handleChange}
                     />
                     <div className="relative">
-                      <span className="error text-[14px]">
+                      <span className=" text-[14px]">
                         {error.lastName}
                       </span>
                     </div>
@@ -381,7 +381,7 @@ const ClientsCard = ({ isOpen,type, onClose,clientEmail}) => {
                       Número de teléfono:
                     </label>
                     <input
-                      className={`data outline-none px-3 py-1 border w-[160px] border-[#394867] rounded-[5px] ${
+                      className={` outline-none px-3 py-1 border w-[160px] border-[#394867] rounded-[5px] ${
                         error.phone ? "border-[#DC3545]" : ""
                       }`}
                       id="phone"
@@ -391,7 +391,7 @@ const ClientsCard = ({ isOpen,type, onClose,clientEmail}) => {
                       onChange={handleChange}
                     />
                     <div className="relative">
-                      <span className="error text-[14px]">{error.phone}</span>
+                      <span className=" text-[14px]">{error.phone}</span>
                     </div>
                   </div>
                   <div>
@@ -402,7 +402,7 @@ const ClientsCard = ({ isOpen,type, onClose,clientEmail}) => {
                       Correo electrónico:
                     </label>
                     <input
-                      className={`data outline-none px-3 py-1 border w-[160px] border-[#394867] rounded-[5px] ${
+                      className={` outline-none px-3 py-1 border w-[160px] border-[#394867] rounded-[5px] ${
                         error.email ? "border-[#DC3545]" : ""
                       }`}
                       id="email"
@@ -412,7 +412,7 @@ const ClientsCard = ({ isOpen,type, onClose,clientEmail}) => {
                       onChange={handleChange}
                     />
                     <div className="relative">
-                      <span className="error text-[14px]">{error.email}</span>
+                      <span className=" text-[14px]">{error.email}</span>
                     </div>
                   </div>
                   <div>
@@ -423,7 +423,7 @@ const ClientsCard = ({ isOpen,type, onClose,clientEmail}) => {
                       Contraseña:
                     </label>
                     <input
-                      className={`data outline-none px-3 py-1 border w-[160px] border-[#394867] rounded-[5px] ${
+                      className={` outline-none px-3 py-1 border w-[160px] border-[#394867] rounded-[5px] ${
                         error.password ? "border-[#DC3545]" : ""
                       }`}
                       id="password"
@@ -436,7 +436,7 @@ const ClientsCard = ({ isOpen,type, onClose,clientEmail}) => {
                       }
                     />
                     <div className="relative">
-                      <span className="error text-[14px]">
+                      <span className=" text-[14px]">
                         {error.password}
                       </span>
                     </div>
@@ -449,7 +449,7 @@ const ClientsCard = ({ isOpen,type, onClose,clientEmail}) => {
                       Confirmar contraseña:
                     </label>
                     <input
-                      className={`data outline-none px-3 py-1 border w-[160px] border-[#394867] rounded-[5px] ${
+                      className={` outline-none px-3 py-1 border w-[160px] border-[#394867] rounded-[5px] ${
                         error.repPassword ? "border-[#DC3545]" : ""
                       }`}
                       id="repPassword"
@@ -459,7 +459,7 @@ const ClientsCard = ({ isOpen,type, onClose,clientEmail}) => {
                       onChange={handleChange}
                     />
                     <div className="relative">
-                      <span className="error text-[14px]">
+                      <span className=" text-[14px]">
                         {error.repPassword}
                       </span>
                     </div>
@@ -473,7 +473,7 @@ const ClientsCard = ({ isOpen,type, onClose,clientEmail}) => {
                     Dirección:
                   </label>
                   <textarea
-                    className={`data outline-none p-3 border w-[350px] border-[#394867] rounded-[5px] focus:h-[100px] transition-[height] duration-500 ease-in ${
+                    className={` outline-none p-3 border w-[350px] border-[#394867] rounded-[5px] focus:h-[100px] transition-[height] duration-500 ease-in ${
                       error.address ? "border-[#DC3545]" : ""
                     }`}
                     name="address"
@@ -482,7 +482,7 @@ const ClientsCard = ({ isOpen,type, onClose,clientEmail}) => {
                     onChange={handleChange}
                   ></textarea>
                   <div className="relative">
-                    <span className="error text-[14px]">{error.address}</span>
+                    <span className=" text-[14px]">{error.address}</span>
                   </div>
                 </div>
                 <div>
@@ -571,7 +571,7 @@ const ClientsCard = ({ isOpen,type, onClose,clientEmail}) => {
                   </figure>
                 </div>
                 <div className="relative">
-                  <span className="error">{error.avatar}</span>
+                  <span className="">{error.avatar}</span>
                 </div>
                 <div className="grid grid-cols-2 gap-2">
                   <div>
@@ -589,7 +589,7 @@ const ClientsCard = ({ isOpen,type, onClose,clientEmail}) => {
                       value="client"
                     />
                     <input
-                      className={`data outline-none px-3 py-1 border w-[160px] border-[#394867] rounded-[5px] ${
+                      className={` outline-none px-3 py-1 border w-[160px] border-[#394867] rounded-[5px] ${
                         error.name ? "border-[#DC3545]" : ""
                       }`}
                       id="name"
@@ -599,7 +599,7 @@ const ClientsCard = ({ isOpen,type, onClose,clientEmail}) => {
                       onChange={handleChange}
                     />
                     <div className="relative">
-                      <span className="error text-[14px] text-red-500">
+                      <span className=" text-[14px] text-red-500">
                         {error.name}
                       </span>
                     </div>
@@ -612,7 +612,7 @@ const ClientsCard = ({ isOpen,type, onClose,clientEmail}) => {
                       Apellido:
                     </label>
                     <input
-                      className={`data outline-none px-3 py-1 border w-[160px] border-[#394867] rounded-[5px] ${
+                      className={` outline-none px-3 py-1 border w-[160px] border-[#394867] rounded-[5px] ${
                         error.lastName ? "border-[#DC3545]" : ""
                       }`}
                       id="lastName"
@@ -622,7 +622,7 @@ const ClientsCard = ({ isOpen,type, onClose,clientEmail}) => {
                       onChange={handleChange}
                     />
                     <div className="relative">
-                      <span className="error text-[14px]">
+                      <span className=" text-[14px]">
                         {error.lastName}
                       </span>
                     </div>
@@ -635,7 +635,7 @@ const ClientsCard = ({ isOpen,type, onClose,clientEmail}) => {
                       Número de teléfono:
                     </label>
                     <input
-                      className={`data outline-none px-3 py-1 border w-[160px] border-[#394867] rounded-[5px] ${
+                      className={` outline-none px-3 py-1 border w-[160px] border-[#394867] rounded-[5px] ${
                         error.phone ? "border-[#DC3545]" : ""
                       }`}
                       id="phone"
@@ -645,7 +645,7 @@ const ClientsCard = ({ isOpen,type, onClose,clientEmail}) => {
                       onChange={handleChange}
                     />
                     <div className="relative">
-                      <span className="error text-[14px]">{error.phone}</span>
+                      <span className=" text-[14px]">{error.phone}</span>
                     </div>
                   </div>
                   <div>
@@ -656,7 +656,7 @@ const ClientsCard = ({ isOpen,type, onClose,clientEmail}) => {
                       Correo electrónico:
                     </label>
                     <input
-                      className={`data outline-none px-3 py-1 border w-[160px] border-[#394867] rounded-[5px] ${
+                      className={` outline-none px-3 py-1 border w-[160px] border-[#394867] rounded-[5px] ${
                         error.email ? "border-[#DC3545]" : ""
                       }`}
                       id="email"
@@ -666,7 +666,7 @@ const ClientsCard = ({ isOpen,type, onClose,clientEmail}) => {
                       onChange={handleChange}
                     />
                     <div className="relative">
-                      <span className="error text-[14px]">{error.email}</span>
+                      <span className=" text-[14px]">{error.email}</span>
                     </div>
                   </div>
                   <div>
@@ -677,7 +677,7 @@ const ClientsCard = ({ isOpen,type, onClose,clientEmail}) => {
                       Contraseña:
                     </label>
                     <input
-                      className={`data outline-none px-3 py-1 border w-[160px] border-[#394867] rounded-[5px] ${
+                      className={` outline-none px-3 py-1 border w-[160px] border-[#394867] rounded-[5px] ${
                         error.password ? "border-[#DC3545]" : ""
                       }`}
                       id="password"
@@ -690,7 +690,7 @@ const ClientsCard = ({ isOpen,type, onClose,clientEmail}) => {
                       }
                     />
                     <div className="relative">
-                      <span className="error text-[14px]">
+                      <span className=" text-[14px]">
                         {error.password}
                       </span>
                     </div>
@@ -703,7 +703,7 @@ const ClientsCard = ({ isOpen,type, onClose,clientEmail}) => {
                       Confirmar contraseña:
                     </label>
                     <input
-                      className={`data outline-none px-3 py-1 border w-[160px] border-[#394867] rounded-[5px] ${
+                      className={` outline-none px-3 py-1 border w-[160px] border-[#394867] rounded-[5px] ${
                         error.repPassword ? "border-[#DC3545]" : ""
                       }`}
                       id="repPassword"
@@ -713,7 +713,7 @@ const ClientsCard = ({ isOpen,type, onClose,clientEmail}) => {
                       onChange={handleChange}
                     />
                     <div className="relative">
-                      <span className="error text-[14px]">
+                      <span className=" text-[14px]">
                         {error.repPassword}
                       </span>
                     </div>
@@ -727,7 +727,7 @@ const ClientsCard = ({ isOpen,type, onClose,clientEmail}) => {
                     Dirección:
                   </label>
                   <textarea
-                    className={`data outline-none p-3 border w-[350px] border-[#394867] rounded-[5px] focus:h-[100px] transition-[height] duration-500 ease-in ${
+                    className={` outline-none p-3 border w-[350px] border-[#394867] rounded-[5px] focus:h-[100px] transition-[height] duration-500 ease-in ${
                       error.address ? "border-[#DC3545]" : ""
                     }`}
                     name="address"
@@ -736,7 +736,7 @@ const ClientsCard = ({ isOpen,type, onClose,clientEmail}) => {
                     onChange={handleChange}
                   ></textarea>
                   <div className="relative">
-                    <span className="error text-[14px]">{error.address}</span>
+                    <span className=" text-[14px]">{error.address}</span>
                   </div>
                 </div>
                 <div>

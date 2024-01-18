@@ -21,7 +21,7 @@ function RecPassword() {
       password: "",
       repPassword: ""
    });
-   const [time, setTime] = useState(new Date(0, 0, 0, 0, 3));
+   const [time, setTime] = useState(new Date(0, 0, 0, 0, 5));
    const [emailSent, setEmailSent] = useState(false);
    const [keySuccess, setKeySuccess] = useState(false);
    const button = useRef();
@@ -153,7 +153,6 @@ function RecPassword() {
    }, [input.password, input.repPassword, keySuccess]);
    return (
       <section className="pt-[50px] flex flex-col w-full box-border relative h-screen pb-10 lg:px-[45px] lg:gap-[24px] lg:bg-[#F1F6F9] lg:justify-center max-lg:bg-[#1A3365] max-lg:items-center">
-         <img className="w-[262px] max-lg:hidden" src={polar} alt="Empresas Polar" />
          <div className="w-full px-[95px]">
             <div className="py-[50px] h-fit flex justify-center lg:bg-[#D9D9D9] rounded-lg">
                <img className="max-w-[45%] max-h-full rounded-[10px] max-lg:hidden" src={polarSede} alt="" />
@@ -182,7 +181,7 @@ function RecPassword() {
                            </button>
                         </div>
                         <div className={`frame flex flex-col gap-[15px] px-[44px] w-full ${!emailSent && "hidden"}`}>
-                           <p className="flex flex-col text-[#6a7081] text-[0.9em]">Ingresa la clave de recuperación que obtuviste <span>{timeString}</span></p>
+                           <p className="flex flex-col text-[#6a7081] text-[0.9em]">Ingresa la clave de recuperación que obtuviste <span className="font-medium">{timeString}</span></p>
                            <label className="label text-[#394867]" htmlFor="password">Clave secreta:</label>
                            <input
                               className={`data123 ${error.userKey ? "border-[#DC3545]" : ""}`}

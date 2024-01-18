@@ -15,7 +15,7 @@ const transporter = nodemailer.createTransport({
 });
 
 function randomNumber() {
-  return Math.random().toString(36).substring(2, 5) + Math.random().toString(36).substring(2, 5);
+  return Math.random().toString(36).substring(2, 6) + Math.random().toString(36).substring(2, 6);
 }
 
 let keys = {};
@@ -53,7 +53,7 @@ emailRouter.post("/", checkKeys, async (req, res) => {
       }
       timeout[email] = setTimeout(() => {
         keys[email] = randomNumber();
-      }, 60000 * 3);
+      }, 60000 * 5);
       res.status(200).send("Email enviado: " + info.response);
     }
   });
