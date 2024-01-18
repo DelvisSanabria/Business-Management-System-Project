@@ -25,7 +25,6 @@ function App() {
   useEffect(() => {
     localStorage.setItem("user", JSON.stringify(user));
     localStorage.setItem("cart", JSON.stringify(cartProducts));
-    console.log(user, cartProducts);
   }, [user, cartProducts]);
   return (
     <BrowserRouter>
@@ -37,7 +36,7 @@ function App() {
               <Route path="products" element={<Page.Products />} />
               <Route path="products/:id" element={<Page.SingleProduct />} />
               <Route path="/cart" element={<Page.Cart />} />
-              <Route path="factura" element={<Page.Bill />} />
+              <Route path="bill" element={<Page.Bill />} />
               <Route path="productsDashboard" element={<Page.ProductsDashboard />} />
               <Route path="users" element={<Page.Users />} />
               <Route path="customers" element={<Page.Customers />} />

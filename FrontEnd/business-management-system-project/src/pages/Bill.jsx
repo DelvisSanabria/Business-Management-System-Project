@@ -63,44 +63,46 @@ export default function Bill() {
    }
 
    return (
-      <section className="relative bg-[#1A3365] w-full flex flex-col gap-[25px] h-screen py-[50px] items-center">
-         <h4 className="text-[#E7E7E7] text-[20px]">Tu Factura</h4>
-         <div className="flex z-10 flex-col p-[15px] w-[80%] gap-[15px] lg:w-[50%] bg-[#F9F9F9] rounded-[12px] ">
-            <div className="flex justify-between items-center pb-[15px] border-b-[1px] border-[#E7E7E7] ">
-               <p>Referencia:</p>
-               <p className="font-light max-w-[50%] max-lg:overflow-x-auto">{saleData._id}</p>
-            </div>
-            <div className="flex justify-between items-center pb-[15px] border-b-[1px] border-[#E7E7E7] ">
-               <p>Fecha:</p>
-               <p className="font-light">{renderTime(saleData.createdAt)}</p>
-            </div>
-            <div className="flex justify-between items-center pb-[15px] border-b-[1px] border-[#E7E7E7] ">
-               <p>Cliente:</p>
-               <p className="font-light">{user.name + " " + user.lastName}</p>
-            </div>
-            <div className="flex flex-col">
-               <div className="flex justify-between items-center pb-[15px]">
-                  <p>Productos:</p>
-                  <p>Precio:</p>
+      <>
+         <img className="z-0 fixed bg-[#1A3365] w-full h-screen lg:hidden" src={blueBg} alt="background" />
+         <section className="relative bg-fixed bg-cover w-full flex flex-col gap-[25px] h-screen py-[50px] items-center">
+            <h4 className="text-[#E7E7E7] text-[20px]">Tu Factura</h4>
+            <div className="flex z-10 flex-col p-[15px] w-[80%] gap-[15px] lg:w-[50%] bg-[#F9F9F9] rounded-[12px] ">
+               <div className="flex justify-between items-center pb-[15px] border-b-[1px] border-[#E7E7E7] ">
+                  <p>Referencia:</p>
+                  <p className="font-light max-w-[50%] max-lg:overflow-x-auto">{saleData._id}</p>
                </div>
                <div className="flex justify-between items-center pb-[15px] border-b-[1px] border-[#E7E7E7] ">
-                  <p className="w-full">{productData && renderProducts(productData, saleData.quantity)}</p>
+                  <p>Fecha:</p>
+                  <p className="font-light">{renderTime(saleData.createdAt)}</p>
+               </div>
+               <div className="flex justify-between items-center pb-[15px] border-b-[1px] border-[#E7E7E7] ">
+                  <p>Cliente:</p>
+                  <p className="font-light">{user.name + " " + user.lastName}</p>
+               </div>
+               <div className="flex flex-col">
+                  <div className="flex justify-between items-center pb-[15px]">
+                     <p>Productos:</p>
+                     <p>Precio:</p>
+                  </div>
+                  <div className="flex justify-between items-center pb-[15px] border-b-[1px] border-[#E7E7E7] ">
+                     <p className="w-full">{productData && renderProducts(productData, saleData.quantity)}</p>
+                  </div>
+               </div>
+               <div className="flex justify-between items-center pb-[15px] border-b-[1px] border-[#E7E7E7] ">
+                  <p>Subtotal:</p>
+                  <p>${saleData.subtotal && saleData.subtotal.toFixed(2)}</p>
+               </div>
+               <div className="flex justify-between items-center pb-[15px] border-b-[1px] border-[#E7E7E7] ">
+                  <p>IVA 16%:</p>
+                  <p>${saleData.tax && saleData.tax.toFixed(2)}</p>
+               </div>
+               <div className="flex justify-between items-center pb-[15px] text-[#223263] text-[1.1em] font-bold">
+                  <p>Total:</p>
+                  <p>${saleData.total && saleData.total.toFixed(2)}</p>
                </div>
             </div>
-            <div className="flex justify-between items-center pb-[15px] border-b-[1px] border-[#E7E7E7] ">
-               <p>Subtotal:</p>
-               <p>${saleData.subtotal && saleData.subtotal.toFixed(2)}</p>
-            </div>
-            <div className="flex justify-between items-center pb-[15px] border-b-[1px] border-[#E7E7E7] ">
-               <p>IVA 16%:</p>
-               <p>${saleData.tax && saleData.tax.toFixed(2)}</p>
-            </div>
-            <div className="flex justify-between items-center pb-[15px] text-[#223263] text-[1.1em] font-bold">
-               <p>Total:</p>
-               <p>${saleData.total && saleData.total.toFixed(2)}</p>
-            </div>
-         </div>
-         <img className="z-0 absolute w-full h-[70%] bottom-0 lg:hidden" src={blueBg} alt="background" />
-      </section>
+         </section>
+      </>
   );
 }

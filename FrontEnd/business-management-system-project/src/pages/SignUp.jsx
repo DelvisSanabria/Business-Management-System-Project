@@ -167,146 +167,148 @@ function SignUp() {
    }, []);
 
    return (
-      <section className="pt-[50px] flex flex-col w-full box-border relative h-max pb-10 lg:px-[45px] lg:gap-[24px] lg:bg-[#F1F6F9] lg:justify-center max-lg:bg-[#1A3365] max-lg:items-center">
-         <img className="w-[262px] max-lg:hidden" src={polar} alt="Empresas Polar" />
-         <div className="w-full px-[95px]">
-            <div className="py-[50px] h-fit flex justify-center lg:bg-[#D9D9D9] rounded-lg">
-               <img className="max-w-[45%] max-h-full rounded-[10px] max-lg:hidden" src={polarSede} alt="" />
-               <form className="z-10 flex flex-col justify-center items-center gap-[21px] bg-[#F1F6F9] pt-[15px] pb-[25px] top-[75px] rounded-[20px] lg:rounded-[10px] lg:w-[45%] lg:bg-[#FFFFFF] max-lg:w-[312px]">
-                  <img className="w-[224px] lg:hidden" src={polar} alt="Empresas Polar" />
-                  <p className="text-[24px] border-[#E7E7E7] border-b-[1px] text-center pb-[15px] w-full max-lg:hidden">Registro</p>
-                  <div className="frame flex flex-col gap-[15px] px-[44px] w-full">
-                     <div className="flex justify-center items-center">
-                        <div className="rounded-full border-[20px] border-[#F1F6F9] lg:border-[#FFFFFF] w-[155px] h-[155px] absolute z-10"></div>
-                        <div className="flex justify-center">
-                           <figure className="relative flex justify-center items-center rounded-full bg-[#E7E7E7] w-[125px] h-[125px] shadow-sm">
-                              {imageUrl && <img className="max-w-[90%] max-h-[90%]" src={URL.createObjectURL(imageUrl)} key={imageUrl} alt="imagen seleccionada" />}
-                              <div className="absolute bottom-0 left-0 flex z-20 justify-center items-center hover:cursor-pointer w-[35px] h-[35px] rounded-full bg-[#FFFFFF] border-[1px] border-[#E7E7E7]"
-                                 onClick={() => inputFile.current.click()}>
-                                 <img className="w-[25px]"
-                                    src={camera} alt="camara" />
-                              </div>
+      <>
+         <img className="z-0 fixed bg-[#1A3365] w-full h-screen lg:hidden" src={blueBg} alt="background" />
+         <section className="pt-[50px] flex flex-col w-full box-border relative h-max pb-10 lg:px-[45px] lg:gap-[24px] lg:bg-[#F1F6F9] lg:justify-center max-lg:items-center">
+            <img className="w-[50%] max-lg:hidden" src={polar} alt="Empresas Polar" />
+            <div className="w-full px-[95px]">
+               <div className="py-[50px] h-fit flex justify-center lg:bg-[#D9D9D9] rounded-lg">
+                  <img className="max-w-[45%] max-h-full rounded-[10px] max-lg:hidden" src={polarSede} alt="" />
+                  <form className="z-10 flex flex-col justify-center items-center gap-[21px] bg-[#F1F6F9] pt-[15px] pb-[25px] top-[75px] rounded-[20px] lg:rounded-[10px] lg:w-[45%] lg:bg-[#FFFFFF] max-lg:w-[312px]">
+                     <img className="w-[224px] lg:hidden" src={polar} alt="Empresas Polar" />
+                     <p className="text-[24px] border-[#E7E7E7] border-b-[1px] text-center pb-[15px] w-full max-lg:hidden">Registro</p>
+                     <div className="frame flex flex-col gap-[15px] px-[44px] w-full">
+                        <div className="flex justify-center items-center">
+                           <div className="rounded-full border-[20px] border-[#F1F6F9] lg:border-[#FFFFFF] w-[155px] h-[155px] absolute z-10"></div>
+                           <div className="flex justify-center">
+                              <figure className="relative flex justify-center items-center rounded-full bg-[#E7E7E7] w-[125px] h-[125px] shadow-sm">
+                                 {imageUrl && <img className="max-w-[90%] max-h-[90%]" src={URL.createObjectURL(imageUrl)} key={imageUrl} alt="imagen seleccionada" />}
+                                 <div className="absolute bottom-0 left-0 flex z-20 justify-center items-center hover:cursor-pointer w-[35px] h-[35px] rounded-full bg-[#FFFFFF] border-[1px] border-[#E7E7E7]"
+                                    onClick={() => inputFile.current.click()}>
+                                    <img className="w-[25px]"
+                                       src={camera} alt="camara" />
+                                 </div>
+                                 <input
+                                    title="Subir imagen"
+                                    className="hidden"
+                                    ref={inputFile}
+                                    id="image"
+                                    type="file"
+                                    name="image"
+                                    accept="image/jpeg, image/png"
+                                    onChange={handleValidation}
+                                    onClick={(e) => e.target.value = null}
+                                 />
+                              </figure>
+                           </div>
+                        </div>
+                        <div className="relative z-10 flex justify-center">
+                           <span className="error">{error.image}</span>
+                        </div>
+                        <div className="flex gap-[15px] lg:gap-[11px] max-lg:flex-col">
+                           <div className="flex flex-col gap-[15px] w-full">
+                              <label className="label text-[#394867]" htmlFor="name">Nombre:</label>
                               <input
-                                 title="Subir imagen"
-                                 className="hidden"
-                                 ref={inputFile}
-                                 id="image"
-                                 type="file"
-                                 name="image"
-                                 accept="image/jpeg, image/png"
-                                 onChange={handleValidation}
-                                 onClick={(e) => e.target.value = null}
+                                 className={`data123 ${error.name ? "border-[#DC3545]" : ""}`}
+                                 id="name"
+                                 type="text"
+                                 name="name"
+                                 value={input.name}
+                                 onChange={handleChange}
                               />
-                           </figure>
-                        </div>
-                     </div>
-                     <div className="relative z-10 flex justify-center">
-                        <span className="error">{error.image}</span>
-                     </div>
-                     <div className="flex gap-[15px] lg:gap-[11px] max-lg:flex-col">
-                        <div className="flex flex-col gap-[15px] w-full">
-                           <label className="label text-[#394867]" htmlFor="name">Nombre:</label>
-                           <input
-                              className={`data123 ${error.name ? "border-[#DC3545]" : ""}`}
-                              id="name"
-                              type="text"
-                              name="name"
-                              value={input.name}
-                              onChange={handleChange}
-                           />
-                           <div className="relative">
-                              <span className="error">{error.name}</span>
+                              <div className="relative">
+                                 <span className="error">{error.name}</span>
+                              </div>
+                           </div>
+                           <div className="flex flex-col gap-[15px] w-full">
+                              <label className="label text-[#394867]" htmlFor="lastName">Apellido:</label>
+                              <input
+                                 className={`data123 ${error.lastName ? "border-[#DC3545]" : ""}`}
+                                 id="lastName"
+                                 type="text"
+                                 name="lastName"
+                                 value={input.lastName}
+                                 onChange={handleChange}
+                              />
+                              <div className="relative">
+                                 <span className="error">{error.lastName}</span>
+                              </div>
                            </div>
                         </div>
-                        <div className="flex flex-col gap-[15px] w-full">
-                           <label className="label text-[#394867]" htmlFor="lastName">Apellido:</label>
-                           <input
-                              className={`data123 ${error.lastName ? "border-[#DC3545]" : ""}`}
-                              id="lastName"
-                              type="text"
-                              name="lastName"
-                              value={input.lastName}
-                              onChange={handleChange}
-                           />
-                           <div className="relative">
-                              <span className="error">{error.lastName}</span>
-                           </div>
+                        <label className="label text-[#394867]" htmlFor="phone">Número de teléfono:</label>
+                        <input
+                           className={`data123 ${error.phone ? "border-[#DC3545]" : ""}`}
+                           id="phone"
+                           type="tel"
+                           name="phone"
+                           value={input.phone}
+                           onChange={handleChange}
+                        />
+                        <div className="relative">
+                           <span className="error">{error.phone}</span>
                         </div>
+                        <label className="label text-[#394867]" htmlFor="email">Correo electrónico:</label>
+                        <input
+                           className={`data123 ${error.email ? "border-[#DC3545]" : ""}`}
+                           id="email"
+                           type="email"
+                           name="email"
+                           value={input.email}
+                           onChange={handleChange}
+                        />
+                        <div className="relative">
+                           <span className="error">{error.email}</span>
+                        </div>
+                        <label className="label text-[#394867]" htmlFor="password">Contraseña:</label>
+                        <input
+                           className={`data123 ${error.password ? "border-[#DC3545]" : ""}`}
+                           id="password"
+                           type="password"
+                           name="password"
+                           value={input.password}
+                           onChange={handleChange}
+                           title={"La contraseña debe contener entre 8 y 16 caracteres y al menos uno de los siguientes:\n- Mayúscula\n- Minúcula\n- Dígito\n- Un caracter especial de entre: !@#$%^&*/"}
+                        />
+                        <div className="relative">
+                           <span className="error">{error.password}</span>
+                        </div>
+                        <label className="label text-[#394867]" htmlFor="repPassword">Confirmar contraseña:</label>
+                        <input
+                           className={`data123 ${error.repPassword ? "border-[#DC3545]" : ""}`}
+                           id="repPassword"
+                           type="password"
+                           name="repPassword"
+                           value={input.repPassword}
+                           onChange={handleChange}
+                        />
+                        <div className="relative">
+                           <span className="error">{error.repPassword}</span>
+                        </div>
+                        <label className="label text-[#394867]" htmlFor="address">Dirección:</label>
+                        <textarea
+                           className={`data123 focus:h-[100px] transition-[height] duration-500 ease-in ${error.address ? "border-[#DC3545]" : ""}`}
+                           name="address"
+                           id="address"
+                           value={input.address}
+                           onChange={handleChange}
+                        >
+                        </textarea>
+                        <div className="relative">
+                           <span className="error">{error.address}</span>
+                        </div>
+                        <button className="text-[#FFFFFF] h-[50px] btn text-[20px] bg-[#3056D3] w-full rounded-[6px] disabled:opacity-50"
+                           ref={button}
+                           id="submit"
+                           onClick={handleSubmit}
+                           type="button">Registrarse
+                        </button>
+                        <p className="text-[#ADADAD] text-[16px] tracking-tight lg:text-center">¿Ya eres miembro? <Link to="/login" className="text-[#3056D3] underline">Iniciar sesión</Link></p>
                      </div>
-                     <label className="label text-[#394867]" htmlFor="phone">Número de teléfono:</label>
-                     <input
-                        className={`data123 ${error.phone ? "border-[#DC3545]" : ""}`}
-                        id="phone"
-                        type="tel"
-                        name="phone"
-                        value={input.phone}
-                        onChange={handleChange}
-                     />
-                     <div className="relative">
-                        <span className="error">{error.phone}</span>
-                     </div>
-                     <label className="label text-[#394867]" htmlFor="email">Correo electrónico:</label>
-                     <input
-                        className={`data123 ${error.email ? "border-[#DC3545]" : ""}`}
-                        id="email"
-                        type="email"
-                        name="email"
-                        value={input.email}
-                        onChange={handleChange}
-                     />
-                     <div className="relative">
-                        <span className="error">{error.email}</span>
-                     </div>
-                     <label className="label text-[#394867]" htmlFor="password">Contraseña:</label>
-                     <input
-                        className={`data123 ${error.password ? "border-[#DC3545]" : ""}`}
-                        id="password"
-                        type="password"
-                        name="password"
-                        value={input.password}
-                        onChange={handleChange}
-                        title={"La contraseña debe contener entre 8 y 16 caracteres y al menos uno de los siguientes:\n- Mayúscula\n- Minúcula\n- Dígito\n- Un caracter especial de entre: !@#$%^&*/"}
-                     />
-                     <div className="relative">
-                        <span className="error">{error.password}</span>
-                     </div>
-                     <label className="label text-[#394867]" htmlFor="repPassword">Confirmar contraseña:</label>
-                     <input
-                        className={`data123 ${error.repPassword ? "border-[#DC3545]" : ""}`}
-                        id="repPassword"
-                        type="password"
-                        name="repPassword"
-                        value={input.repPassword}
-                        onChange={handleChange}
-                     />
-                     <div className="relative">
-                        <span className="error">{error.repPassword}</span>
-                     </div>
-                     <label className="label text-[#394867]" htmlFor="address">Dirección:</label>
-                     <textarea
-                        className={`data123 focus:h-[100px] transition-[height] duration-500 ease-in ${error.address ? "border-[#DC3545]" : ""}`}
-                        name="address"
-                        id="address"
-                        value={input.address}
-                        onChange={handleChange}
-                     >
-                     </textarea>
-                     <div className="relative">
-                        <span className="error">{error.address}</span>
-                     </div>
-                     <button className="text-[#FFFFFF] h-[50px] btn text-[20px] bg-[#3056D3] w-full rounded-[6px] disabled:opacity-50"
-                        ref={button}
-                        id="submit"
-                        onClick={handleSubmit}
-                        type="button">Registrarse
-                     </button>
-                     <p className="text-[#ADADAD] text-[16px] tracking-tight lg:text-center">¿Ya eres miembro? <Link to="/login" className="text-[#3056D3] underline">Iniciar sesión</Link></p>
-                  </div>
-               </form>
+                  </form>
+               </div>
             </div>
-         </div>
-         <img className="z-0 absolute w-full h-[70%] bottom-0 lg:hidden" src={blueBg} alt="background" />
-      </section>
+         </section>
+      </>
    );
 };
 

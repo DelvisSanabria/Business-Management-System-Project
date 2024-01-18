@@ -92,7 +92,7 @@ function Products() {
    }
 
    return (
-      <section className="pt-[50px] gap-[25px] lg:gap-[50px] bg-white px-[25px] flex flex-col w-full box-border relative pb-10 lg:px-[45px] lg:justify-center">
+      <section className="pt-[50px] gap-[50px] bg-white px-[25px] flex flex-col w-full box-border relative pb-10 lg:px-[45px] lg:justify-center">
          <div className="flex relative gap-[10px] lg:justify-center lg:w-full">
             <div className="flex justify-center relative lg:border-[#E7E7E7] lg:border-[1px] bg-[#F1F6F9] w-fit h-[45px] rounded-[35px] lg:bg-[#F8FAFC] lg:rounded-[8px]">
                <div className="flex flex-col justify-center items-center lg:w-[350px]">
