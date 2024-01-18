@@ -97,6 +97,12 @@ saleRouter.patch("/", async (req, res) => {
       if (!sale) {
          return res.status(404).json({error: "Venta no encontrada"});
       }
+      if (fields.client) {
+         const Client = await User.findOne({email: fields.client});
+         if (!Client) {
+            return res.status(404).json({client: "Cliente no encontrado"});
+         }
+      }
       //SOFT Delete
       if (fields.deleted) {
          sale.deleted = fields.deleted;

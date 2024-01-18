@@ -106,7 +106,7 @@ function Cart() {
           checked: {},
           price: {},
         }));
-        navigate("/factura", { state: response.data });
+        navigate("/bill", { state: response.data });
       }
     } catch ({ name, message, response }) {
       if (response.data) {

@@ -146,9 +146,6 @@ routerUsers.post("/signup", checkEmail, async (req, res) => {
     const salt = await bcrypt.genSalt();
     const hash = await bcrypt.hash(req.body.password, salt);
     let newUser = new User({ ...req.body, password: hash });
-    if (req.file) {
-      newUser.avatar = `${domain}/images/users/${req.file.filename}`;
-    }
     await newUser.save();
     return res.status(201).json(newUser);
   } catch (error) {
@@ -164,7 +161,7 @@ routerUsers.post("/uploadImage", upload.single("image"), async (req, res) => {
       return res.status(404).json({ user: "Usuario no encontrado" });
     }
     if (req.file) {
-      user.avatar = req.file.path;
+      user.avatar = `${domain}/images/users/${req.file.filename}`;
       await user.save();
     }
     return res.status(200).json(user);

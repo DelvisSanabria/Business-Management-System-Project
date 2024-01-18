@@ -79,10 +79,9 @@ function LogIn() {
    return (
       <>
          <img className="z-0 fixed bg-[#1A3365] w-full h-screen lg:hidden" src={blueBg} alt="background" />
-         <section className="pt-[50px] h-screen flex flex-col box-border relative pb-10 lg:top-5 lg:h-[625px] lg:w-[78vw] lg:pb-0 lg:pt-0  lg:px-[45px] lg:gap-[24px] lg:bg-[#F1F6F9] lg:justify-center max-lg:items-center">
-            <img className="w-[50%] lg:hidden max-lg:hidden" src={polar} alt="Empresas Polar" />
-            <div className="w-full mb-10 px-[95px]">
-               <div className="py-[50px] mt-10 h-fit flex justify-center lg:bg-[#D9D9D9] rounded-lg">
+         <section className="pt-[50px] h-screen flex flex-col box-border relative pb-10 lg:px-[45px] lg:gap-[24px] lg:bg-[#F1F6F9] lg:justify-center max-lg:items-center">
+            <div className="w-full px-[95px]">
+               <div className="py-[50px] h-fit flex justify-center lg:bg-[#D9D9D9] rounded-lg">
                   <img className="w-[45%] max-h-full rounded-[10px] max-lg:hidden" src={polarSede} alt="" />
                   <form className="z-10 flex flex-col justify-center items-center gap-[21px] bg-[#F1F6F9] pt-[15px] pb-[25px] top-[75px] rounded-[20px] lg:rounded-[10px] lg:w-[45%] lg:bg-[#FFFFFF] max-lg:w-[312px]"
                   onSubmit={handleSubmit}>

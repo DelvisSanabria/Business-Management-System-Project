@@ -47,7 +47,7 @@ export default function Bill() {
          <span key={index} className="flex w-full gap-[15px] justify-between">
             <span className="flex flex-col">
                <span className="font-light">{name}</span>
-               <span className="font-medium text-[0.8em]">x{quantity}</span>
+               <span className="text-[#9098B1] text-[0.8em]">x{quantity}</span>
             </span>
             <span className="text-[#9098B1] text-[0.8em]">${price.toFixed(2)}</span>
          </span>
@@ -65,9 +65,9 @@ export default function Bill() {
    return (
       <>
          <img className="z-0 fixed bg-[#1A3365] w-full h-screen lg:hidden" src={blueBg} alt="background" />
-         <section className="relative bg-fixed bg-cover w-full flex flex-col gap-[25px] h-screen py-[50px] items-center">
-            <h4 className="text-[#E7E7E7] text-[20px]">Tu Factura</h4>
-            <div className="flex z-10 flex-col p-[15px] w-[80%] gap-[15px] lg:w-[50%] bg-[#F9F9F9] rounded-[12px] ">
+         <section className="relative lg:bg-[#b8bbbe] bg-fixed bg-cover w-full flex flex-col items-center lg:justify-center gap-[25px] h-screen py-[50px]">
+            <h4 className="max-lg:text-[#ececec] font-medium text-[20px]">Factura</h4>
+            <div className="flex z-10 flex-col p-[15px] w-[80%] lg:w-[40%] gap-[15px] bg-[#F9F9F9] rounded-[12px] ">
                <div className="flex justify-between items-center pb-[15px] border-b-[1px] border-[#E7E7E7] ">
                   <p>Referencia:</p>
                   <p className="font-light max-w-[50%] max-lg:overflow-x-auto">{saleData._id}</p>

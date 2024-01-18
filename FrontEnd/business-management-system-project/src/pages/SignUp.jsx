@@ -169,8 +169,7 @@ function SignUp() {
    return (
       <>
          <img className="z-0 fixed bg-[#1A3365] w-full h-screen lg:hidden" src={blueBg} alt="background" />
-         <section className="pt-[50px] flex flex-col w-full  relative h-max pb-10 lg:top-5 lg:h-[1145px] lg:w-[78vw] lg:pb-0 lg:pt-0 lg:px-[45px] lg:gap-[24px] lg:bg-[#F1F6F9] lg:justify-center max-lg:items-center">
-            <img className="w-[50%] max-lg:hidden lg:hidden" src={polar} alt="Empresas Polar" />
+         <section className="pt-[50px] flex flex-col w-full box-border relative h-max pb-10 lg:px-[45px] lg:gap-[24px] lg:bg-[#F1F6F9] lg:justify-center max-lg:items-center">
             <div className="w-full px-[95px]">
                <div className="py-[50px] h-fit flex justify-center lg:bg-[#D9D9D9] rounded-lg">
                   <img className="max-w-[45%] max-h-full rounded-[10px] max-lg:hidden" src={polarSede} alt="" />

@@ -135,7 +135,6 @@ const Settings = () => {
               isValid = false;
           }
         } else {
-          isValid = false;
         }
       }
     }
@@ -221,7 +220,7 @@ const Settings = () => {
             <div className="relative grid grid-cols-[1fr_30px]">
               <div>
                 <p className="text-[24px] select-none border-[#E7E7E7] border-b-[1px] text-center w-full">
-                  Editar Usuario
+                  Tus datos
                 </p>
               </div>
             </div>
@@ -272,7 +271,7 @@ const Settings = () => {
                 </figure>
               </div>
               <div className="relative">
-                <span className="error">{error.avatar}</span>
+                <span className="">{error.avatar}</span>
               </div>
               <div className="grid grid-cols-2 gap-2">
                 <div>
@@ -297,7 +296,7 @@ const Settings = () => {
                     onChange={handleChange}
                   />
                   <div className="relative">
-                    <span className="error text-[14px] text-red-500">
+                    <span className=" text-[14px] text-red-500">
                       {error.name}
                     </span>
                   </div>
@@ -320,7 +319,7 @@ const Settings = () => {
                     onChange={handleChange}
                   />
                   <div className="relative">
-                    <span className="error text-[14px]">{error.lastName}</span>
+                    <span className=" text-[14px]">{error.lastName}</span>
                   </div>
                 </div>
                 <div>
@@ -338,7 +337,7 @@ const Settings = () => {
                     onChange={handleChange}
                   />
                   <div className="relative">
-                    <span className="error text-[14px]">{error.phone}</span>
+                    <span className=" text-[14px]">{error.phone}</span>
                   </div>
                 </div>
                 <div>
@@ -356,7 +355,7 @@ const Settings = () => {
                     onChange={handleChange}
                   />
                   <div className="relative">
-                    <span className="error text-[14px]">{error.email}</span>
+                    <span className=" text-[14px]">{error.email}</span>
                   </div>
                 </div>
                 <div>
@@ -380,7 +379,7 @@ const Settings = () => {
                     }
                   />
                   <div className="relative">
-                    <span className="error text-[14px]">{error.password}</span>
+                    <span className=" text-[14px]">{error.password}</span>
                   </div>
                 </div>
                 <div>
@@ -401,7 +400,7 @@ const Settings = () => {
                     onChange={handleChange}
                   />
                   <div className="relative">
-                    <span className="error text-[14px]">
+                    <span className=" text-[14px]">
                       {error.repPassword}
                     </span>
                   </div>
@@ -421,7 +420,7 @@ const Settings = () => {
                   onChange={handleChange}
                 ></textarea>
                 <div className="relative">
-                  <span className="error text-[14px]">{error.address}</span>
+                  <span className=" text-[14px]">{error.address}</span>
                 </div>
               </div>
               <div>
