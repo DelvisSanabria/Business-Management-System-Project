@@ -8,7 +8,7 @@ function SaleForm() {
    const { user } = useContext(Session);
    const server = "http://localhost:3001/";
    const [sale, setSale] = useState({
-      vendor: user.role === "vendor" ? user.email : "--",
+      vendor: user && user.role === "vendor" ? user.email : "--",
       subtotal: 0,
       tax: 0,
       total: 0
