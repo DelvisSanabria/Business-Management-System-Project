@@ -37,6 +37,7 @@ function App() {
               <Route path="products" element={<Page.Products />} />
               <Route path="products/:id" element={<Page.SingleProduct />} />
               <Route path="/cart" element={<Page.Cart />} />
+              <Route path="factura" element={<Page.Bill />} />
               <Route path="productsDashboard" element={<Page.ProductsDashboard />} />
               <Route path="users" element={<Page.Users />} />
               <Route path="customers" element={<Page.Customers />} />

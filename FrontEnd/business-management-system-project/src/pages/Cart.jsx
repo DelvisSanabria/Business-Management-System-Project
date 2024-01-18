@@ -84,10 +84,6 @@ function Cart() {
     calculateTotal();
   }, [cartProducts.quantity, cartProducts.price]);
 
-  const checkOut = () => {
-    /* navigate("/cart"); */
-  };
-
   const handleSubmit = async () => {
     try {
       let sale = {};
@@ -110,6 +106,7 @@ function Cart() {
           checked: {},
           price: {},
         }));
+        navigate("/factura", { state: response.data });
       }
     } catch ({ name, message, response }) {
       if (response.data) {
@@ -358,7 +355,6 @@ function Cart() {
                 }`}
                 type="button"
                 onClick={() => {
-                  checkOut();
                   handleSubmit();
                 }}
               >

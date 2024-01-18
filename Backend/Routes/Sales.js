@@ -1,4 +1,5 @@
 const saleRouter = require("express").Router();
+const mongoose = require("mongoose");
 const Sale = require("../Models/Sales");
 const Product = require("../Models/Products");
 const User = require("../Models/Users");
@@ -41,6 +42,10 @@ saleRouter.get("/", async (req, res) => {
                ]
             };
          }
+      }
+      if (fields.id) {
+         const ObjectId = mongoose.Types.ObjectId(fields.id);
+         query = { ...query, _id: ObjectId };
       }
       const sale = await Sale.paginate(query, options);
       return res.status(200).json(sale);
