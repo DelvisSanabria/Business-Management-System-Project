@@ -65,8 +65,8 @@ export default function Bill() {
    return (
       <>
          <img className="z-0 fixed bg-[#1A3365] w-full h-screen lg:hidden" src={blueBg} alt="background" />
-         <section className="relative lg:bg-[#adb2b9] bg-fixed bg-cover w-full flex flex-col items-center lg:justify-center gap-[25px] h-screen py-[50px]">
-            <h4 className="max-lg:text-[#E7E7E7] font-medium text-[20px]">Factura</h4>
+         <section className="relative lg:bg-[#b8bbbe] bg-fixed bg-cover w-full flex flex-col items-center lg:justify-center gap-[25px] h-screen py-[50px]">
+            <h4 className="max-lg:text-[#ececec] font-medium text-[20px]">Factura</h4>
             <div className="flex z-10 flex-col p-[15px] w-[80%] lg:w-[40%] gap-[15px] bg-[#F9F9F9] rounded-[12px] ">
                <div className="flex justify-between items-center pb-[15px] border-b-[1px] border-[#E7E7E7] ">
                   <p>Referencia:</p>

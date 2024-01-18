@@ -580,7 +580,7 @@ const UsersCard = ({ isOpen,type, onClose,userEmail}) => {
                       ): (
                         <img 
                           className="h-[100px] w-[100px] rounded-full"  
-                          src={previousDates.avatar.includes("localhost") ? previousDates.avatar : `http://localhost:3001/${previousDates.avatar}`}  
+                          src={previousDates.avatar && previousDates.avatar.includes("localhost") ? previousDates.avatar : `http://localhost:3001/${previousDates.avatar}`}  
                           alt={previousDates.name} />
                       )}
                     </div>
