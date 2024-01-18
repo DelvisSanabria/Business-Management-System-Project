@@ -22,7 +22,7 @@ export default function MenuBox(){
   const defaultColor = "#637381"
   const svgs = {
     Home: <HomeSvg currentColor={activeTab === "Home" ? activeColor : (defaultColor)}/>,
-    User: <UserSvg currentColor={activeTab === "User" ? activeColor : (defaultColor)}/>,
+    Users: <UserSvg currentColor={activeTab === "User" ? activeColor : (defaultColor)}/>,
     Customers: <UserSvg currentColor={activeTab === "Customers" ? activeColor : (defaultColor)}/>,
     Vendors: <UserSvg currentColor={activeTab === "Vendors" ? activeColor : (defaultColor)}/>,
     Inventory: <ProductSvg currentColor={activeTab === "Inventory" ? activeColor : (defaultColor)}/>,
