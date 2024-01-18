@@ -107,8 +107,8 @@ function CartModal() {
                onClick={checkOut}>Ir al carrito
             </button>
             :
-            <Link className="h-[40px] flex justify-center items-center text-[#FFFFFF] btn text-[18px] bg-[#3056D3] w-full rounded-[6px]" to="/signup">
-               Regístrate
+            <Link className="h-[40px] flex justify-center items-center text-[#FFFFFF] btn text-[18px] bg-[#3056D3] w-full rounded-[6px]" to="/login">
+               Iniciar Sesión
             </Link>
          }
       </form>
