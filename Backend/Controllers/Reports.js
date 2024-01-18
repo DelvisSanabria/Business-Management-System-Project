@@ -105,6 +105,7 @@ reportsRouter.get("/sellersReportMonthly", async (req, res) => {
               { $eq: [{ $month: { $toDate: "$createdAt" } }, monthValue] },
             ],
           },
+          vendor: { $ne: "--" }
         },
       },
       {
