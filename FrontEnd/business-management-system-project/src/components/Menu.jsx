@@ -380,7 +380,7 @@ export default function Menu () {
                   <div className="grid grid-cols-[29px_1fr] gap-2 my-3 mx-7 items-center justify-center w-[220px]">
                     <Link to="/settings">
                       {user && logedImg && logedImg !== "" ? (
-                        <img className="w-[29px] h-[29px] rounded-full" src={`http://localhost:3001/${logedImg}`} alt={user && user.name}/>
+                        <img className="w-[29px] h-[29px] rounded-full" src={logedImg} alt={user && user.name}/>
                       ): (<AccountSvg></AccountSvg>)}
                     </Link>
                     <div>
