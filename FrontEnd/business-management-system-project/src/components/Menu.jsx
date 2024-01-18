@@ -173,7 +173,42 @@ export default function Menu () {
     }
   };
 
-  useEffect(()=>{
+   //si no funciona borras esta funcion
+   const determineMenuItems = () => {
+    if (user) {
+      setIsLogged(true);
+      setUserRole(user.role);
+
+      switch (userRole) {
+        case "admin":
+          setMenuItems(adminPages);
+          break;
+        case "vendor":
+          setMenuItems(vendorsPages);
+          break;
+        case "client":
+          setMenuItems(clientsPages);
+          break;
+        default:
+          setMenuItems(generalMenu);
+      }
+
+      setSessionItem("Cerrar Sesion");
+      setSessionName("Logout");
+    } else {
+      setMenuItems(generalMenu);
+      setSessionItem("Iniciar Sesion");
+      setSessionName("Login");
+    }
+  };
+
+//y este Effect
+  useEffect(() => {
+    determineMenuItems();
+  }, [user, isLogged]);
+
+//Y descomentas todo esto, en ambos menu y menuBox
+  /* useEffect(()=>{
     if(user){
       setIsLogged(true)
       setUserRole(user.role);
@@ -198,7 +233,8 @@ export default function Menu () {
       setSessionName("Login");
     }
 
-  }, [user,isLogged])
+  }, [user,isLogged]) */
+
 
   useEffect(() => {
     if (user) {
@@ -343,8 +379,8 @@ export default function Menu () {
                 <div className="w-[259px] h-[80px]">
                   <div className="grid grid-cols-[29px_1fr] gap-2 my-3 mx-7 items-center justify-center w-[220px]">
                     <Link to="/settings">
-                      {user && user.avatar ? (
-                        <img className="w-[29px] h-[29px] rounded-full" src={logedImg} alt={user.name}/>
+                      {user && logedImg && logedImg !== "" ? (
+                        <img className="w-[29px] h-[29px] rounded-full" src={`http://localhost:3001/${logedImg}`} alt={user && user.name}/>
                       ): (<AccountSvg></AccountSvg>)}
                     </Link>
                     <div>

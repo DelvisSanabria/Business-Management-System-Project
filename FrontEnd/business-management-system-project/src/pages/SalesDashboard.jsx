@@ -52,7 +52,9 @@ function SalesDashboard() {
             setPagination({totalPages, totalDocs, hasPrevPage, hasNextPage, prevPage, nextPage, page});
          }
       } catch ({name, message}) {
-         console.error(`${name}: ${message}`);
+         if(name, message){
+            console.error(`${name}: ${message}`);
+         }
       }
    };
 
@@ -122,7 +124,7 @@ function SalesDashboard() {
                   <h1 className="font-medium text-[18px]">Tabla de Ventas</h1>
                   <h4 className="flex items-center font-medium text-[12px] text-[#3056D3] bg-[#F9F5FF] rounded-full p-[10px] h-[22px]">{pagination.totalDocs > 0 ? (pagination.totalDocs === 1 ? `${pagination.totalDocs} venta` : `${pagination.totalDocs} ventas`) : "No hay ventas"}</h4>
                </div>
-               <p className="text-[14px] text-[#667085]">{`${user.role === "vendor" ? "Lista de todas tus ventas" : "Lista de todas las ventas realizadas"}`}</p>
+               <p className="text-[14px] text-[#667085]">{`${ user && user.role === "vendor" ? "Lista de todas tus ventas" : "Lista de todas las ventas realizadas"}`}</p>
             </div>
             <div className="flex justify-between lg:w-[60%]">
                <div className="flex justify-center lg:border-[#E7E7E7] lg:border-[1px] bg-[#F1F6F9] h-[45px] rounded-[35px] lg:bg-[#F8FAFC] lg:rounded-[8px]">
@@ -165,7 +167,7 @@ function SalesDashboard() {
          </dialog>
          <section id="productsDashboard" className="flex flex-col lg:w-full items-center bg-[#F1F6F9] rounded-[20px] lg:mt-[75px]">
             <div className="flex font-medium justify-between px-[12px] gap-[25px] w-full max-lg:hidden">
-               {user.role !== "vendor" && <p className="text-[#667085] w-full">Vendedor</p>}
+               {user && user.role !== "vendor" && <p className="text-[#667085] w-full">Vendedor</p>}
                <p className="text-[#667085] w-full">Cliente</p>
                <p className="text-[#667085] w-full">Hora y Fecha</p>
                <p className="text-[#667085] w-full">I.V.A. (16%)</p>
