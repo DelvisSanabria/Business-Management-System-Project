@@ -1,7 +1,7 @@
 /* eslint-disable react/prop-types */
 import { useEffect, useState,useRef,useContext } from "react";
 import axios from "axios";
-import {camera} from "../components/exportsImports";
+import {camera, userIco} from "../components/exportsImports";
 import {Session} from "../Session/session";
 
 
@@ -255,8 +255,8 @@ const Settings = () => {
                     ) : (
                       <img
                         className="h-[100px] w-[100px] rounded-full"
-                        src={previousDates.avatar}
-                        alt={previousDates.name}
+                        src={previousDates && previousDates.avatar ? previousDates.avatar : userIco}
+                        alt={previousDates && previousDates.name ? previousDates.name : "avatar"}
                       />
                     )}
                   </div>
@@ -284,7 +284,7 @@ const Settings = () => {
                     id="role"
                     type="text"
                     name="role"
-                    value={user.role}
+                    value={user && user.role ? user.role : ""}
                   />
                   <input
                     className={`data outline-none px-3 py-1 border w-[160px] border-[#394867] rounded-[5px] ${
@@ -292,7 +292,7 @@ const Settings = () => {
                     }`}
                     id="name"
                     type="text"
-                    placeholder={previousDates.name}
+                    placeholder={previousDates && previousDates.name ? previousDates.name : "nombre de usuario"}
                     name="name"
                     onChange={handleChange}
                   />
@@ -316,7 +316,7 @@ const Settings = () => {
                     id="lastName"
                     type="text"
                     name="lastName"
-                    placeholder={previousDates.lastName}
+                    placeholder={previousDates && previousDates.lastName ? previousDates.lastName : "apellidos"}
                     onChange={handleChange}
                   />
                   <div className="relative">
@@ -334,7 +334,7 @@ const Settings = () => {
                     id="phone"
                     type="tel"
                     name="phone"
-                    placeholder={previousDates.phone}
+                    placeholder={previousDates && previousDates.phone ? previousDates.phone : "telefono"}
                     onChange={handleChange}
                   />
                   <div className="relative">
@@ -352,7 +352,7 @@ const Settings = () => {
                     id="email"
                     type="email"
                     name="email"
-                    placeholder={previousDates.email}
+                    placeholder={previousDates &&previousDates.email ? previousDates.email : "email"}
                     onChange={handleChange}
                   />
                   <div className="relative">
@@ -373,7 +373,7 @@ const Settings = () => {
                     id="password"
                     type="password"
                     name="password"
-                    placeholder={previousDates.password}
+                    placeholder={previousDates && previousDates.password ? previousDates.password : "contraseña"}
                     onChange={handleChange}
                     title={
                       "La contraseña debe contener entre 8 y 16 caracteres y al menos uno de los siguientes:\n- Mayúscula\n- Minúcula\n- Dígito\n- Un caracter especial de entre: !@#$%^&*/"
@@ -397,7 +397,7 @@ const Settings = () => {
                     id="repPassword"
                     type="password"
                     name="repPassword"
-                    placeholder={previousDates.password}
+                    placeholder={previousDates && previousDates.password ? previousDates.password : "contraseña"}
                     onChange={handleChange}
                   />
                   <div className="relative">
@@ -417,7 +417,7 @@ const Settings = () => {
                   }`}
                   name="address"
                   id="address"
-                  placeholder={previousDates.address}
+                  placeholder={ previousDates && previousDates.address ? previousDates.address : "dirección"}
                   onChange={handleChange}
                 ></textarea>
                 <div className="relative">

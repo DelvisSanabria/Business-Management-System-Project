@@ -556,7 +556,11 @@ const ClientsCard = ({ isOpen,type, onClose,clientEmail}) => {
                       {image ? (
                         <img className="h-[100px] w-[100px] rounded-full" src={URL.createObjectURL(image)} alt="avatar" />
                       ): (
-                        <img className="h-[100px] w-[100px] rounded-full"  src={previousDates.avatar} alt={previousDates.name} />
+                        
+                        <img
+                          className="h-[100px] w-[100px] rounded-full"
+                          src={previousDates.avatar.includes("localhost") ? previousDates.avatar : `http://localhost:3001/${previousDates.avatar}`} 
+                          alt={previousDates.name} />
                       )}
                     </div>
                     <input
