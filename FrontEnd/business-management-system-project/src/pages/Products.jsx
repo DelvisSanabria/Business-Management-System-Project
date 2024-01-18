@@ -1,14 +1,15 @@
 import React, { useState, useEffect, useRef, useContext } from "react";
 import { Link } from "react-router-dom";
-import { shoppingCart } from "../Session/session";
+import { shoppingCart, Session } from "../Session/session";
 import axios from "axios";
 import { lens, lens2, cart_black, cart_white, cart_green, CartModal } from "../components/exportsImports";
 
 function Products() {
    const server = "http://localhost:3001/";
    const [products, setProducts] = useState([]);
+   const { user } = useContext(Session);
    const { cartProducts, setCartProducts } = useContext(shoppingCart);
-   const limit = 6;
+   const limit = 8;
    const [productsRefs, setProductsRefs] = useState([]);
    const cart = useRef();
    const [src, setSrc] = useState({ lens: lens, cart: cart_white });
@@ -137,11 +138,12 @@ function Products() {
          <div id="Products" className="flex flex-col w-full items-start text-[14px] lg:text-[16px] ">
             <div className="grid grid-cols-2 lg:grid-cols-4 gap-[10px] lg:gap-[50px] lg:w-full ">
                {products && products.map((product, index) => (
-                  <div className="flex lg:justify-center relative" key={product._id}>
-                     <div className={`absolute z-10 flex justify-center items-center top-[10px] left-[15px] lg:left-[25px] rounded-full w-[40px] h-[40px] lg:w-[40px] lg:h-[40px] ${cartProducts.checked && cartProducts.checked[product._id] ? "bg-[#edfff8] border-[1px] border-[#429c5e]" : "bg-white"}`} onClick={() => productsRefs[index].current.click()}>
+                  <div className="flex bg-[#D9D9D9] rounded-[20px] lg:justify-center relative" key={product._id}>
+                     <div className={`absolute z-10 flex justify-center items-center top-[10px] left-[15px] rounded-full w-[40px] h-[40px] lg:w-[40px] lg:h-[40px] ${!user && "opacity-50"} ${cartProducts.checked && cartProducts.checked[product._id] ? "bg-[#edfff8] border-[1px] border-[#429c5e]" : "bg-white"}`} onClick={() => productsRefs[index].current.click()}>
                         <img className="w-[25px] h-[25px] lg:w-[25px] lg:h-[25px]" type="image" src={cartProducts.checked && cartProducts.checked[product._id] ? cart_green : cart_black} alt="Carrito" />
                         <input className="hidden"
                            type="checkbox"
+                           disabled={!user}
                            ref={productsRefs[index]}
                            title="Añadir al carrito"
                            checked={cartProducts.checked && (cartProducts.checked[product._id] || false)}
@@ -150,7 +152,7 @@ function Products() {
                            value={product.price}
                         />
                      </div>
-                     <Link to={`/products/${product._id}`} className="bg-[#D9D9D9] rounded-[20px] pb-[10px] w-[230px] z-0">
+                     <Link to={`/products/${product._id}`} className="pb-[10px] w-[230px] z-0">
                         <div className="relative flex justify-center items-center">
                            <img className="h-[220px] lg:max-h-[230px]" src={server + product.imageURL} alt={product.name} />
                         </div>
@@ -167,7 +169,7 @@ function Products() {
             </div>
          </div>
          <div className="flex justify-between box-border">
-            <div className="flex items-center gap-[2px] text-[#667085]">
+            <div className="flex items-center gap-[2px] text-[#515969]">
                <p>Página </p>
                <input
                   className="outline-none w-[20px] text-center"

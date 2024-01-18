@@ -15,38 +15,57 @@ const transporter = nodemailer.createTransport({
 });
 
 function randomNumber() {
-  return Math.random().toString().substring(2, 5) + Math.random().toString().substring(2, 5);
+  return Math.random().toString(36).substring(2, 5) + Math.random().toString(36).substring(2, 5);
 }
 
-let key = randomNumber();
+let keys = {};
+let newKeys = {};
+let timeout = {};
 
-emailRouter.post("/", async (req, res) => {
-
+const checkKeys = (req, _, next) => {
   const { email } = req.body;
+  if (!keys[email]) {
+    keys[email] = randomNumber();
+    newKeys[email] = keys[email]
+  } else if (newKeys[email] === keys[email]) {
+    keys[email] = randomNumber();
+    newKeys[email] = keys[email]
+  }
+  next();
+}
 
+emailRouter.post("/", checkKeys, async (req, res) => {
+  const { email } = req.body;
   const mail = {
     from: "proyectopolar2024@gmail.com",
     to: email,
     subject: "Recuperar contraseña",
-    text: key,
+    text: keys[email],
   };
 
   transporter.sendMail(mail, (error, info) => {
     if (error) {
       console.log(error);
-      return res.status(500).send("Ha ocurrido un error con el nombre: " + error);
+      return res.status(500).send("Ha ocurrido un error: " + error);
     } else {
-      res.status(200).json(email);
-      setTimeout(() => {
-        key = randomNumber();
+      if (timeout[email]) {
+        clearTimeout(timeout[email]);
+      }
+      timeout[email] = setTimeout(() => {
+        keys[email] = randomNumber();
       }, 60000 * 3);
+      res.status(200).send("Email enviado: " + info.response);
     }
   });
 })
 
 emailRouter.post("/keyValidation", async (req, res) => {
-  const { userKey } = req.body
-  if (userKey === key) {
+  const { userKey, email } = req.body
+  if (userKey === keys[email]) {
+    clearTimeout(timeout[email]);
+    delete timeout[email];
+    delete keys[email];
+    delete newKeys[email];
     return res.status(200).send("Clave correcta")
   } else {
     return res.status(400).json({userKey: "Clave de recuperación incorrecta"})

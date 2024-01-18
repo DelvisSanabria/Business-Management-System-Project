@@ -18,7 +18,7 @@ import Cart from './Cart.jsx'
 import NoPage from './NoPage.jsx'
 import SignUp from './SignUp'
 import Profile from './Profile.jsx'
-import MakeSale from './MakeSale.jsx'
+import Bill from './Bill.jsx'
 import SingleProduct from './SingleProduct'
 import SalesDashboard from './SalesDashboard.jsx'
 import ProductsDashboard from './ProductsDashboard.jsx'
@@ -41,5 +41,5 @@ export {
   NoPage,
   SignUp,
   Profile,
-  MakeSale,
+  Bill,
 }

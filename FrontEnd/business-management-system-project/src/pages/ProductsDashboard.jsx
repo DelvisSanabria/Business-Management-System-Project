@@ -180,7 +180,7 @@ function ProductsDashboard() {
             ))}
          </section>
          <div className="flex justify-between box-border">
-            <div className="flex items-center gap-[2px] text-[#667085]">
+            <div className="flex items-center gap-[2px] text-[#515969]">
                <p>Página </p>
                <input
                   className="outline-none w-[20px] text-center"

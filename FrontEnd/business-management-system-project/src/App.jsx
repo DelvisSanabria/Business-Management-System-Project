@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react'
 import './index.css'
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import * as Page from './pages/Pages';
-import { Session, shoppingCart } from './Session/session';
+import { Session, shoppingCart } from "./Session/session";
 
 
 function App() {
@@ -25,6 +25,7 @@ function App() {
   useEffect(() => {
     localStorage.setItem("user", JSON.stringify(user));
     localStorage.setItem("cart", JSON.stringify(cartProducts));
+    console.log(user, cartProducts);
   }, [user, cartProducts]);
   return (
     <BrowserRouter>
