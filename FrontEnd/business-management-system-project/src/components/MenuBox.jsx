@@ -108,7 +108,7 @@ export default function MenuBox(){
 //y este Effect
   useEffect(() => {
     determineMenuItems();
-  }, [user, isLogged]);
+  }, [user,userRole, isLogged]);
 
 //Y descomentas todo esto, en ambos menu y menuBox
   /* useEffect(()=>{

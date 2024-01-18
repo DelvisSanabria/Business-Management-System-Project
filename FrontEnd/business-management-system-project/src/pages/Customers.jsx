@@ -149,7 +149,7 @@ export default function Customers() {
               >
                 <div className="flex items-center w-[88px] m-5 h-[88px] bg-[#d9d9d9] rounded-[44px] shadow-[0px_4px_4px_#00000040]">
                   <img
-                    src={client.avatar}
+                    src={client.avatar.includes("localhost") ? client.avatar : `http://localhost:3001/${client.avatar}`}
                     alt={`${client.name}-image`}
                     className="w-[80px] h-[80px] rounded-[44px]"
                   />
@@ -325,7 +325,7 @@ export default function Customers() {
                       <td className="border-b p-2 px-5">
                         <div className="flex items-center w-[35px] m-5 h-[35px] bg-[#d9d9d9] rounded-[44px] shadow-[0px_4px_4px_#00000040]">
                           <img
-                            src={client.avatar}
+                            src={client.avatar.includes("localhost") ? client.avatar : `http://localhost:3001/${client.avatar}`}
                             alt={`${client.name}-image`}
                             className="w-[30px] h-[30px] rounded-[44px]"
                           />

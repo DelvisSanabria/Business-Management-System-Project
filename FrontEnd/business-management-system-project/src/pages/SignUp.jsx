@@ -309,6 +309,6 @@ function SignUp() {
          </section>
       </>
    );
-};
+}
 
 export default SignUp;
