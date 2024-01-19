@@ -1,8 +1,10 @@
 import EditSvg from "../components/Svgs/Edit";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import axios from "axios";
 import DeleteSvg from "../components/Svgs/Delete";
+import {Session} from "./../Session/session"
 import ClientsCard from "../components/Cards/ClientsCard";
+
 
 export default function Customers() {
   const [clients, setClients] = useState(undefined);
@@ -10,7 +12,7 @@ export default function Customers() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [clientToUp, setClientToUp] = useState("")
   const [modalType, setModalType] = useState(""); 
-
+  const {user} = useContext(Session)
 
   const openModal = async (type) => {
     setModalType(type);
@@ -98,8 +100,8 @@ export default function Customers() {
   
   return (
     <>
-      <div className="grid grid-rows-[100px_80px_1fr_80px] md:hidden">
-        <header className="flex flex-col items-start w-[88vw] my-10 mx-5">
+      <div className="grid grid-rows-[100px_80px_1fr_80px] md:w-[75vw] lg:hidden">
+        <header className="flex flex-col items-start w-[88vw] my-10 mx-5 md:w-[70vw]">
           <div className="grid grid-rows-2 justify-items-start">
             <div className="flex w-[327px] items-center gap-[8px]">
               <div className="w-fit mt-[-1.00px] font-medium text-gray-900 text-[18px] tracking-[0] leading-[28px] whitespace-nowrap">
@@ -132,7 +134,7 @@ export default function Customers() {
             </div>
           </div>
         </div>
-        <div className="w-[97%] h-[70vh] mx-3 rounded-[20px_20px_0px_0px] overflow-auto ">
+        <div className="w-[97%] h-[70vh] mx-3 rounded-[20px_20px_0px_0px] overflow-auto md:w-[90vw]">
           {clients &&
             clients.users.map((client, index) => (
               <div
@@ -149,7 +151,11 @@ export default function Customers() {
               >
                 <div className="flex items-center w-[88px] m-5 h-[88px] bg-[#d9d9d9] rounded-[44px] shadow-[0px_4px_4px_#00000040]">
                   <img
-                    src={client.avatar.includes("localhost") ? client.avatar : `http://localhost:3001/${client.avatar}`}
+                    src={
+                      client.avatar.includes("localhost")
+                        ? client.avatar
+                        : `http://localhost:3001/${client.avatar}`
+                    }
                     alt={`${client.name}-image`}
                     className="w-[80px] h-[80px] rounded-[44px]"
                   />
@@ -204,19 +210,21 @@ export default function Customers() {
                       }}
                     />
                   </div>
-                  <div>
-                    <DeleteSvg
-                      onClick={() => {
-                        deleteClient(client.email);
-                      }}
-                    />
-                  </div>
+                  {user && user.role === "admin" && (
+                    <div>
+                      <DeleteSvg
+                        onClick={() => {
+                          deleteClient(client.email);
+                        }}
+                      />
+                    </div>
+                  )}
                 </div>
                 <div className="h-[2px] bg-[#667085]"></div>
               </div>
             ))}
         </div>
-        <div className="grid grid-cols-2 mt-5 items-center">
+        <div className="grid grid-cols-2 mt-5 items-center md:grid md:grid-cols-[2.5fr_1fr]">
           <div className="w-[100px] h-[31px] py-3 font-semibold text-[#667085] text-[15px] text-center tracking-[0] leading-[15px]">
             <span>Página {clients ? clients.page : ""}</span>
           </div>
@@ -252,9 +260,9 @@ export default function Customers() {
           </div>
         </div>
       </div>
-      <div className="hidden md:block">
-        <div className="grid grid-rows-[100px_1fr_80px]">
-          <header className="grid grid-cols-2 gap-2 my-10 mx-5">
+      <div className="hidden lg:block lg:w-[70vw] xl:w-[80vw]">
+        <div className="grid grid-rows-[100px_1fr_80px] lg:w-[70vw]">
+          <header className="grid grid-cols-2 gap-2 my-10 mx-5 w-[70vw] xl:w-[80vw]">
             <div className="grid grid-rows-2 justify-items-start">
               <div className="flex w-[327px] items-center gap-[8px]">
                 <div className="w-fit mt-[-1.00px] font-medium text-gray-900 text-[18px] tracking-[0] leading-[28px] whitespace-nowrap">
@@ -280,7 +288,7 @@ export default function Customers() {
                       openModal("createClient");
                     }}
                     className="text-[13px] mb-1 text-white grid grid-cols-[20px_1fr]"
-                  > 
+                  >
                     <span className="mr-2">+</span>
                     <span>Agregar Cliente</span>
                   </button>
@@ -288,8 +296,8 @@ export default function Customers() {
               </div>
             </div>
           </header>
-          <div className="mt-10">
-            <table className="w-[80vw] border-b-2">
+          <div className="w-[70vw] mt-10">
+            <table className="w-[70vw] border-b-2 xl:w-[80vw]">
               <thead>
                 <tr className="text-[#637381]">
                   <th className="border-b-2 border-gray-200 bg-gray-50 p-2">
@@ -325,7 +333,11 @@ export default function Customers() {
                       <td className="border-b p-2 px-5">
                         <div className="flex items-center w-[35px] m-5 h-[35px] bg-[#d9d9d9] rounded-[44px] shadow-[0px_4px_4px_#00000040]">
                           <img
-                            src={client.avatar.includes("localhost") ? client.avatar : `http://localhost:3001/${client.avatar}`}
+                            src={
+                              client.avatar.includes("localhost")
+                                ? client.avatar
+                                : `http://localhost:3001/${client.avatar}`
+                            }
                             alt={`${client.name}-image`}
                             className="w-[30px] h-[30px] rounded-[44px]"
                           />
@@ -347,13 +359,15 @@ export default function Customers() {
                               }}
                             />
                           </div>
-                          <div>
-                            <DeleteSvg
-                              onClick={() => {
-                                deleteClient(client.email);
-                              }}
-                            />
-                          </div>
+                          {user && user.role === "admin" && (
+                            <div>
+                              <DeleteSvg
+                                onClick={() => {
+                                  deleteClient(client.email);
+                                }}
+                              />
+                            </div>
+                          )}
                         </div>
                       </td>
                     </tr>
@@ -361,11 +375,11 @@ export default function Customers() {
               </tbody>
             </table>
           </div>
-          <div className="grid grid-cols-2 mt-5 items-between">
+          <div className="grid grid-cols-[4fr_2fr] w-[70vw] mt-5 items-between xl:grid xl:grid-cols-2 xl:w-[81vw]">
             <div className="w-[100px] h-[31px] py-3 font-semibold text-[#667085] text-[15px] text-center tracking-[0] leading-[15px]">
               <span>Página {clients ? clients.page : ""}</span>
             </div>
-            <div className="grid grid-cols-[100px_100px] mx-10 px-10 lg:mx-36 lg:px-36">
+            <div className="grid grid-cols-[100px_100px] pl-20 xl:mx-36 xl:px-36">
               <button
                 onClick={() => {
                   if (clients && clients.hasPrevPage && clients.page > 1) {
