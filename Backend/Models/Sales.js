@@ -1,55 +1,46 @@
-const mongoose = require('mongoose');
-const mongoosePaginate = require('mongoose-paginate-v2');
+const mongoose = require("mongoose");
+const mongoosePaginate = require("mongoose-paginate-v2");
+const aggregatePaginate = require("mongoose-aggregate-paginate-v2");
+
 const SaleSchema = new mongoose.Schema({
   client: {
     type: String,
-    minlength: 1,
-    maxlength: 100,
-    required: true,
+    required: true
   },
   vendor: {
     type: String,
-    minlength: 1,
-    maxlength: 100,
-    required: true,
+    required: true
   },
-  products: {
-    type: Array,
-    min: 0,
-    required: true,
+  products: [{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Product"
+  }],
+  quantity: {
+    type: Object,
+    required: true
+  },
+  subtotal: {
+    type: Number,
+    required: true
+  },
+  tax: {
+    type: Number,
+    required: true
   },
   total: {
     type: Number,
-    min: 0,
-    required: true,
-  },
-  iva: {
-    type: Number,
-    min: 0,
-    required: true,
-  },
-  createdAt: {
-    type: Date,
-    default: Date.now(),
-    required:true
-  },
-  updateAt: {
-    type: Date,
-    default: Date.now(),
-    required:true
+    required: true
   },
   deleted: {
     type: Boolean,
-    default: false,
-    required: true
+    default: false
   }
-});
+}, { timestamps: true });
 
-SaleSchema.pre('save', function (next) {
-  this.updateAt = new Date();
-  next();
-});
+SaleSchema.plugin(mongoosePaginate);
+SaleSchema.plugin(aggregatePaginate);
 
-const Sales = mongoose.model("Sale", SaleSchema);
+const Sale = mongoose.model("Sale", SaleSchema);
 
-module.exports = Sales
+module.exports = Sale;
+//cambio x

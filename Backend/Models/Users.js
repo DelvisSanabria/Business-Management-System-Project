@@ -1,22 +1,22 @@
 const mongoose = require('mongoose');
 const mongoosePaginate = require('mongoose-paginate-v2');
+const moment = require('moment');
 
 const UserSchema = new mongoose.Schema({
   avatar: {
     type: String,
-    minlength: 10,
+    minlength: 5,
     maxlength: 600,
-    required: true,
   },
   name: {
     type: String,
-    minlength: 5,
+    minlength: 3,
     maxlength: 100,
     required: true,
   },
   lastName: {
     type: String,
-    minlength: 5,
+    minlength: 3,
     maxlength: 100,
     required: true,
   },
@@ -25,6 +25,7 @@ const UserSchema = new mongoose.Schema({
     minlength: 10,
     maxlength: 100,
     required: true,
+    unique: true,
   },
   phone: {
     type: String,
@@ -52,13 +53,13 @@ const UserSchema = new mongoose.Schema({
   },
   createdAt: {
     type: Date,
-    default: Date.now(),
-    required:true
+    default: moment().format(),
+    required: true
   },
-  updateAt: {
+  updatedAt: {
     type: Date,
-    default: Date.now(),
-    required:true
+    default: moment().format(),
+    required: true
   },
   deleted: {
     type: Boolean,
@@ -68,7 +69,7 @@ const UserSchema = new mongoose.Schema({
 });
 
 UserSchema.pre('save', function (next) {
-  this.updateAt = new Date();
+  this.updateAt = moment().format();
   next();
 });
 
