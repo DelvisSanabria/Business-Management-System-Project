@@ -110,34 +110,6 @@ export default function MenuBox(){
     determineMenuItems();
   }, [user,userRole, isLogged]);
 
-//Y descomentas todo esto, en ambos menu y menuBox
-  /* useEffect(()=>{
-    if(user){
-      setIsLogged(true)
-      setUserRole(user.role);
-      setLogedImg(user.avatar);
-    }else {
-      setMenuItems(generalMenu);
-    }
-
-    if (userRole === "admin") {
-      setMenuItems(adminPages)
-    } else if (userRole === "vendor") {
-      setMenuItems(vendorsPages)
-    } else if (userRole === "client") {
-      setMenuItems(clientsPages)
-    }
-
-    if (isLogged === true) {
-      setSessionItem("Cerrar Sesion");
-      setSessionName("Logout");
-    } else {
-      setSessionItem("Iniciar Sesion");
-      setSessionName("Login");
-    }
-
-  }, [user,isLogged]) */
-
 
   const handleActive = (tab) => {
     setIsActiveTab(tab.name);

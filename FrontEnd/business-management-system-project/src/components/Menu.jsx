@@ -173,7 +173,6 @@ export default function Menu () {
     }
   };
 
-   //si no funciona borras esta funcion
    const determineMenuItems = () => {
     if (user) {
       setIsLogged(true);
@@ -202,38 +201,9 @@ export default function Menu () {
     }
   };
 
-//y este Effect
   useEffect(() => {
     determineMenuItems();
   }, [user,userRole, isLogged]);
-
-//Y descomentas todo esto, en ambos menu y menuBox
-  /* useEffect(()=>{
-    if(user){
-      setIsLogged(true)
-      setUserRole(user.role);
-      setLogedImg(user.avatar);
-    }else {
-      setMenuItems(generalMenu);
-    }
-
-    if (userRole === "admin") {
-      setMenuItems(adminPages)
-    } else if (userRole === "vendor") {
-      setMenuItems(vendorsPages)
-    } else if (userRole === "client") {
-      setMenuItems(clientsPages)
-    }
-
-    if (isLogged === true) {
-      setSessionItem("Cerrar Sesion");
-      setSessionName("Logout");
-    } else {
-      setSessionItem("Iniciar Sesion");
-      setSessionName("Login");
-    }
-
-  }, [user,isLogged]) */
 
 
   useEffect(() => {
@@ -274,7 +244,7 @@ export default function Menu () {
 
   return (
     <>
-      <div className="grid grid-rows-[73px_1fr] justify-center md:hidden lg:hidden xl:hidden">
+      <div className="grid grid-rows-[73px_1fr] justify-center lg:hidden xl:hidden">
         <header>
           <div className="fixed grid grid-cols-2 m-y-2 m-x-4 items-center justify-items-end  w-full h-[73px] top-0 left-0 bg-[#f1f6f9]">
             <div>
@@ -300,7 +270,7 @@ export default function Menu () {
           </div>
         </header>
       </div>
-      <div className="hidden md:block w-[375px] h-fit">
+      <div className="hidden lg:block w-[375px] h-fit">
         <div className="fixed w-[220px] h-[100vh] top-0 left-0 bg-white shadow-[0px_1px_4px_#0000001f]">
           <div className="flex m-4">
             <img
@@ -322,7 +292,9 @@ export default function Menu () {
                     activeTab === page.name ? "bg-[#d6dfff]" : "bg-[#FFFFFF]"
                   }`}
                 >
-                  <div className="w-[22px] px-2 h-[21px]">{svgs[page.name]}</div>
+                  <div className="w-[22px] px-2 h-[21px]">
+                    {svgs[page.name]}
+                  </div>
                   <div
                     className={`w-[55px] px-3 font-medium text-[16px] tracking-[0] leading-[24px] whitespace-nowrap ${
                       activeTab === page.name
@@ -342,62 +314,112 @@ export default function Menu () {
             </div>
             <div>
               <div className="bg-[#E7E7E7] w-[190px] h-[1px] m-4"></div>
-              {SubMenuItems.map((page) => (
-                <Link
-                  to={page.path}
-                  onClick={() => {
-                    if (page.title === "Cerrar Sesion") {
-                      logout();
-                    } else {
-                      handleActive(page);
-                    }
-                  }}
-                  key={page.name}
-                  className={`grid grid-cols-[29px_1fr_4px] items-center justify-center w-[220px] h-[35px] ${
-                    activeTab === page.name ? "bg-[#d6dfff]" : "bg-[#FFFFFF]"
-                  }`}
-                >
-                  <div className="w-[22px] px-2 h-[21px]">{svgs[page.name]}</div>
-                  <div
-                    className={`w-[55px] px-3 font-medium text-[16px] tracking-[0] leading-[24px] whitespace-nowrap ${
-                      activeTab === page.name
-                        ? "text-[#3056d3]"
-                        : "text-[#637381]"
+              {SubMenuItems.map((page) =>
+                user ? (
+                  <Link
+                    to={page.path}
+                    onClick={() => {
+                      if (page.title === "Cerrar Sesion") {
+                        logout();
+                      } else {
+                        handleActive(page);
+                      }
+                    }}
+                    key={page.name}
+                    className={`grid grid-cols-[29px_1fr_4px] items-center justify-center w-[220px] h-[35px] ${
+                      activeTab === page.name ? "bg-[#d6dfff]" : "bg-[#FFFFFF]"
                     }`}
                   >
-                    {page.title}
-                  </div>
-                  <div
-                    className={`w-[4px] h-[35px] ${
-                      activeTab === page.name ? "bg-[#3056d3]" : ""
-                    }`}
-                  />
-                </Link>
-              ))}
-              <div className="w-[255px] h-[80px]">
-              <div className="w-[255px] h-[80px]">
-                <div className="w-[259px] h-[80px]">
-                  <div className="grid grid-cols-[29px_1fr] gap-2 my-3 mx-7 items-center justify-center w-[220px]">
-                    <Link to="/settings">
-                      {user && logedImg && logedImg !== "" ? (
-                        <img 
-                          className="w-[29px] h-[29px] rounded-full"
-                          src={logedImg.includes("localhost") ? logedImg : `http://localhost:3001/${logedImg}`}
-                          alt={user && user.name}/>
-                      ): (<AccountSvg></AccountSvg>)}
-                    </Link>
-                    <div>
-                      <div className="font-medium text-[#637381] text-[13px] tracking-[0] leading-[24px] whitespace-nowrap">
-                        {user && user.name?(user.name):('Nombre de Usuario')}
+                    <div className="w-[22px] px-2 h-[21px]">
+                      {svgs[page.name]}
+                    </div>
+                    <div
+                      className={`w-[55px] px-3 font-medium text-[16px] tracking-[0] leading-[24px] whitespace-nowrap ${
+                        activeTab === page.name
+                          ? "text-[#3056d3]"
+                          : "text-[#637381]"
+                      }`}
+                    >
+                      {page.title}
+                    </div>
+                    <div
+                      className={`w-[4px] h-[35px] ${
+                        activeTab === page.name ? "bg-[#3056d3]" : ""
+                      }`}
+                    />
+                  </Link>
+                ) : (
+                  page.name !== "Settings" && (
+                    <Link
+                      to={page.path}
+                      onClick={() => {
+                        if (page.title === "Cerrar Sesion") {
+                          logout();
+                        } else {
+                          handleActive(page);
+                        }
+                      }}
+                      key={page.name}
+                      className={`grid grid-cols-[29px_1fr_4px] items-center justify-center w-[220px] h-[35px] ${
+                        activeTab === page.name
+                          ? "bg-[#d6dfff]"
+                          : "bg-[#FFFFFF]"
+                      }`}
+                    >
+                      <div className="w-[22px] px-2 h-[21px]">
+                        {svgs[page.name]}
                       </div>
-                      <div className=" font-normal text-[#637381] text-[11px] tracking-[0] leading-[20px] whitespace-nowrap">
-                      {user && user.email ?(user.email):('Correo de Usuario')}
+                      <div
+                        className={`w-[55px] px-3 font-medium text-[16px] tracking-[0] leading-[24px] whitespace-nowrap ${
+                          activeTab === page.name
+                            ? "text-[#3056d3]"
+                            : "text-[#637381]"
+                        }`}
+                      >
+                        {page.title}
+                      </div>
+                      <div
+                        className={`w-[4px] h-[35px] ${
+                          activeTab === page.name ? "bg-[#3056d3]" : ""
+                        }`}
+                      />
+                    </Link>
+                  )
+                )
+              )}
+              <div className="w-[255px] h-[80px]">
+                <div className="w-[255px] h-[80px]">
+                  <div className="w-[259px] h-[80px]">
+                    <div className="grid grid-cols-[29px_1fr] gap-2 my-3 mx-7 items-center justify-center w-[220px]">
+                      <Link to="/settings">
+                        {user && logedImg && logedImg !== "" ? (
+                          <img
+                            className="w-[29px] h-[29px] rounded-full"
+                            src={
+                              logedImg.includes("localhost")
+                                ? logedImg
+                                : `http://localhost:3001/${logedImg}`
+                            }
+                            alt={user && user.name}
+                          />
+                        ) : (
+                          <AccountSvg></AccountSvg>
+                        )}
+                      </Link>
+                      <div>
+                        <div className="font-medium text-[#637381] text-[13px] tracking-[0] leading-[24px] whitespace-nowrap">
+                          {user && user.name ? user.name : "Nombre de Usuario"}
+                        </div>
+                        <div className=" font-normal text-[#637381] text-[11px] tracking-[0] leading-[20px] whitespace-nowrap">
+                          {user && user.email
+                            ? user.email
+                            : "Correo de Usuario"}
+                        </div>
                       </div>
                     </div>
                   </div>
                 </div>
               </div>
-            </div>
             </div>
           </div>
         </div>
