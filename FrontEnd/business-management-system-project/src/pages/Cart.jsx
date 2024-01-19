@@ -235,7 +235,6 @@ function Cart() {
           }`}
           type="button"
           onClick={() => {
-            checkOut();
             handleSubmit();
           }}
         >

@@ -10,7 +10,6 @@ export default function Bill() {
    const [productData, setProductData] = useState();
    const saleData = location.state;
    const server = "http://localhost:3001/";
-   console.log(saleData);
 
    useEffect(() => {    
       const productsInfo = async () => {
@@ -29,10 +28,6 @@ export default function Bill() {
       }
       productsInfo();
    }, [saleData])
-   
-   useEffect(() => {    
-      console.log(productData);
-   }, [productData])
 
    const renderProducts = function(products, quantity) {
       let productsList = [];
