@@ -39,6 +39,6 @@ app.use("/mailsender", mailRouter);
 
 
 //puerto
-app.listen(app.get('port'), () => {
+app.listen(app.get('port'), '0.0.0.0', () => {
   console.log('server on port', app.get('port'));
 })

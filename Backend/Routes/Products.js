@@ -42,7 +42,7 @@ productRouter.get("/", async (req, res) => {
          };
       }
       if (fields.id) {
-         const ObjectId = mongoose.Types.ObjectId(fields.id);
+         const ObjectId = new mongoose.Types.ObjectId(fields.id);
          query = { ...query, _id: ObjectId };
        }
    

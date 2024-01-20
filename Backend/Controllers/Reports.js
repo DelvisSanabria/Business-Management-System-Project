@@ -14,7 +14,6 @@ reportsRouter.get("/generalDataReportPerMonth", async (req, res) => {
     const monthValue =
       typeof month !== "undefined" ? parseInt(month) : currentMonth;
 
-
     const generalDataReportPerMonth = await Sale.aggregate([
       {
         $match: {
@@ -80,12 +79,12 @@ reportsRouter.get("/generalDataReportPerMonth", async (req, res) => {
 
 reportsRouter.get("/sellersReportMonthly", async (req, res) => {
   try {
-    const { page,year, month, limit } = req.query;
+    const { page, year, month, limit } = req.query;
     const options = {
       page: parseInt(page, 10) || 1,
       limit: parseInt(limit, 10) || 6,
       sort: { createdAt: -1 },
-      customLabels: { docs: "users", totalDocs: "count" }
+      customLabels: { docs: "users", totalDocs: "count" },
     };
     const currentDate = new Date();
     const currentYear = currentDate.getFullYear();
@@ -105,7 +104,7 @@ reportsRouter.get("/sellersReportMonthly", async (req, res) => {
               { $eq: [{ $month: { $toDate: "$createdAt" } }, monthValue] },
             ],
           },
-          vendor: { $ne: "--" }
+          vendor: { $ne: "--" },
         },
       },
       {
@@ -121,7 +120,7 @@ reportsRouter.get("/sellersReportMonthly", async (req, res) => {
           totalSales: 1,
         },
       },
-    ])
+    ]);
     let result = await Sale.aggregatePaginate(totalSalesVendors, options);
 
     res.status(200).json(result);
@@ -231,14 +230,13 @@ reportsRouter.get("/salesPerDay", async (req, res) => {
       page: parseInt(fields.page) || 1,
       limit: parseInt(fields.limit) || 6,
     };
-
     let newAggregate = Sale.aggregate();
     if (day && month && year) {
       newAggregate
         .match({
           createdAt: {
-            $gte: new Date(Date.UTC(year, month - 1, day)),
-            $lt: new Date(Date.UTC(year, month - 1, day + 1)),
+            $gte: new Date(year, month - 1, day - 1, 20),
+            $lt: new Date(year, month - 1, day, 20),
           },
         })
         .group({
