@@ -17,11 +17,13 @@ saleRouter.get("/", async (req, res) => {
       let query = {deleted: false};
       if (fields.search) {
          const search = fields.search.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+         const dateSearch = new Date(Date.UTC(fields.search));
          query = {
             ...query,
             $or: [
                { client: { $regex: search, $options: "i" } },
                { vendor: { $regex: search, $options: "i" } },
+               { createdAt: { $eq: dateSearch } }
             ]
          };
       }
@@ -33,11 +35,13 @@ saleRouter.get("/", async (req, res) => {
          if (fields.search) {
             delete query.$or;
             const search = fields.search.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+            const dateSearch = new Date(Date.UTC(search));
             query = {
                ...query,
                vendor: fields.vendor,
                $or: [
-                  { client: { $regex: search, $options: "i" } }
+                  { client: { $regex: search, $options: "i" } },
+                  { createdAt: { $eq: dateSearch } }
                ]
             };
          }

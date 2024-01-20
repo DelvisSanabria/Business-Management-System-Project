@@ -106,7 +106,7 @@ function SalesDashboard() {
    }
 
    const validateSearch = () => {
-      const regexValue = /^[\w ]+$/;
+      const regexValue = /^[\w@.\- ]+$/;
       if (!search.value) {
          setSearch((prev) => ({...prev, error: "Ingresa un valor para buscar"}));
       } else if (!regexValue.test(search.value)) {
@@ -141,7 +141,7 @@ function SalesDashboard() {
                            }
                         }}
                      />
-                     <div className="relative w-full top-[13px]">
+                     <div className="relative w-full top-[22px]">
                         <p className="error">{search.error}</p>
                      </div>
                   </div>

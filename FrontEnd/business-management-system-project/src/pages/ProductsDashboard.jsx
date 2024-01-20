@@ -112,7 +112,7 @@ function ProductsDashboard() {
                            }
                         }}
                      />
-                     <div className="relative w-full top-[13px]">
+                     <div className="relative w-full top-[22px]">
                         <p className="error">{search.error}</p>
                      </div>
                   </div>
