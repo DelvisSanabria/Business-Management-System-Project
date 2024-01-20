@@ -136,29 +136,29 @@ function ProductsDashboard() {
             <ProductForm />
             <input type="image" className="absolute right-[5px] top-[10px] cursor-pointer w-[35px]" src={cancel} alt="Cancelar" onClick={() => {addProduct.current.close(); fetchProducts(pagination.page)} } />
          </dialog>
-         <section id="productsDashboard" className="flex flex-col lg:w-full items-center bg-[#F1F6F9] rounded-[20px] lg:mt-[75px]">
+         <section id="productsDashboard" className="flex flex-col lg:w-full items-center text-[#667085] bg-[#F1F6F9] rounded-[20px] lg:mt-[75px]">
             <div className="flex font-medium justify-around w-full max-lg:hidden">
-               <p className="text-[#667085] w-[110px] text-center ">Imagen</p>
-               <p className="text-[#667085] w-[205px]">Nombre</p>
-               <p className="text-[#667085] w-[205px]">Descripción</p>
-               <p className="text-[#667085] w-[205px]">Categoría</p>
-               <p className="text-[#667085] w-[205px]">Precio Unitario</p>
-               <p className="text-[#667085] w-[205px]">Inventario</p>
-               <p className="text-[#667085] w-[66px] ">Acciones</p>
+               <p className="w-[7%] text-center ">Imagen</p>
+               <p className="w-[14%]">Nombre</p>
+               <p className="w-[14%]">Descripción</p>
+               <p className="w-[14%]">Categoría</p>
+               <p className="w-[14%]">Precio Unitario</p>
+               <p className="w-[14%]">Inventario</p>
+               <p className="w-[66px] ">Acciones</p>
             </div>
             {products && products.map((product, index) => (
-               <div className={`flex w-full justify-between border-y-[1px] lg:gap-[25px] border-[#EAECF0] p-[12px] box-border h-[130px] ${index === 0 && "max-lg:rounded-t-[20px]"} ${index === products.length - 1 && "rounded-b-[20px]"}`} key={product._id}>
+               <div className={`flex w-full justify-between border-y-[1px] lg:gap-[25px] lg:bg-white border-[#EAECF0] p-[12px] box-border h-[130px] ${index === 0 && "max-lg:rounded-t-[20px]"} ${index === products.length - 1 && "rounded-b-[20px]"}`} key={product._id}>
                   <div className="flex flex-col justify-center items-center">
                      <figure className="relative flex justify-center items-center rounded-full bg-[#E7E7E7] w-[88px] h-[88px] shadow-sm">
                         <img className="w-[50px]" src={server + product.imageURL} alt={product.name} />
                      </figure>
                   </div>
                   <div className="flex gap-[10px] lg:w-full">
-                     <div className="flex flex-col justify-between lg:hidden">
-                        <p className="text-[#667085] text-right">Nombre:</p>
-                        <p className="text-[#667085] text-right">Categoría:</p>
-                        <p className="text-[#667085] text-right">Precio Unitario:</p>
-                        <p className="text-[#667085] text-right">Inventario:</p>
+                     <div className="flex flex-col font-medium justify-between lg:hidden">
+                        <p className="text-right">Nombre:</p>
+                        <p className="text-right">Categoría:</p>
+                        <p className="text-right">Precio Und.:</p>
+                        <p className="text-right">Inventario:</p>
                      </div>
                      <div className="flex lg:items-center max-lg:flex-col max-lg:max-w-[165px] lg:gap-[25px] justify-between text-[14px] lg:w-full">
                         <p className="text-left overflow-x-auto max-lg:whitespace-nowrap max-lg:max-w-[78px] lg:w-full">{product.name}</p>

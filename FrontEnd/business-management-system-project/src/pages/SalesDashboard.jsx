@@ -165,34 +165,34 @@ function SalesDashboard() {
             <SaleForm />
             <input type="image" className="absolute right-[5px] top-[10px] cursor-pointer w-[35px]" src={cancel} alt="Cancelar" onClick={() => {addSale.current.close(); fetchSales(pagination.page)} } />
          </dialog>
-         <section id="productsDashboard" className="flex flex-col lg:w-full items-center bg-[#F1F6F9] rounded-[20px] lg:mt-[75px]">
+         <section id="productsDashboard" className="flex text-[#667085] flex-col lg:w-full items-center bg-[#F1F6F9] rounded-[20px] lg:mt-[75px]">
             <div className="flex font-medium justify-between px-[12px] gap-[25px] w-full max-lg:hidden">
-               {user && user.role !== "vendor" && <p className="text-[#667085] w-full">Vendedor</p>}
-               <p className="text-[#667085] w-full">Cliente</p>
-               <p className="text-[#667085] w-full">Hora y Fecha</p>
-               <p className="text-[#667085] w-full">I.V.A. (16%)</p>
-               <p className="text-[#667085] w-full">Total</p>
-               <p className="text-[#667085] w-full">Productos</p>
-               <p className="text-[#667085]">Acciones</p>
+               {user && user.role !== "vendor" && <p className="w-full">Vendedor</p>}
+               <p className="w-full">Cliente</p>
+               <p className="w-full">Hora y Fecha</p>
+               <p className="w-full">I.V.A. (16%)</p>
+               <p className="w-full">Total</p>
+               <p className="w-full">Productos</p>
+               <p className="">Acciones</p>
             </div>
             {sales && sales.map((sale, index) => (
-               <div className={`flex w-full justify-between border-y-[1px] lg:gap-[25px] border-[#EAECF0] p-[12px] box-border lg:h-[130px] ${index === 0 && "max-lg:rounded-t-[20px]"} ${index === sales.length - 1 && "rounded-b-[20px]"}`} key={sale._id}>
+               <div className={`flex w-full justify-between border-y-[1px] lg:gap-[25px] lg:bg-white border-[#EAECF0] p-[12px] box-border lg:h-[130px] ${index === 0 && "max-lg:rounded-t-[20px]"} ${index === sales.length - 1 && "rounded-b-[20px]"}`} key={sale._id}>
                   <div className="flex gap-[10px] lg:w-full">
-                     <div className="flex flex-col justify-between h-fit lg:hidden">
-                        {user.role !== "vendor" && <p className="text-[#667085] text-right h-[24px]">Vendedor:</p>}
-                        <p className="text-[#667085] text-right h-[24px]">Cliente:</p>
-                        <p className="text-[#667085] text-right h-[24px]">Hora y Fecha:</p>
-                        <p className="text-[#667085] text-right h-[24px]">I.V.A. (16%):</p>
-                        <p className="text-[#667085] text-right h-[24px]">Total:</p>
-                        <p className="text-[#667085] text-right h-[24px]">Productos:</p>
+                     <div className="flex flex-col font-medium justify-between h-fit lg:hidden">
+                        {user.role !== "vendor" && <p className="text-right h-[24px]">Vendedor:</p>}
+                        <p className="text-right h-[24px]">Cliente:</p>
+                        <p className="text-right h-[24px]">Hora y Fecha:</p>
+                        <p className="text-right h-[24px]">I.V.A. (16%):</p>
+                        <p className="text-right h-[24px]">Total:</p>
+                        <p className="text-right h-[24px]">Productos:</p>
                      </div>
                      <div className="flex lg:items-center max-lg:flex-col max-lg:max-w-[165px] lg:gap-[25px] justify-between text-[14px] lg:w-full">
-                        {user.role !== "vendor" && <p className="text-left overflow-x-auto max-lg:whitespace-nowrap w-full h-[24px]">{sale.vendor}</p>}
-                        <p className="text-left max-lg:overflow-x-auto max-lg:whitespace-nowrap w-full h-[24px]">{sale.client}</p>
-                        <p className="text-left max-lg:overflow-x-auto max-lg:whitespace-nowrap w-full h-[24px]">{sale.createdAt && renderTime(sale.createdAt)}</p>
-                        <p className="text-left max-lg:overflow-x-auto max-lg:whitespace-nowrap w-full h-[24px]">${sale.tax && sale.tax.toFixed(2)}</p>
-                        <p className="text-left max-lg:overflow-x-auto max-lg:whitespace-nowrap w-full h-[24px]">${sale.total && sale.total.toFixed(2)}</p>
-                        <p className="text-left max-lg:overflow-x-auto lg:overflow-y-auto max-lg:whitespace-nowrap lg:gap-[5px] w-full flex flex-col lg:max-h-full">{sale.products && sale.quantity && renderProducts(sale.products, sale.quantity)}</p>
+                        {user.role !== "vendor" && <p className="text-left overflow-x-auto whitespace-nowrap w-full max-lg:h-[24px]">{sale.vendor}</p>}
+                        <p className="text-left overflow-x-auto whitespace-nowrap w-full max-lg:h-[24px]">{sale.client}</p>
+                        <p className="text-left overflow-x-auto whitespace-nowrap w-full h-[24px]">{sale.createdAt && renderTime(sale.createdAt)}</p>
+                        <p className="text-left w-full">${sale.tax && sale.tax.toFixed(2)}</p>
+                        <p className="text-left w-full">${sale.total && sale.total.toFixed(2)}</p>
+                        <p className="text-left overflow-x-auto lg:overflow-y-auto whitespace-nowrap w-full flex flex-col lg:max-h-full">{sale.products && sale.quantity && renderProducts(sale.products, sale.quantity)}</p>
                      </div>
                   </div>
                   <div className="flex max-lg:flex-col max-lg:w-[25px] justify-center gap-[25px]">
