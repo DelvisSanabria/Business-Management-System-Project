@@ -20,7 +20,7 @@ const ExportMonthReport = ({ ReportData,month,year }) => {
       A: ReportData.totalSales,
       B: ReportData.bestSeller.name,
       C: ReportData.bestCustomer.name,
-      D: ReportData.bestSellingProduct.name,
+      D: ReportData.bestSellingProduct.ProductName,
     });
 
     const dataFinal = [...titulo, ...tabla];

@@ -128,7 +128,11 @@ export default function SingleProduct (){
                   <div className="bg-[#b3b9c5] w-[250px] my-3 py-2 h-[360px] rounded-[20px] p-2">
                     <img
                       className="w-[230px]"
-                      src={productDates.imageURL}
+                      src={
+                        productDates.imageURL.includes("localhost")
+                          ? productDates.imageURL
+                          : `http://localhost:3001/${productDates.imageURL}`
+                      }
                       alt={productDates.name}
                     />
                   </div>
@@ -139,21 +143,33 @@ export default function SingleProduct (){
                     <div className="bg-[#b3b9c5] w-[110px] h-[117px] rounded-[20px] p-2">
                       <img
                         className="w-[150px] h-[100%]"
-                        src={productDates.imageURL}
+                        src={
+                          productDates.imageURL.includes("localhost")
+                            ? productDates.imageURL
+                            : `http://localhost:3001/${productDates.imageURL}`
+                        }
                         alt={productDates.name}
                       />
                     </div>
                     <div className="bg-[#b3b9c5] w-[110px] h-[117px] rounded-[20px] p-2">
                       <img
                         className="w-[150px] h-[100%]"
-                        src={productDates.imageURL}
+                        src={
+                          productDates.imageURL.includes("localhost")
+                            ? productDates.imageURL
+                            : `http://localhost:3001/${productDates.imageURL}`
+                        }
                         alt={productDates.name}
                       />
                     </div>
                     <div className="bg-[#b3b9c5] w-[110px] h-[117px] rounded-[20px] p-2">
                       <img
                         className="w-[150px] h-[100%]"
-                        src={productDates.imageURL}
+                        src={
+                          productDates.imageURL.includes("localhost")
+                            ? productDates.imageURL
+                            : `http://localhost:3001/${productDates.imageURL}`
+                        }
                         alt={productDates.name}
                       />
                     </div>
@@ -221,7 +237,11 @@ export default function SingleProduct (){
                 <div className="bg-[#b3b9c5] flex justify-center w-[400px] my-3 py-2 h-[400px] rounded-[20px] p-2">
                   <img
                     className="w-[230px]"
-                    src={productDates.imageURL}
+                    src={
+                      productDates.imageURL.includes("localhost")
+                        ? productDates.imageURL
+                        : `http://localhost:3001/${productDates.imageURL}`
+                    }
                     alt={productDates.name}
                   />
                 </div>
@@ -231,21 +251,33 @@ export default function SingleProduct (){
                   <div className="bg-[#b3b9c5] w-[110px] h-[117px] rounded-[20px] p-2">
                     <img
                       className="w-[150px] h-[100%]"
-                      src={productDates.imageURL}
+                      src={
+                        productDates.imageURL.includes("localhost")
+                          ? productDates.imageURL
+                          : `http://localhost:3001/${productDates.imageURL}`
+                      }
                       alt={productDates.name}
                     />
                   </div>
                   <div className="bg-[#b3b9c5] w-[110px] h-[117px] rounded-[20px] p-2">
                     <img
                       className="w-[150px] h-[100%]"
-                      src={productDates.imageURL}
+                      src={
+                        productDates.imageURL.includes("localhost")
+                          ? productDates.imageURL
+                          : `http://localhost:3001/${productDates.imageURL}`
+                      }
                       alt={productDates.name}
                     />
                   </div>
                   <div className="bg-[#b3b9c5] w-[110px] h-[117px] rounded-[20px] p-2">
                     <img
                       className="w-[150px] h-[100%]"
-                      src={productDates.imageURL}
+                      src={
+                        productDates.imageURL.includes("localhost")
+                          ? productDates.imageURL
+                          : `http://localhost:3001/${productDates.imageURL}`
+                      }
                       alt={productDates.name}
                     />
                   </div>
