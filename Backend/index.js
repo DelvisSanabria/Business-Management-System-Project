@@ -10,7 +10,7 @@ const mailRouter = require("./Controllers/EmailSender");
 const corsOptions = {
   origin: "*",
   optionsSuccessStatus: 200,
-  methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
+  methods: "GET,PATCH,POST,DELETE",
   allowedHeaders: ["Content-Type", "Authorization"]
 };
 
