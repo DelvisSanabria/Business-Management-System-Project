@@ -16,7 +16,7 @@ function ProductsDashboard() {
    const limit = 6;
    const addProduct = useRef(null);
    const [productsRefs, setProductsRefs] = useState([]);
-   
+
    useEffect(() => {
       setProductsRefs((refs) => Array(products.length).fill().map((_, index) => refs[index] || React.createRef()));
    }, [products]);
@@ -28,13 +28,13 @@ function ProductsDashboard() {
    }, [search.value]);
 
    useEffect(() => {
-      const mediaQuery = window.matchMedia('(min-width: 1440px)');
+      const mediaQuery = window.matchMedia('(min-width: 1024px)');
       function handleResize() {
-      if (mediaQuery.matches) {
-         setLensSrc(lens2);
-      } else {
-         setLensSrc(lens);
-      }
+         if (mediaQuery.matches) {
+            setLensSrc(lens2);
+         } else {
+            setLensSrc(lens);
+         }
       }
       handleResize();
       mediaQuery.addEventListener("change", handleResize);
@@ -50,9 +50,9 @@ function ProductsDashboard() {
          if (response.status === 200) {
             const { docs, totalPages, totalDocs, hasPrevPage, hasNextPage, prevPage, nextPage, page } = response.data;
             setProducts([...docs]);
-            setPagination({totalPages, totalDocs, hasPrevPage, hasNextPage, prevPage, nextPage, page});
+            setPagination({ totalPages, totalDocs, hasPrevPage, hasNextPage, prevPage, nextPage, page });
          }
-      } catch ({name, message}) {
+      } catch ({ name, message }) {
          console.error(`${name}: ${message}`);
       }
    };
@@ -71,7 +71,7 @@ function ProductsDashboard() {
          if (response.status === 200) {
             fetchProducts(pagination.page);
          }
-      } catch ({name, message}) {
+      } catch ({ name, message }) {
          console.error(`${name}: ${message}`);
       }
    }
@@ -79,11 +79,11 @@ function ProductsDashboard() {
    const validateSearch = () => {
       const regexValue = /^[\w ]+$/;
       if (!search.value) {
-         setSearch((prev) => ({...prev, error: "Ingresa un valor para buscar"}));
+         setSearch((prev) => ({ ...prev, error: "Ingresa un valor para buscar" }));
       } else if (!regexValue.test(search.value)) {
-         setSearch((prev) => ({...prev, error: "Búsqueda inválida"}));
+         setSearch((prev) => ({ ...prev, error: "Búsqueda inválida" }));
       } else {
-         setSearch((prev) => ({...prev, error: ""}));
+         setSearch((prev) => ({ ...prev, error: "" }));
          fetchProducts();
       }
    }
@@ -105,7 +105,7 @@ function ProductsDashboard() {
                         type="text"
                         placeholder="Buscar un producto"
                         id="search"
-                        onChange={(event) => setSearch((prev) => ({...prev, value: event.target.value}))}
+                        onChange={(event) => setSearch((prev) => ({ ...prev, value: event.target.value }))}
                         onKeyDown={(event) => {
                            if (event.key === "Enter") {
                               validateSearch();
@@ -134,7 +134,7 @@ function ProductsDashboard() {
          </hgroup>
          <dialog className="dialog" ref={addProduct}>
             <ProductForm />
-            <input type="image" className="absolute right-[5px] top-[10px] cursor-pointer w-[35px]" src={cancel} alt="Cancelar" onClick={() => {addProduct.current.close(); fetchProducts(pagination.page)} } />
+            <input type="image" className="absolute right-[5px] top-[10px] cursor-pointer w-[35px]" src={cancel} alt="Cancelar" onClick={() => { addProduct.current.close(); fetchProducts(pagination.page) }} />
          </dialog>
          <section id="productsDashboard" className="flex flex-col lg:w-full items-center text-[#667085] bg-[#F1F6F9] rounded-[20px] lg:mt-[75px]">
             <div className="flex font-medium justify-around w-full max-lg:hidden">
@@ -174,7 +174,7 @@ function ProductsDashboard() {
                   </div>
                   <dialog className="dialog" ref={productsRefs[index]}>
                      <EditProduct {...product} />
-                     <input type="image" className="absolute right-[5px] top-[10px] cursor-pointer w-[35px]" src={cancel} alt="Cancelar" onClick={() => {if (productsRefs[index].current) { productsRefs[index].current.close(); fetchProducts(pagination.page)}} } />
+                     <input type="image" className="absolute right-[5px] top-[10px] cursor-pointer w-[35px]" src={cancel} alt="Cancelar" onClick={() => { if (productsRefs[index].current) { productsRefs[index].current.close(); fetchProducts(pagination.page) } }} />
                   </dialog>
                </div>
             ))}
@@ -200,15 +200,15 @@ function ProductsDashboard() {
                <p> de {pagination.totalPages}</p>
             </div>
             <div className="flex gap-[10px] text-[14px] ">
-               <button 
+               <button
                   className={`border-[1px] border-[#9BA4B4] rounded-[10px] w-[90px] h-[36px] ${pagination.hasPrevPage ? "" : "opacity-50 cursor-default"}`}
-                  onClick={() => {fetchProducts(pagination.prevPage)}}
+                  onClick={() => { fetchProducts(pagination.prevPage) }}
                >
                   Anterior
                </button>
-               <button 
+               <button
                   className="border-[1px] border-[#9BA4B4] bg-[#3056D3] rounded-[10px] text-white w-[90px] h-[36px]"
-                  onClick={() => {fetchProducts(pagination.nextPage)}}
+                  onClick={() => { fetchProducts(pagination.nextPage) }}
                >
                   Siguiente
                </button>

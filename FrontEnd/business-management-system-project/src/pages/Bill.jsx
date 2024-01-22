@@ -3,6 +3,8 @@ import { useLocation } from "react-router-dom";
 import { Session } from "../Session/session";
 import axios from "axios";
 import { blueBg } from "./../components/exportsImports";
+import PDFDocument from "../components/PDFDocument";
+import { PDFViewer } from '@react-pdf/renderer';
 
 export default function Bill() {
    const { user } = useContext(Session);
@@ -98,6 +100,9 @@ export default function Bill() {
                </div>
             </div>
          </section>
+         <PDFViewer>
+            <PDFDocument saleData={saleData} productData={productData} renderTime={renderTime} user={user} />
+         </PDFViewer>
       </>
   );
 }
