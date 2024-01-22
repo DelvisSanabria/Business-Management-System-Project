@@ -14,6 +14,7 @@ export default function DayReport() {
   const [monthReport, setMonthReport] = useState("");
   const [product, setProduct] = useState([]);
   const [productId, setProductId] = useState("");
+  const [updatedData, setUpdatedData] = useState("");
   const months = [
     { name: "Enero", value: 1 },
     { name: "Febrero", value: 2 },
@@ -63,6 +64,7 @@ export default function DayReport() {
       .then((response) => {
         const data = response.data;
         setProduct(data);
+        setUpdatedData( { ...monthReport, ProductName: product.docs[0].name });
       })
       .catch((error) => {
         console.log(error);
@@ -180,7 +182,7 @@ export default function DayReport() {
                 </div>
                 <div className="z-[94]">
                   <ExportMonthReport
-                    ReportData={monthReport}
+                    ReportData={updatedData}
                     month={selectedMonth}
                     year={selectedYear}
                   />
@@ -192,7 +194,9 @@ export default function DayReport() {
                 <Reports1Svg />
                 <div className="grid grid-rows-2 w-[200px]">
                   <span className="font-bold text-xl">
-                    ${monthReport.totalSales}k
+                    $
+                    {monthReport &&
+                      monthReport.totalSales(monthReport.totalSales.toFixed(2))}
                   </span>
                   <span className="text-[#61697b] font-semibold tracking-wide">
                     Ventas totales
@@ -243,8 +247,11 @@ export default function DayReport() {
                   <span className="text-[#61697b] font-semibold tracking-wide">
                     Producto mas Vendido:{" "}
                     <span className="text-blue-500 font-semibold text-base">
-                      {monthReport.bestSellingProduct &&
-                        monthReport.bestSellingProduct.name}
+                      {product.docs && product.docs.length > 0 ? (
+                        product.docs[0].name
+                      ) : (
+                        <span>0</span>
+                      )}
                     </span>
                   </span>
                 </div>
@@ -343,7 +350,7 @@ export default function DayReport() {
                 </div>
                 <div className="z-[94]">
                   <ExportMonthReport
-                    ReportData={monthReport}
+                    ReportData={updatedData}
                     month={selectedMonth}
                     year={selectedYear}
                   />
@@ -354,7 +361,11 @@ export default function DayReport() {
                   <Reports1Svg />
                   <div className="grid grid-rows-2 w-[100px]">
                     <span className="font-bold text-xl">
-                      ${monthReport.totalSales}k
+                      $
+                      {monthReport &&
+                        monthReport.totalSales(
+                          monthReport.totalSales.toFixed(2)
+                        )}
                     </span>
                     <span className="text-[#61697b] font-semibold tracking-wide">
                       Ventas totales

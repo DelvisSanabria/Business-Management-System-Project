@@ -93,9 +93,9 @@ export default function DayReport() {
                 <div className="grid grid-rows-2 w-[100px]">
                   <span className="font-bold text-xl">
                     {DayReport.docs && DayReport.docs.length > 0 ? (
-                      DayReport.docs[0].totalSold
+                      <span>$</span> + DayReport.docs[0].totalSold.toFixed(2)
                     ) : (
-                      <span>0</span>
+                      <span>$0</span>
                     )}
                   </span>
                   <span className="text-[#61697b] font-semibold tracking-wide">
