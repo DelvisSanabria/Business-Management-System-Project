@@ -4,7 +4,7 @@ import { Session } from "../Session/session";
 import axios from "axios";
 import { blueBg } from "./../components/exportsImports";
 import PDFDocument from "../components/PDFDocument";
-import { PDFViewer } from '@react-pdf/renderer';
+import { PDFDownloadLink } from '@react-pdf/renderer';
 
 export default function Bill() {
    const { user } = useContext(Session);
@@ -98,11 +98,22 @@ export default function Bill() {
                   <p>Total:</p>
                   <p>${saleData.total && saleData.total.toFixed(2)}</p>
                </div>
+               <div className="w-full flex justify-center items-center">
+                  <PDFDownloadLink 
+                     className="text-[20px] flex justify-center items-center bg-[#3056D3] text-[#FFFFFF] w-[60%] rounded-[6px] h-[50px]"
+                     document={<PDFDocument saleData={saleData} productData={productData} renderTime={renderTime} user={user} />}
+                     fileName="Factura_Polar.pdf" >
+                        {({ blob, url, loading, error }) => {
+                           if (!error) {
+                              return loading ? 'Cargando factura...' : 'Descargar en PDF'
+                           } else {
+                              console.log(error)
+                           }
+                        }}
+                  </PDFDownloadLink>
+               </div>
             </div>
          </section>
-         <PDFViewer>
-            <PDFDocument saleData={saleData} productData={productData} renderTime={renderTime} user={user} />
-         </PDFViewer>
       </>
   );
 }

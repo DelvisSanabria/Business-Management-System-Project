@@ -26,6 +26,7 @@ function SalesDashboard() {
          fetchSales();
       }
    }, [search.value]);
+   
    useEffect(() => {
       const mediaQuery = window.matchMedia('(min-width: 1024px)');
       function handleResize() {

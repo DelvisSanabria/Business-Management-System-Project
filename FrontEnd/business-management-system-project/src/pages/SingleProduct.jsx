@@ -55,7 +55,7 @@ export default function SingleProduct (){
 
    const handleAddToCart = () => {
     const productId = productDates._id;
-    const isInCart = cartProducts.products.includes(productId);
+    const isInCart = cartProducts && cartProducts.products.includes(productId);
   
     setCartProducts((prev) => ({
       ...prev,
@@ -129,7 +129,7 @@ export default function SingleProduct (){
                     <img
                       className="w-[230px]"
                       src={
-                        productDates.imageURL.includes("localhost")
+                        productDates.imageURL && productDates.imageURL.includes("localhost")
                           ? productDates.imageURL
                           : `http://localhost:3001/${productDates.imageURL}`
                       }
@@ -144,7 +144,7 @@ export default function SingleProduct (){
                       <img
                         className="w-[150px] h-[100%]"
                         src={
-                          productDates.imageURL.includes("localhost")
+                          productDates.imageURL && productDates.imageURL.includes("localhost")
                             ? productDates.imageURL
                             : `http://localhost:3001/${productDates.imageURL}`
                         }
@@ -155,7 +155,7 @@ export default function SingleProduct (){
                       <img
                         className="w-[150px] h-[100%]"
                         src={
-                          productDates.imageURL.includes("localhost")
+                          productDates.imageURL && productDates.imageURL.includes("localhost")
                             ? productDates.imageURL
                             : `http://localhost:3001/${productDates.imageURL}`
                         }
@@ -166,7 +166,7 @@ export default function SingleProduct (){
                       <img
                         className="w-[150px] h-[100%]"
                         src={
-                          productDates.imageURL.includes("localhost")
+                          productDates.imageURL && productDates.imageURL.includes("localhost")
                             ? productDates.imageURL
                             : `http://localhost:3001/${productDates.imageURL}`
                         }
@@ -238,7 +238,7 @@ export default function SingleProduct (){
                   <img
                     className="w-[230px]"
                     src={
-                      productDates.imageURL.includes("localhost")
+                      productDates.imageURL && productDates.imageURL.includes("localhost")
                         ? productDates.imageURL
                         : `http://localhost:3001/${productDates.imageURL}`
                     }
@@ -252,7 +252,7 @@ export default function SingleProduct (){
                     <img
                       className="w-[150px] h-[100%]"
                       src={
-                        productDates.imageURL.includes("localhost")
+                        productDates.imageURL && productDates.imageURL.includes("localhost")
                           ? productDates.imageURL
                           : `http://localhost:3001/${productDates.imageURL}`
                       }
@@ -263,7 +263,7 @@ export default function SingleProduct (){
                     <img
                       className="w-[150px] h-[100%]"
                       src={
-                        productDates.imageURL.includes("localhost")
+                        productDates.imageURL && productDates.imageURL.includes("localhost")
                           ? productDates.imageURL
                           : `http://localhost:3001/${productDates.imageURL}`
                       }
@@ -274,7 +274,7 @@ export default function SingleProduct (){
                     <img
                       className="w-[150px] h-[100%]"
                       src={
-                        productDates.imageURL.includes("localhost")
+                        productDates.imageURL && productDates.imageURL.includes("localhost")
                           ? productDates.imageURL
                           : `http://localhost:3001/${productDates.imageURL}`
                       }

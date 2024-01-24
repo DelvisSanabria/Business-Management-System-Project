@@ -195,8 +195,7 @@ export default function DayReport() {
                 <div className="grid grid-rows-2 w-[200px]">
                   <span className="font-bold text-xl">
                     $
-                    {monthReport &&
-                      monthReport.totalSales(monthReport.totalSales.toFixed(2))}
+                    {monthReport && monthReport.totalSales.toFixed(2)}
                   </span>
                   <span className="text-[#61697b] font-semibold tracking-wide">
                     Ventas totales
@@ -362,10 +361,7 @@ export default function DayReport() {
                   <div className="grid grid-rows-2 w-[100px]">
                     <span className="font-bold text-xl">
                       $
-                      {monthReport &&
-                        monthReport.totalSales(
-                          monthReport.totalSales.toFixed(2)
-                        )}
+                      {monthReport && monthReport.totalSales.toFixed(2)}
                     </span>
                     <span className="text-[#61697b] font-semibold tracking-wide">
                       Ventas totales
